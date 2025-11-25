@@ -16,6 +16,10 @@ import CompanyPage from './pages/CompanyPage';
 import DividendCalendarPage from './pages/DividendCalendar';
 import BrokersPage from './pages/BrokersList';
 import TechnicalAnalysisPage from './pages/TechnicalAnalysis';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import SectorsPage from './pages/SectorsPage';
+import ComparePage from './pages/ComparePage';
 
 const router = createBrowserRouter([
     {
@@ -35,6 +39,38 @@ const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <AppLayout><DashboardPage /></AppLayout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/profile',
+        element: (
+            <ProtectedRoute>
+                <AppLayout><ProfilePage /></AppLayout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/settings',
+        element: (
+            <ProtectedRoute>
+                <AppLayout><SettingsPage /></AppLayout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/sectors',
+        element: (
+            <ProtectedRoute>
+                <AppLayout><SectorsPage /></AppLayout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/compare',
+        element: (
+            <ProtectedRoute>
+                <AppLayout><ComparePage /></AppLayout>
             </ProtectedRoute>
         ),
     },
