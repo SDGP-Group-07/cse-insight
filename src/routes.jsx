@@ -24,7 +24,7 @@ import ComparePage from './pages/ComparePage';
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <AppLayout><LandingPage /></AppLayout>,
+        element: <TemporaryLandingPage />,
     },
     {
         path: '/login',
