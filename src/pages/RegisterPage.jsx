@@ -14,14 +14,7 @@ const RegisterPage = () => {
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
                 <div className="flex justify-center mb-6">
-                    <Link to="/" className="flex items-center gap-2">
-                        <div className="bg-gradient-to-br from-accent-cyan to-accent-green p-2 rounded-lg">
-                            <TrendingUp className="text-primary-dark w-8 h-8" />
-                        </div>
-                        <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                            CSE INSIGHT
-                        </span>
-                    </Link>
+                    
                 </div>
                 <h2 className="text-center text-3xl font-bold text-white mb-2">
                     Create Account

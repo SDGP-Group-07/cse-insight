@@ -1,5 +1,6 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Linkedin, TrendingUp } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Footer = () => {
     return (
@@ -8,9 +9,11 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="col-span-1 md:col-span-1">
                         <div className="flex items-center gap-2 mb-6">
-                            <div className="bg-gradient-to-br from-accent-cyan to-accent-green p-1.5 rounded-lg">
-                                <TrendingUp className="text-primary-dark w-5 h-5" />
-                            </div>
+                            <img
+                                src={logo}
+                                alt="CSE Insight Logo"
+                                className="w-8 h-8 object-contain"
+                            />
                             <span className="text-xl font-bold text-white">CSE INSIGHT</span>
                         </div>
                         <p className="text-gray-400 mb-6">
