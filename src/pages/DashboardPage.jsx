@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../components/common/Header';
 import MarketOverview from '../components/dashboard/MarketOverview';
 import StockTable from '../components/dashboard/StockTable';
 import IndexCards from '../components/dashboard/IndexCards';
@@ -11,7 +10,6 @@ const DashboardPage = () => {
     return (
         <MarketDataProvider>
             <div className="min-h-screen bg-primary-dark text-white font-sans">
-                <Header />
                 <main className="container mx-auto px-6 pt-24 pb-12">
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold mb-2">Market Dashboard</h1>
