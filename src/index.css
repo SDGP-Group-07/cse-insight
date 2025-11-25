@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-sans: "Google Sans", sans-serif;
+
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-mid: var(--color-primary-mid);
+  --color-primary-light: var(--color-primary-light);
+
+  --color-accent-cyan: #00f5d4;
+  --color-accent-green: #4ade80;
+  --color-accent-purple: #9333ea;
+  --color-accent-pink: #ec4899;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --color-text-main: var(--color-text-main);
+  --color-text-muted: var(--color-text-muted);
+
+  --animate-fade-in-up: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom Utilities */
+.btn-primary {
+  @apply bg-gradient-to-br from-[--color-accent-cyan] to-[--color-accent-green] text-[--color-primary-dark] px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 5px 15px rgba(0, 245, 212, 0.4);
+}
+
+.card {
+  @apply bg-[--color-primary-mid]/60 backdrop-blur-md border border-[--color-text-main]/10 rounded-2xl p-6 transition-all duration-300 hover:bg-[--color-primary-mid]/80 hover:-translate-y-1;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 245, 212, 0.1);
+}
+
+/* Global Styles & Variables */
+:root {
+  /* Default Dark Mode Colors */
+  --color-primary-dark: #1a1a2e;
+  /* Start of gradient */
+  --color-primary-mid: #24133a;
+  /* End of gradient / Card bg base */
+  --color-primary-light: #2d1b4e;
+  /* Lighter shade for borders/hovers */
+
+  --color-text-main: #ffffff;
+  --color-text-muted: #9ca3af;
+}
+
+:root.light {
+  /* Light Mode Colors */
+  --color-primary-dark: #f8fafc;
+  /* Very light gray/white background */
+  --color-primary-mid: #ffffff;
+  /* White for cards */
+  --color-primary-light: #e2e8f0;
+  /* Light gray for borders/accents */
+
+  --color-text-main: #111827;
+  /* Dark gray for text */
+  --color-text-muted: #4b5563;
+  /* Medium gray for muted text */
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, #1a1a2e 0%, #24133a 100%);
+  background-attachment: fixed;
+  /* Ensure gradient covers full scroll */
+  color: var(--color-text-main);
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+:root.light body {
+  background: var(--color-primary-dark);
+  /* Keep light mode as solid color or define a light gradient if needed */
+}
+
+/* Helper for text colors in components */
+.text-gray-300,
+.text-gray-400,
+.text-gray-500 {
+  color: var(--color-text-muted);
+}
+
+.text-white {
+  color: var(--color-text-main);
+}
