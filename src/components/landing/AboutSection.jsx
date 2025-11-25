@@ -10,7 +10,7 @@ const AboutSection = () => {
                         <div className="relative">
                             <div className="absolute -inset-4 bg-gradient-to-r from-accent-cyan to-accent-purple opacity-30 blur-2xl rounded-full"></div>
                             <img
-                                src="https://images.unsplash.com/photo-1611974765270-ca12586343bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
                                 alt="Stock market analysis"
                                 className="relative rounded-2xl border border-white/10 shadow-2xl"
                             />

@@ -5,6 +5,8 @@ import Button from './Button';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
 
+import logo from '../../assets/logo.png';
+
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,9 +77,11 @@ const Header = () => {
             <div className="container mx-auto px-6 flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center text-primary-dark font-bold text-xl group-hover:scale-105 transition-transform">
-                        C
-                    </div>
+                    <img
+                        src={logo}
+                        alt="CSE Insight Logo"
+                        className="w-10 h-10 object-contain group-hover:scale-105 transition-transform"
+                    />
                     <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
                         CSE Insight
                     </span>
