@@ -1,9 +1,20 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, Bell } from 'lucide-react';
+import { TrendingUp, TrendingDown, Bell, Check } from 'lucide-react';
 import Button from '../common/Button';
+import { useNotification } from '../../context/NotificationContext';
 
 const CompanyHeader = ({ company }) => {
     const isPositive = company.change >= 0;
+    const { isSubscribed, subscribe, unsubscribe } = useNotification();
+    const subscribed = isSubscribed(company.symbol);
+
+    const handleSubscribe = () => {
+        if (subscribed) {
+            unsubscribe(company.symbol);
+        } else {
+            subscribe(company.symbol);
+        }
+    };
 
     return (
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -24,8 +35,13 @@ const CompanyHeader = ({ company }) => {
                     </div>
                 </div>
 
-                <Button variant="outline" className="p-3 rounded-full border-white/20 hover:bg-white/10">
-                    <Bell size={20} className="text-accent-cyan" />
+                <Button
+                    variant={subscribed ? "primary" : "outline"}
+                    className={`p-3 rounded-full transition-all ${subscribed ? 'bg-accent-cyan text-primary-dark border-accent-cyan' : 'border-white/20 hover:bg-white/10'}`}
+                    onClick={handleSubscribe}
+                    title={subscribed ? "Unsubscribe" : "Subscribe for alerts"}
+                >
+                    {subscribed ? <Check size={20} /> : <Bell size={20} className={subscribed ? "text-primary-dark" : "text-accent-cyan"} />}
                 </Button>
             </div>
         </div>

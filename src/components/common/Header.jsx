@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, LogOut, Settings, List, BookOpen, BarChart2, Calendar, FileText, TrendingUp, PieChart } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogOut, Settings, List, BookOpen, BarChart2, Calendar, FileText, TrendingUp, PieChart, Bell } from 'lucide-react';
 import Button from './Button';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 
 import logo from '../../assets/logo.png';
 
@@ -14,6 +15,7 @@ const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
+    const { notifications, unreadCount, markAsRead, clearAll } = useNotification();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -145,6 +147,65 @@ const Header = () => {
                 {/* Auth Buttons & Theme Toggle */}
                 <div className="hidden lg:flex items-center gap-4">
                     <ThemeToggle />
+
+                    {user && (
+                        <div
+                            className="relative group"
+                            onMouseEnter={() => setActiveDropdown('notifications')}
+                            onMouseLeave={() => setActiveDropdown(null)}
+                        >
+                            <button className="relative p-2 text-gray-300 hover:text-white transition-colors">
+                                <Bell size={20} />
+                                {unreadCount > 0 && (
+                                    <span className="absolute top-1 right-1 w-2 h-2 bg-accent-cyan rounded-full animate-pulse"></span>
+                                )}
+                            </button>
+
+                            {/* Notification Dropdown */}
+                            <div className={`absolute top-full right-0 w-80 pt-2 transition-all duration-200 ${activeDropdown === 'notifications' ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-2 invisible'}`}>
+                                <div className="bg-primary-mid border border-white/10 rounded-xl shadow-xl overflow-hidden">
+                                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/5">
+                                        <h3 className="font-bold text-white text-sm">Notifications</h3>
+                                        {notifications.length > 0 && (
+                                            <button onClick={clearAll} className="text-xs text-gray-400 hover:text-white transition-colors">
+                                                Clear all
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="max-h-80 overflow-y-auto">
+                                        {notifications.length > 0 ? (
+                                            notifications.map(notification => (
+                                                <div
+                                                    key={notification.id}
+                                                    className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer ${!notification.read ? 'bg-accent-cyan/5' : ''}`}
+                                                    onClick={() => markAsRead(notification.id)}
+                                                >
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <span className={`text-sm font-medium ${!notification.read ? 'text-white' : 'text-gray-400'}`}>
+                                                            {notification.title}
+                                                        </span>
+                                                        <span className="text-[10px] text-gray-500">{notification.time}</span>
+                                                    </div>
+                                                    <p className="text-xs text-gray-400 leading-relaxed">{notification.message}</p>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="px-4 py-8 text-center text-gray-500 text-sm">
+                                                No notifications yet
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="px-4 py-2 bg-white/5 border-t border-white/10 text-center">
+                                        <Link to="/settings" className="text-xs text-accent-cyan hover:underline">
+                                            Notification Settings
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {user ? (
                         <div

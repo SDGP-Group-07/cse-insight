@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '../components/common/Header';
 import CompanyHeader from '../components/company/CompanyHeader';
 import PriceChart from '../components/company/PriceChart';
 import KeyStats from '../components/company/KeyStats';
 import CompanyProfile from '../components/company/CompanyProfile';
-import { useMarketData } from '../context/MarketDataContext';
+import { useMarketData, MarketDataProvider } from '../context/MarketDataContext';
 import { Loader, ArrowLeft } from 'lucide-react';
 
-const CompanyPage = () => {
+const CompanyPageContent = () => {
     const { symbol } = useParams();
     const navigate = useNavigate();
     const { marketData, loading } = useMarketData();
@@ -36,7 +35,6 @@ const CompanyPage = () => {
 
     return (
         <div className="min-h-screen bg-primary-dark text-white font-sans">
-            <Header />
             <main className="container mx-auto px-6 pt-24 pb-12">
                 <button
                     onClick={() => navigate('/dashboard')}
@@ -60,6 +58,14 @@ const CompanyPage = () => {
                 <CompanyProfile company={company} />
             </main>
         </div>
+    );
+};
+
+const CompanyPage = () => {
+    return (
+        <MarketDataProvider>
+            <CompanyPageContent />
+        </MarketDataProvider>
     );
 };
 
