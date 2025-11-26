@@ -21,7 +21,21 @@ For a technical deep dive, check out our [High-Level Architecture](./ARCHITECTUR
     -   **Document Analyzer (RAG)**: AI-powered analysis of financial reports (Coming Soon).
     -   **Price Predictions**: AI-driven stock price forecasting (Coming Soon).
 
-## 🛠️ Tech Stack
+## � Data Sources & Collection
+
+CSE Insight aggregates data from multiple reliable sources to ensure accuracy and timeliness:
+
+-   **Colombo Stock Exchange (CSE)**: The primary source for real-time stock prices, indices, and company announcements. Data is gathered via:
+    -   Direct integration with `cse.lk` public endpoints.
+    -   Automated data pipelines for end-of-day reports.
+-   **Financial News Portals**: News and sentiment data are aggregated from major financial news websites to power the AI analysis.
+-   **Company Reports**: Annual and quarterly reports are collected for the Document Analyzer (RAG) feature.
+
+**Data Collection Services:**
+-   **Scraper Engine**: A custom-built service that monitors market activity and updates the database in real-time.
+-   **API Gateway**: Sanitizes and serves the collected data to the frontend application.
+
+## �🛠️ Tech Stack
 
 -   **Frontend Framework**: [React 19](https://react.dev/)
 -   **Build Tool**: [Vite](https://vitejs.dev/)
