@@ -74,7 +74,7 @@ const TemporaryLandingPage = () => {
                             <img
                                 src={backgroundGif}
                                 alt="Background Animation"
-                                className="w-full h-full object-cover opacity-40"
+                                className="w-full h-full object-cover opacity-70"
                             />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/80 via-primary-dark/50 to-primary-dark z-10"></div>
