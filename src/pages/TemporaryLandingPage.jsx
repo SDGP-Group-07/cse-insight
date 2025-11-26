@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Target, ArrowRight, Check } from 'lucide-react';
+import { Users, Target, ArrowRight, Check, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 import Button from '../components/common/Button';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -78,6 +78,25 @@ const TemporaryLandingPage = () => {
                             />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/80 via-primary-dark/50 to-primary-dark z-10"></div>
+                    </div>
+
+                    {/* Social Media Sidebar */}
+                    <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-30">
+                        <a href="https://facebook.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110">
+                            <Facebook size={24} />
+                        </a>
+                        <a href="https://twitter.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110">
+                            <Twitter size={24} />
+                        </a>
+                        <a href="https://instagram.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110">
+                            <Instagram size={24} />
+                        </a>
+                        <a href="https://linkedin.com/company/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110">
+                            <Linkedin size={24} />
+                        </a>
+                        <a href="https://youtube.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110">
+                            <Youtube size={24} />
+                        </a>
                     </div>
 
                     <div className="container mx-auto px-6 relative z-20 text-center max-w-4xl">
