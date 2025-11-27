@@ -119,7 +119,7 @@ const TemporaryLandingPage = () => {
               <Twitter size={24} />
             </a>
             <a
-              href="https://instagram.com/cseinsight"
+              href="https://instagram.com/cse.insights"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-accent-cyan transition-colors transform hover:scale-110"

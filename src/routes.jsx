@@ -25,7 +25,8 @@ import CompaniesPage from './pages/CompaniesPage';
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <AppLayout><LandingPage /></AppLayout>,
+        //element: <AppLayout><LandingPage /></AppLayout>,
+        element: <TemporaryLandingPage />,
     },
     {
         path: '/login',
