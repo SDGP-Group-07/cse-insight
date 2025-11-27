@@ -20,11 +20,12 @@ import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import SectorsPage from './pages/SectorsPage';
 import ComparePage from './pages/ComparePage';
+import CompaniesPage from './pages/CompaniesPage';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <TemporaryLandingPage />,
+        element: <AppLayout><LandingPage /></AppLayout>,
     },
     {
         path: '/login',
@@ -114,11 +115,12 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
     },
+
     {
         path: '/companies',
         element: (
             <ProtectedRoute>
-                <AppLayout><DashboardPage /></AppLayout>
+                <AppLayout><CompaniesPage /></AppLayout>
             </ProtectedRoute>
         ),
     },

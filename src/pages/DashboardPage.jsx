@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import MarketOverview from '../components/dashboard/MarketOverview';
 import StockTable from '../components/dashboard/StockTable';
 import IndexCards from '../components/dashboard/IndexCards';
@@ -21,6 +23,12 @@ const DashboardPage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         <div className="lg:col-span-2">
                             <IndexCards />
+                            <div className="flex justify-between items-center mb-4 mt-8">
+                                <h2 className="text-xl font-bold">Market Movers</h2>
+                                <Link to="/companies" className="text-sm text-accent-cyan hover:underline flex items-center gap-1">
+                                    View All Companies <ArrowRight size={14} />
+                                </Link>
+                            </div>
                             <StockTable />
                         </div>
                         <div className="space-y-6">
