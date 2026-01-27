@@ -23,7 +23,7 @@ const SectorPerformance = () => {
     };
 
     return (
-        <Card className="h-full min-h-[300px]">
+        <Card className="min-h-[300px]">
             <div className="flex items-center gap-2 mb-6">
                 <div className="p-2 rounded-lg bg-purple-500/10">
                     <PieChart className="w-5 h-5 text-purple-400" />

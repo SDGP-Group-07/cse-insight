@@ -31,9 +31,13 @@ const DashboardPage = () => {
                             </div>
                             <StockTable />
                         </div>
-                        <div className="space-y-6">
-                            <NewsWidget />
-                            <SectorPerformance />
+                        <div className="lg:col-span-1 flex flex-col gap-6">
+                            <div className="flex-shrink-0">
+                                <NewsWidget />
+                            </div>
+                            <div className="flex-shrink-0">
+                                <SectorPerformance />
+                            </div>
                         </div>
                     </div>
                 </main>

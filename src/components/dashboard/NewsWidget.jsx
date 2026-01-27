@@ -8,7 +8,7 @@ const NewsWidget = () => {
     const { news } = marketData;
 
     return (
-        <Card className="h-full">
+        <Card>
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <div className="p-2 rounded-lg bg-blue-500/10">

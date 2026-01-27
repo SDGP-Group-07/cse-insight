@@ -82,6 +82,15 @@ const TemporaryLandingPage = () => {
               CSE Insight
             </span>
           </div>
+
+          <Link to="/login">
+            <Button
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10 hover:border-accent-cyan px-6"
+            >
+              Try Demo
+            </Button>
+          </Link>
         </div>
       </header>
 
