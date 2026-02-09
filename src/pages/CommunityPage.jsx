@@ -24,16 +24,16 @@ const CommunityPage = () => {
     ];
 
     const contributors = [
-        { name: 'Shaahid Fathul', role: 'RAG Developer', avatar: 'T1' },
-        { name: 'Lasantha Karunarathne', role: 'Backend Developer', avatar: 'T2' },
-        { name: 'Lasantha Karunarathne', role: 'Frontend Developer', avatar: 'T3' },
-        { name: 'Lasantha Karunarathne', role: 'UI/UX Designer', avatar: 'T4' },
-        { name: 'Omalshi Rajapaksha', role: 'ML Engineer', avatar: 'T5' },
-        { name: 'Disni Perera', role: 'SEO / Social Media', avatar: 'T6' },
-        { name: 'Dulangi Perera', role: 'QA Engineer', avatar: 'T7' },
-        { name: 'Shaahid Fathul', role: 'Team Leader', avatar: 'T8' },
-        { name: 'Dulangi Perera', role: 'BA Engineer', avatar: 'T9' },
-        { name: 'Disni Perera', role: 'BA Engineer', avatar: 'T10' },
+        { name: 'Shaahid Fathul', role: 'RAG Developer', avatar: 'SF' },
+        { name: 'Lasantha Karunarathne', role: 'Backend Developer', avatar: 'LK' },
+        { name: 'Lasantha Karunarathne', role: 'Frontend Developer', avatar: 'LK' },
+        { name: 'Lasantha Karunarathne', role: 'UI/UX Designer', avatar: 'LK' },
+        { name: 'Omalshi Rajapaksha', role: 'ML Engineer', avatar: 'OR' },
+        { name: 'Disni Perera', role: 'SEO / Social Media', avatar: 'DP' },
+        { name: 'Dulangi Perera', role: 'QA Engineer', avatar: 'DP' },
+        { name: 'Shaahid Fathul', role: 'Team Leader', avatar: 'SF' },
+        { name: 'Dulangi Perera', role: 'BA Engineer', avatar: 'DP' },
+        { name: 'Disni Perera', role: 'BA Engineer', avatar: 'DP' },
     ];
 
     return (
