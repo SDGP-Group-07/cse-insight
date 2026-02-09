@@ -24,11 +24,16 @@ const CommunityPage = () => {
     ];
 
     const contributors = [
-        { name: 'Team Member 1', role: 'Lead Developer', avatar: 'T1' },
-        { name: 'Team Member 2', role: 'Backend Developer', avatar: 'T2' },
-        { name: 'Team Member 3', role: 'Frontend Developer', avatar: 'T3' },
-        { name: 'Team Member 4', role: 'UI/UX Designer', avatar: 'T4' },
-        { name: 'Team Member 5', role: 'Data Engineer', avatar: 'T5' },
+        { name: 'Shaahid Fathul', role: 'RAG Developer', avatar: 'T1' },
+        { name: 'Lasantha Karunarathne', role: 'Backend Developer', avatar: 'T2' },
+        { name: 'Lasantha Karunarathne', role: 'Frontend Developer', avatar: 'T3' },
+        { name: 'Lasantha Karunarathne', role: 'UI/UX Designer', avatar: 'T4' },
+        { name: 'Omalshi Rajapaksha', role: 'ML Engineer', avatar: 'T5' },
+        { name: 'Disni Perera', role: 'SEO / Social Media', avatar: 'T6' },
+        { name: 'Dulangi Perera', role: 'QA Engineer', avatar: 'T7' },
+        { name: 'Shaahid Fathul', role: 'Team Leader', avatar: 'T8' },
+        { name: 'Dulangi Perera', role: 'BA Engineer', avatar: 'T9' },
+        { name: 'Disni Perera', role: 'BA Engineer', avatar: 'T10' },
     ];
 
     return (
