@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
@@ -20,40 +21,40 @@ const Footer = () => {
                             AI-powered market intelligence platform for smart investors and traders in Sri Lanka.
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="text-gray-400 hover:text-accent-cyan transition-colors"><Facebook size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-accent-cyan transition-colors"><Twitter size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-accent-cyan transition-colors"><Instagram size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-accent-cyan transition-colors"><Linkedin size={20} /></a>
+                            <a href="https://facebook.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors"><Facebook size={20} /></a>
+                            <a href="https://twitter.com/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors"><Twitter size={20} /></a>
+                            <a href="https://instagram.com/cse.insights" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors"><Instagram size={20} /></a>
+                            <a href="https://linkedin.com/company/cseinsight" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-cyan transition-colors"><Linkedin size={20} /></a>
                         </div>
                     </div>
 
                     <div>
                         <h4 className="text-white font-semibold mb-6">Platform</h4>
                         <ul className="space-y-4 text-gray-400">
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Market Dashboard</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">AI Chatbot</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Wiki Navigator</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Prediction Lab</a></li>
+                            <li><Link to="/dashboard" className="hover:text-accent-cyan transition-colors">Market Dashboard</Link></li>
+                            <li><Link to="/chatbot" className="hover:text-accent-cyan transition-colors">AI Chatbot</Link></li>
+                            <li><Link to="/wiki" className="hover:text-accent-cyan transition-colors">Wiki Navigator</Link></li>
+                            <li><Link to="/predictions" className="hover:text-accent-cyan transition-colors">Prediction Lab</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-white font-semibold mb-6">Resources</h4>
                         <ul className="space-y-4 text-gray-400">
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Documentation</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">API Reference</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Community</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Help Center</a></li>
+                            <li><Link to="/documentation" className="hover:text-accent-cyan transition-colors">Documentation</Link></li>
+                            <li><Link to="/api-reference" className="hover:text-accent-cyan transition-colors">API Reference</Link></li>
+                            <li><Link to="/community" className="hover:text-accent-cyan transition-colors">Community</Link></li>
+                            <li><Link to="/help" className="hover:text-accent-cyan transition-colors">Help Center</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-white font-semibold mb-6">Legal</h4>
                         <ul className="space-y-4 text-gray-400">
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Terms of Service</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Cookie Policy</a></li>
-                            <li><a href="#" className="hover:text-accent-cyan transition-colors">Disclaimer</a></li>
+                            <li><Link to="/privacy-policy" className="hover:text-accent-cyan transition-colors">Privacy Policy</Link></li>
+                            <li><Link to="/terms-of-service" className="hover:text-accent-cyan transition-colors">Terms of Service</Link></li>
+                            <li><Link to="/cookie-policy" className="hover:text-accent-cyan transition-colors">Cookie Policy</Link></li>
+                            <li><Link to="/disclaimer" className="hover:text-accent-cyan transition-colors">Disclaimer</Link></li>
                         </ul>
                     </div>
                 </div>
@@ -72,3 +73,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
