@@ -33,7 +33,8 @@ const Header = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Dashboard', path: '/dashboard', protected: true },
+        { name: 'Market Dashboard', path: '/dashboard', protected: true },
+        { name: 'Company Directory', path: '/companies', protected: true },
         {
             name: 'Learn',
             path: '#',
@@ -55,14 +56,9 @@ const Header = () => {
             ]
         },
         {
-            name: 'Companies',
-            path: '#',
+            name: 'Sectors',
+            path: '/sectors',
             protected: true,
-            dropdown: [
-                { name: 'All Companies', path: '/companies', icon: List },
-                { name: 'Sectors', path: '/sectors', icon: PieChart },
-                { name: 'Compare', path: '/compare', icon: BarChart2, disabled: true }
-            ]
         }
     ];
 
