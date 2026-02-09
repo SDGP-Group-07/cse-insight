@@ -22,6 +22,18 @@ import SectorsPage from './pages/SectorsPage';
 import ComparePage from './pages/ComparePage';
 import CompaniesPage from './pages/CompaniesPage';
 
+// Legal Pages
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
+import DisclaimerPage from './pages/DisclaimerPage';
+
+// Resource Pages
+import DocumentationPage from './pages/DocumentationPage';
+import APIReferencePage from './pages/APIReferencePage';
+import CommunityPage from './pages/CommunityPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -164,6 +176,40 @@ const router = createBrowserRouter([
                 <AppLayout><TechnicalAnalysisPage /></AppLayout>
             </ProtectedRoute>
         ),
+    },
+    // Legal Pages
+    {
+        path: '/privacy-policy',
+        element: <AppLayout><PrivacyPolicyPage /></AppLayout>,
+    },
+    {
+        path: '/terms-of-service',
+        element: <AppLayout><TermsOfServicePage /></AppLayout>,
+    },
+    {
+        path: '/cookie-policy',
+        element: <AppLayout><CookiePolicyPage /></AppLayout>,
+    },
+    {
+        path: '/disclaimer',
+        element: <AppLayout><DisclaimerPage /></AppLayout>,
+    },
+    // Resource Pages
+    {
+        path: '/documentation',
+        element: <AppLayout><DocumentationPage /></AppLayout>,
+    },
+    {
+        path: '/api-reference',
+        element: <AppLayout><APIReferencePage /></AppLayout>,
+    },
+    {
+        path: '/community',
+        element: <AppLayout><CommunityPage /></AppLayout>,
+    },
+    {
+        path: '/help',
+        element: <AppLayout><HelpCenterPage /></AppLayout>,
     },
 ]);
 
