@@ -64,7 +64,12 @@ const companyService = {
             { id: 2, title: 'Quarterly profits rise by 15%', date: '1 day ago', source: 'Daily FT' },
             { id: 3, title: 'New strategic partnership announced', date: '3 days ago', source: 'Reuters' },
         ]);
+    },
+
+    getCompanies: async () => {
+        return await api.get('/cse/companies');
     }
+
 };
 
 export default companyService;
