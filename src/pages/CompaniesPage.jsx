@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/common/Header';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { Search, TrendingUp, TrendingDown, ArrowRight, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import companyService from '../services/companyService';
 
 const CompaniesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSector, setSelectedSector] = useState('All');
+    const [companies, setCompanies] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Mock Data for Companies
-    const companies = [
-        { symbol: 'JKH', name: 'John Keells Holdings', sector: 'Capital Goods', price: 185.50, change: 2.5, changePercent: 1.35 },
-        { symbol: 'SAMP', name: 'Sampath Bank', sector: 'Banks', price: 72.10, change: -0.4, changePercent: -0.55 },
-        { symbol: 'COMB', name: 'Commercial Bank', sector: 'Banks', price: 98.00, change: 1.2, changePercent: 1.22 },
-        { symbol: 'HNB', name: 'Hatton National Bank', sector: 'Banks', price: 165.25, change: 0.0, changePercent: 0.00 },
-        { symbol: 'EXPO', name: 'Expolanka Holdings', sector: 'Transportation', price: 145.75, change: -1.5, changePercent: -1.02 },
-        { symbol: 'LOLC', name: 'LOLC Holdings', sector: 'Diversified Financials', price: 450.00, change: 5.0, changePercent: 1.11 },
-        { symbol: 'SLT', name: 'Sri Lanka Telecom', sector: 'Telecommunication', price: 95.00, change: 0.5, changePercent: 0.53 },
-        { symbol: 'DIAL', name: 'Dialog Axiata', sector: 'Telecommunication', price: 10.50, change: -0.1, changePercent: -0.94 },
-        { symbol: 'HAYL', name: 'Hayleys PLC', sector: 'Capital Goods', price: 88.00, change: 1.8, changePercent: 2.05 },
-        { symbol: 'MELS', name: 'Melstacorp PLC', sector: 'Food & Beverage', price: 65.40, change: -0.2, changePercent: -0.30 },
-        { symbol: 'DIST', name: 'Distilleries Company', sector: 'Food & Beverage', price: 22.10, change: 0.1, changePercent: 0.45 },
-        { symbol: 'AEL', name: 'Access Engineering', sector: 'Capital Goods', price: 24.50, change: 0.3, changePercent: 1.22 },
-    ];
+    useEffect(() => {
+        const fetchCompanies = async () => {
+            try {
+                const response = await companyService.getCompanies();
+                console.log('API Response:', response);
+                
+                // Extract companies from data array
+                const companyList = Array.isArray(response.data?.data) ? response.data.data : [];
+                console.log('Extracted companies:', companyList);
+                setCompanies(companyList);
+            } catch (error) {
+                console.error('Error fetching companies:', error);
+                setCompanies([]);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const sectors = ['All', ...new Set(companies.map(c => c.sector))];
+        fetchCompanies();
+    }, []);
 
     const filteredCompanies = companies.filter(company => {
         const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             company.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesSector = selectedSector === 'All' || company.sector === selectedSector;
-        return matchesSearch && matchesSector;
+        return matchesSearch;
     });
 
     return (
@@ -42,6 +47,12 @@ const CompaniesPage = () => {
                     <h1 className="text-3xl font-bold mb-2">Listed Companies</h1>
                     <p className="text-gray-400">Explore and analyze companies listed on the Colombo Stock Exchange.</p>
                 </div>
+
+                {loading && (
+                    <div className="text-center py-20">
+                        <p className="text-gray-400">Loading companies...</p>
+                    </div>
+                )}
 
                 {/* Search & Filter Bar */}
                 <div className="flex flex-col md:flex-row gap-4 mb-8">
@@ -55,20 +66,6 @@ const CompaniesPage = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 no-scrollbar">
-                        {sectors.map(sector => (
-                            <button
-                                key={sector}
-                                onClick={() => setSelectedSector(sector)}
-                                className={`px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${selectedSector === sector
-                                    ? 'bg-accent-cyan text-primary-dark font-medium'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-                                    }`}
-                            >
-                                {sector}
-                            </button>
-                        ))}
-                    </div>
                 </div>
 
                 {/* Companies Grid */}
@@ -79,13 +76,12 @@ const CompaniesPage = () => {
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
                                         <h3 className="text-lg font-bold text-white">{company.symbol}</h3>
-                                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-gray-300">{company.sector}</span>
                                     </div>
                                     <p className="text-sm text-gray-400 truncate w-48">{company.name}</p>
                                 </div>
-                                <div className={`flex items-center gap-1 text-sm font-medium ${company.change >= 0 ? 'text-accent-green' : 'text-red-500'}`}>
-                                    {company.change >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                                    {company.changePercent.toFixed(2)}%
+                                <div className={`flex items-center gap-1 text-sm font-medium ${company.percentageChange >= 0 ? 'text-accent-green' : 'text-red-500'}`}>
+                                    {company.percentageChange >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                                    {company.percentageChange.toFixed(2)}%
                                 </div>
                             </div>
 
@@ -95,7 +91,7 @@ const CompaniesPage = () => {
                                     <p className="text-2xl font-bold text-white">LKR {company.price.toFixed(2)}</p>
                                 </div>
                                 <div className={`text-sm ${company.change >= 0 ? 'text-accent-green' : 'text-red-500'}`}>
-                                    {company.change > 0 ? '+' : ''}{company.change.toFixed(2)}
+                                    {company.change > 0 ? '+' : ''}{company.change}
                                 </div>
                             </div>
 
