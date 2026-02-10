@@ -1,57 +1,166 @@
 import api from './api';
 
+const unwrapApiData = (response) => {
+  if (!response) {
+    return null;
+  }
+  if (
+    response.data &&
+    Object.prototype.hasOwnProperty.call(response.data, 'data')
+  ) {
+    return response.data.data;
+  }
+  return response.data ?? response;
+};
+
+const parseNumber = (value, fallback = 0) => {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/,/g, '');
+    const parsed = Number(cleaned);
+    return Number.isNaN(parsed) ? fallback : parsed;
+  }
+  return fallback;
+};
+
+const formatShortNumber = (value) => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  const num = parseNumber(value, NaN);
+  if (Number.isNaN(num)) {
+    return String(value);
+  }
+  if (num >= 1_000_000_000) {
+    return `${(num / 1_000_000_000).toFixed(1)}B`;
+  }
+  if (num >= 1_000_000) {
+    return `${(num / 1_000_000).toFixed(1)}M`;
+  }
+  if (num >= 1_000) {
+    return `${(num / 1_000).toFixed(1)}K`;
+  }
+  return num.toFixed(0);
+};
+
+const normalizeIndexData = (raw) => ({
+  value: parseNumber(raw?.value ?? raw?.indexValue ?? raw?.currentValue ?? 0),
+  change: parseNumber(raw?.change ?? raw?.changeValue ?? raw?.priceChange ?? 0),
+  changePercent: parseNumber(
+    raw?.changePercent ?? raw?.changePercentage ?? raw?.percentageChange ?? 0,
+  ),
+});
+
+const normalizeStock = (raw) => ({
+  symbol: raw?.symbol ?? raw?.stockCode ?? raw?.securityCode ?? '',
+  name: raw?.name ?? raw?.securityName ?? raw?.companyName ?? '',
+  price: parseNumber(raw?.price ?? raw?.lastTradedPrice ?? raw?.lastPrice ?? 0),
+  change: parseNumber(raw?.change ?? raw?.priceChange ?? raw?.changeValue ?? 0),
+  changePercent: parseNumber(
+    raw?.changePercent ??
+      raw?.changePercentage ??
+      raw?.percentageChange ??
+      0,
+  ),
+  volume:
+    raw?.volume ??
+    raw?.sharevolume ??
+    raw?.tradevolume ??
+    raw?.tradeVolume ??
+    raw?.volumeTraded ??
+    '',
+  turnover:
+    raw?.turnover ?? raw?.tradeTurnover ?? raw?.valueTraded ?? raw?.turnover,
+});
+
+const normalizeMover = (raw) => ({
+  symbol: raw?.symbol ?? raw?.stockCode ?? raw?.securityCode ?? '',
+  price: parseNumber(raw?.price ?? raw?.lastTradedPrice ?? raw?.lastPrice ?? 0),
+  changePercent: parseNumber(
+    raw?.changePercent ?? raw?.changePercentage ?? raw?.percentageChange ?? 0,
+  ),
+});
+
+const normalizeSector = (raw) => ({
+  name: raw?.name ?? raw?.sectorName ?? raw?.sector ?? '',
+  change: parseNumber(
+    raw?.change ?? raw?.changePercentage ?? raw?.percentageChange ?? 0,
+  ),
+});
+
 const marketService = {
-    getIndices: async () => {
-        // return api.get('/market/indices');
-        return Promise.resolve([
-            { name: 'ASPI', value: 11245.32, change: 125.45, changePercent: 1.12, status: 'up' },
-            { name: 'S&P SL20', value: 3245.12, change: -12.30, changePercent: -0.38, status: 'down' }
-        ]);
-    },
+  getIndices: async () => {
+    const [aspiResponse, snpResponse, summaryResponse] = await Promise.all([
+      api.get('/cse/aspi'),
+      api.get('/cse/snp'),
+      api.get('/cse/market-summary'),
+    ]);
 
-    getStocks: async () => {
-        // return api.get('/market/stocks');
-        return Promise.resolve([
-            { id: 1, symbol: 'JKH', name: 'John Keells Holdings', price: 185.50, change: 2.50, changePercent: 1.35, volume: '1.2M' },
-            { id: 2, symbol: 'COMB', name: 'Commercial Bank', price: 92.10, change: -0.40, changePercent: -0.43, volume: '850K' },
-            { id: 3, symbol: 'SAMP', name: 'Sampath Bank', price: 74.30, change: 1.10, changePercent: 1.50, volume: '2.1M' },
-            { id: 4, symbol: 'HNB', name: 'Hatton National Bank', price: 165.00, change: 0.00, changePercent: 0.00, volume: '450K' },
-            { id: 5, symbol: 'DIAL', name: 'Dialog Axiata', price: 9.20, change: 0.10, changePercent: 1.09, volume: '5.4M' },
-            { id: 6, symbol: 'EXPO', name: 'Expolanka Holdings', price: 145.75, change: -3.25, changePercent: -2.18, volume: '320K' },
-            { id: 7, symbol: 'LOLC', name: 'LOLC Holdings', price: 380.25, change: 15.25, changePercent: 4.18, volume: '120K' },
-            { id: 8, symbol: 'HAYL', name: 'Hayleys PLC', price: 88.90, change: 1.20, changePercent: 1.37, volume: '670K' },
-        ]);
-    },
+    const aspiRaw = unwrapApiData(aspiResponse);
+    const snpRaw = unwrapApiData(snpResponse);
+    const summaryRaw = unwrapApiData(summaryResponse);
 
-    getTopGainers: async () => {
-        // return api.get('/market/top-gainers');
-        return Promise.resolve([
-            { symbol: 'LOLC', price: 380.25, change: 4.18 },
-            { symbol: 'SAMP', price: 74.30, change: 1.50 },
-            { symbol: 'HAYL', price: 88.90, change: 1.37 },
-        ]);
-    },
+    return {
+      aspi: normalizeIndexData(aspiRaw),
+      sp20: normalizeIndexData(snpRaw),
+      turnover: formatShortNumber(
+        summaryRaw?.turnover ??
+          summaryRaw?.marketTurnover ??
+          summaryRaw?.totalTurnover,
+      ),
+      trades: parseNumber(
+        summaryRaw?.trades ??
+          summaryRaw?.totalTrades ??
+          summaryRaw?.tradeCount ??
+          0,
+      ),
+      lastUpdated: new Date().toISOString(),
+    };
+  },
 
-    getTopLosers: async () => {
-        // return api.get('/market/top-losers');
-        return Promise.resolve([
-            { symbol: 'EXPO', price: 145.75, change: -2.18 },
-            { symbol: 'COMB', price: 92.10, change: -0.43 },
-            { symbol: 'S&P SL20', price: 3245.12, change: -0.38 },
-        ]);
-    },
+  getStocks: async () => {
+    return marketService.getMarketSummary();
+  },
 
-    getSectorPerformance: async () => {
-        // return api.get('/market/sectors');
-        return Promise.resolve([
-            { name: 'Banking', change: 1.5 },
-            { name: 'Telco', change: 0.8 },
-            { name: 'Energy', change: -0.5 },
-            { name: 'Insurance', change: 2.1 },
-            { name: 'Food & Bev', change: -1.2 },
-            { name: 'Transport', change: -0.3 },
-        ]);
-    }
+  getTopGainers: async () => {
+    const response = await api.get('/cse/top-gainers');
+    const data = unwrapApiData(response) ?? [];
+    return Array.isArray(data) ? data.map(normalizeMover) : [];
+  },
+
+  getTopLosers: async () => {
+    const response = await api.get('/cse/top-losers');
+    const data = unwrapApiData(response) ?? [];
+    return Array.isArray(data) ? data.map(normalizeMover) : [];
+  },
+
+  getSectorPerformance: async () => {
+    const response = await api.get('/cse/sectors');
+    const data = unwrapApiData(response) ?? [];
+    return Array.isArray(data) ? data.map(normalizeSector) : [];
+  },
+
+  getMarketSummary: async () => {
+    const response = await api.get('/cse/trade-summary');
+    const data = unwrapApiData(response);
+    const rows = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.reqTradeSummery)
+        ? data.reqTradeSummery
+        : Array.isArray(data?.data)
+          ? data.data
+        : [];
+    return rows.map(normalizeStock);
+  },
+
+  createRefreshTimer: (callback, intervalMs) => {
+    const timerId = setInterval(() => {
+      callback();
+    }, intervalMs);
+    return () => clearInterval(timerId);
+  },
 };
 
 export default marketService;
