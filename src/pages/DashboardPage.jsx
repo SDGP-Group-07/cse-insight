@@ -43,19 +43,20 @@ const DashboardPage = () => {
 
           <MarketOverview />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="flex justify-between items-center mb-4 mt-8">
+            <h2 className="text-xl font-bold">Market Movers</h2>
+            <Link
+              to="/companies"
+              className="text-sm text-accent-cyan hover:underline flex items-center gap-1"
+            >
+              View All Companies <ArrowRight size={14} />
+            </Link>
+          </div>
+          <StockTable />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-8">
             <div className="lg:col-span-2">
               <IndexCards />
-              <div className="flex justify-between items-center mb-4 mt-8">
-                <h2 className="text-xl font-bold">Market Movers</h2>
-                <Link
-                  to="/companies"
-                  className="text-sm text-accent-cyan hover:underline flex items-center gap-1"
-                >
-                  View All Companies <ArrowRight size={14} />
-                </Link>
-              </div>
-              <StockTable />
             </div>
             <div className="lg:col-span-1 flex flex-col gap-6">
               <div className="flex-shrink-0">
