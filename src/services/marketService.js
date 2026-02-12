@@ -71,8 +71,16 @@ const normalizeStock = (raw) => ({
     raw?.tradeVolume ??
     raw?.volumeTraded ??
     '',
-  turnover:
-    raw?.turnover ?? raw?.tradeTurnover ?? raw?.valueTraded ?? raw?.turnover,
+  previousClose: parseNumber(
+    raw?.previousClose ?? raw?.closingPrice ?? raw?.previous_close ?? 0,
+  ),
+  open: parseNumber(raw?.open ?? raw?.openingPrice ?? 0),
+  high: parseNumber(raw?.high ?? raw?.highPrice ?? 0),
+  low: parseNumber(raw?.low ?? raw?.lowPrice ?? 0),
+  sharevolume: parseNumber(raw?.sharevolume ?? raw?.crossingVolume ?? 0),
+  tradevolume: parseNumber(raw?.tradevolume ?? raw?.crossingTradeVol ?? 0),
+  turnover: parseNumber(raw?.turnover ?? raw?.tradeTurnover ?? raw?.valueTraded ?? 0),
+  lastTradedTime: raw?.lastTradedTime ?? raw?.lastTradedAt ?? raw?.lastTradedTimestamp ?? null,
 });
 
 const normalizeMover = (raw) => ({
