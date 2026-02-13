@@ -2,7 +2,7 @@ import axios from 'axios';
 
 //const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const API_BASE_URL =
-  'https://cseinsight-api-f3bkbeebgmfaczg9.southeastasia-01.azurewebsites.net/api';
+  'https://cse-insight-api-btgbf9efd3g7fze2.southeastasia-01.azurewebsites.net/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
