@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrendingUp, TrendingDown, Activity, DollarSign } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
@@ -95,36 +95,106 @@ const MarketOverview = () => {
     );
   };
 
+  const CombinedStatCard = ({ indices }) => {
+    const renderItem = (item, Icon, color) => {
+      const isPositive = item.change >= 0;
+      const formattedValue = Number(item.value).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return (
+        <div className="flex-1 px-4 py-3">
+          <p className="text-gray-400 text-sm font-medium mb-1">{item.title}</p>
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold text-white">{formattedValue}</h3>
+            <div className={`opacity-10 ${color}`}>
+              <Icon size={36} />
+            </div>
+          </div>
+          {item.change !== undefined && (
+            <div className={`flex items-center gap-1 text-sm ${isPositive ? 'text-accent-green' : 'text-red-500'}`}>
+              {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+              <span className="font-medium">
+                {isPositive ? '+' : ''}
+                {item.change} ({isPositive ? '+' : ''}{item.changePercent}%)
+              </span>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    return (
+      <Card className="relative overflow-hidden">
+        <div className="relative z-10 flex divide-x divide-gray-700">
+          {renderItem({ title: 'ASPI', ...indices.aspi }, Activity, 'text-accent-cyan')}
+          {renderItem({ title: 'S&P SL20', ...indices.sp20 }, Activity, 'text-accent-purple')}
+        </div>
+      </Card>
+    );
+  };
+
+  const SecondCard = ({ indices }) => {
+    const [now, setNow] = useState(new Date());
+
+    useEffect(() => {
+      const t = setInterval(() => setNow(new Date()), 1000);
+      return () => clearInterval(t);
+    }, []);
+
+    const marketUp = (indices?.aspi?.change ?? 0) >= 0;
+    const dateStr = now.toLocaleDateString();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const fmt = (v, opts = {}) => {
+      if (v === undefined || v === null) return 'N/A';
+      if (typeof v === 'number') return v.toLocaleString(undefined, opts);
+      return v;
+    };
+
+    const volume = indices?.volume ?? indices?.shareVolume ?? null;
+    const trades = indices?.trades ?? null;
+    const turnover = indices?.turnover ?? null;
+
+    return (
+      <Card className="flex flex-col justify-between p-2">
+        <div className="flex items-center justify-between px-3 py-2">
+          <div className="flex items-center gap-2">
+            {marketUp ? <TrendingUp className="text-accent-green" size={16} /> : <TrendingDown className="text-red-500" size={16} />}
+            <div>
+              <p className="text-sm text-gray-400">Market Status</p>
+              <p className={`font-medium text-sm ${marketUp ? 'text-accent-green' : 'text-red-500'}`}>{marketUp ? 'Market Up' : 'Market Down'}</p>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <p className="text-sm text-gray-400">{dateStr}</p>
+            <p className="text-sm font-medium text-white">{timeStr}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 px-3 py-2 border-t border-gray-800">
+          <div className="flex flex-col items-start">
+            <p className="text-sm text-gray-400">Share Volume</p>
+            <p className="font-bold text-white">{fmt(volume)}</p>
+          </div>
+          <div className="flex flex-col items-start">
+            <p className="text-sm text-gray-400">Trades</p>
+            <p className="font-bold text-white">{fmt(trades)}</p>
+          </div>
+          <div className="flex flex-col items-start">
+            <p className="text-sm text-gray-400">Turnover</p>
+            <p className="font-bold text-white">{fmt(turnover)}</p>
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <StatCard
-        title="ASPI"
-        value={indices.aspi.value.toFixed(2)}
-        change={indices.aspi.change}
-        changePercent={indices.aspi.changePercent}
-        icon={Activity}
-        color="text-accent-cyan"
-      />
-      <StatCard
-        title="S&P SL20"
-        value={indices.sp20.value.toFixed(2)}
-        change={indices.sp20.change}
-        changePercent={indices.sp20.changePercent}
-        icon={Activity}
-        color="text-accent-purple"
-      />
-      <StatCard
-        title="Market Turnover"
-        value={indices.turnover}
-        icon={DollarSign}
-        color="text-accent-green"
-      />
-      <StatCard
-        title="Total Trades"
-        value={indices.trades}
-        icon={Activity}
-        color="text-orange-500"
-      />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <CombinedStatCard indices={indices} />
+      <SecondCard indices={indices} />
     </div>
   );
 };

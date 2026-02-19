@@ -163,6 +163,18 @@ const marketService = {
     return rows.map(normalizeStock);
   },
 
+  getMarketStatus: async () => {
+    const response = await api.get('/cse/market-status');
+    const data = unwrapApiData(response);
+    if (!data) return null;
+    if (typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, 'status')) {
+      return data.status;
+    }
+    // In case the API returns a plain string
+    if (typeof data === 'string') return data;
+    return null;
+  },
+
   createRefreshTimer: (callback, intervalMs) => {
     const timerId = setInterval(() => {
       callback();
