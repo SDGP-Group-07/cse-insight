@@ -14,10 +14,12 @@ export const MarketDataProvider = ({ children }) => {
     indices: {
       aspi: { value: 0, change: 0, changePercent: 0 },
       sp20: { value: 0, change: 0, changePercent: 0 },
+      shareVolume: 0,
       turnover: '',
       trades: 0,
       lastUpdated: null,
     },
+    marketStatus: '',
     stocks: [],
     gainers: [],
     losers: [],
@@ -57,6 +59,7 @@ export const MarketDataProvider = ({ children }) => {
   });
   const [status, setStatus] = useState({
     indices: createSectionStatus(),
+    marketStatus: createSectionStatus(),
     stocks: createSectionStatus(),
     gainers: createSectionStatus(),
     losers: createSectionStatus(),
@@ -111,6 +114,11 @@ export const MarketDataProvider = ({ children }) => {
       loader: marketService.getSectorPerformance,
       apply: (sectors) => setMarketData((prev) => ({ ...prev, sectors })),
       isEmpty: (sectors) => !sectors || sectors.length === 0,
+    },
+    marketStatus: {
+      loader: marketService.getMarketStatus,
+      apply: (marketStatus) => setMarketData((prev) => ({ ...prev, marketStatus })),
+      isEmpty: (s) => !s,
     },
   };
 

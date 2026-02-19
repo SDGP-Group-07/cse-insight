@@ -100,26 +100,45 @@ const normalizeSector = (raw) => ({
 
 const marketService = {
   getIndices: async () => {
-    const [aspiResponse, snpResponse, summaryResponse] = await Promise.all([
+    const [aspiResponse, snpResponse, summaryResponse, statusResponse, dailyResponse] = await Promise.all([
       api.get('/cse/aspi'),
       api.get('/cse/snp'),
       api.get('/cse/market-summary'),
+      api.get('/cse/market-status'),
+      api.get('/cse/daily-market-summary'),
     ]);
 
     const aspiRaw = unwrapApiData(aspiResponse);
     const snpRaw = unwrapApiData(snpResponse);
     const summaryRaw = unwrapApiData(summaryResponse);
+    
+    // Extract from daily market summary (more reliable)
+    let dailyData = null;
+    const dailyRaw = unwrapApiData(dailyResponse);
+    if (Array.isArray(dailyRaw) && dailyRaw.length > 0) {
+      const mostRecentDay = dailyRaw[0];
+      if (Array.isArray(mostRecentDay) && mostRecentDay.length > 0) {
+        dailyData = mostRecentDay[0];
+      }
+    }
 
     return {
       aspi: normalizeIndexData(aspiRaw),
       sp20: normalizeIndexData(snpRaw),
+      shareVolume: parseNumber(
+        dailyData?.volumeOfTurnOverNumber ??
+          summaryRaw?.shareVolume ?? 0
+      ),
       turnover: formatShortNumber(
-        summaryRaw?.turnover ??
+        dailyData?.marketTurnover ??
+          summaryRaw?.tradeVolume ??
+          summaryRaw?.turnover ??
           summaryRaw?.marketTurnover ??
           summaryRaw?.totalTurnover,
       ),
       trades: parseNumber(
-        summaryRaw?.trades ??
+        dailyData?.marketTrades ??
+          summaryRaw?.trades ??
           summaryRaw?.totalTrades ??
           summaryRaw?.tradeCount ??
           0,
@@ -173,6 +192,22 @@ const marketService = {
     // In case the API returns a plain string
     if (typeof data === 'string') return data;
     return null;
+  },
+
+  getDailyMarketSummary: async () => {
+    const response = await api.get('/cse/daily-market-summary');
+    const data = unwrapApiData(response);
+    if (!Array.isArray(data) || data.length === 0) return null;
+    
+    const mostRecentDay = data[0];
+    if (!Array.isArray(mostRecentDay) || mostRecentDay.length === 0) return null;
+    
+    const summary = mostRecentDay[0];
+    return {
+      turnover: summary?.marketTurnover ?? 0,
+      shareVolume: summary?.volumeOfTurnOverNumber ?? 0,
+      trades: summary?.marketTrades ?? 0,
+    };
   },
 
   createRefreshTimer: (callback, intervalMs) => {

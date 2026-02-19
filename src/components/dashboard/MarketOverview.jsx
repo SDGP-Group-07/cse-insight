@@ -6,7 +6,7 @@ import { useMarketData } from '../../context/MarketDataContext';
 
 const MarketOverview = () => {
   const { marketData, status, refreshSection } = useMarketData();
-  const { indices } = marketData;
+  const { indices, marketStatus } = marketData;
   const indicesStatus = status.indices;
 
   if (indicesStatus.error) {
@@ -134,7 +134,7 @@ const MarketOverview = () => {
     );
   };
 
-  const SecondCard = ({ indices }) => {
+  const SecondCard = ({ indices, marketStatus }) => {
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
@@ -142,7 +142,7 @@ const MarketOverview = () => {
       return () => clearInterval(t);
     }, []);
 
-    const marketUp = (indices?.aspi?.change ?? 0) >= 0;
+    const isMarketOpen = marketStatus && marketStatus.toLowerCase().includes('open');
     const dateStr = now.toLocaleDateString();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -152,7 +152,7 @@ const MarketOverview = () => {
       return v;
     };
 
-    const volume = indices?.volume ?? indices?.shareVolume ?? null;
+    const shareVolume = indices?.shareVolume ?? null;
     const trades = indices?.trades ?? null;
     const turnover = indices?.turnover ?? null;
 
@@ -160,10 +160,10 @@ const MarketOverview = () => {
       <Card className="flex flex-col justify-between p-2">
         <div className="flex items-center justify-between px-3 py-2">
           <div className="flex items-center gap-2">
-            {marketUp ? <TrendingUp className="text-accent-green" size={16} /> : <TrendingDown className="text-red-500" size={16} />}
+            {isMarketOpen ? <TrendingUp className="text-accent-green" size={16} /> : <TrendingDown className="text-red-500" size={16} />}
             <div>
               <p className="text-sm text-gray-400">Market Status</p>
-              <p className={`font-medium text-sm ${marketUp ? 'text-accent-green' : 'text-red-500'}`}>{marketUp ? 'Market Up' : 'Market Down'}</p>
+              <p className={`font-medium text-sm ${isMarketOpen ? 'text-accent-green' : 'text-red-500'}`}>{marketStatus || 'Loading...'}</p>
             </div>
           </div>
 
@@ -176,10 +176,10 @@ const MarketOverview = () => {
         <div className="grid grid-cols-3 gap-3 px-3 py-2 border-t border-gray-800">
           <div className="flex flex-col items-start">
             <p className="text-sm text-gray-400">Share Volume</p>
-            <p className="font-bold text-white">{fmt(volume)}</p>
+            <p className="font-bold text-white">{fmt(shareVolume)}</p>
           </div>
           <div className="flex flex-col items-start">
-            <p className="text-sm text-gray-400">Trades</p>
+            <p className="text-sm text-gray-400">Number of Trades</p>
             <p className="font-bold text-white">{fmt(trades)}</p>
           </div>
           <div className="flex flex-col items-start">
@@ -194,7 +194,7 @@ const MarketOverview = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <CombinedStatCard indices={indices} />
-      <SecondCard indices={indices} />
+      <SecondCard indices={indices} marketStatus={marketStatus} />
     </div>
   );
 };
