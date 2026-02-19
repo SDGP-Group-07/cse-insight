@@ -210,6 +210,26 @@ const marketService = {
     };
   },
 
+  getFinancialAnnouncements: async () => {
+    const response = await api.get('/cse/announcements/financial');
+    const data = unwrapApiData(response);
+    if (!data) return [];
+    
+    // Handle the API typo: reqFinancialAnnouncemnets
+    const announcements = data.reqFinancialAnnouncemnets ?? data.announcements ?? [];
+    if (!Array.isArray(announcements)) return [];
+    
+    return announcements.map((item) => ({
+      id: item.id,
+      name: item.name ?? item.symbol ?? 'Unknown',
+      symbol: item.symbol ?? '',
+      title: item.fileText ?? '',
+      uploadedDate: item.uploadedDate ?? '',
+      logoUrl: item.logoUrl ?? '',
+      path: item.path ?? '',
+    }));
+  },
+
   createRefreshTimer: (callback, intervalMs) => {
     const timerId = setInterval(() => {
       callback();

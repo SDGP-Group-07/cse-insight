@@ -24,32 +24,7 @@ export const MarketDataProvider = ({ children }) => {
     gainers: [],
     losers: [],
     sectors: [],
-    news: [
-      {
-        id: 1,
-        title: 'JKH reports strong Q3 earnings driven by tourism sector',
-        category: 'Earnings',
-        time: '2 hours ago',
-      },
-      {
-        id: 2,
-        title: 'Central Bank maintains policy rates steady',
-        category: 'Economy',
-        time: '4 hours ago',
-      },
-      {
-        id: 3,
-        title: 'Sampath Bank declares final dividend of Rs. 5.00',
-        category: 'Dividend',
-        time: '1 day ago',
-      },
-      {
-        id: 4,
-        title: 'CSE turnover crosses 2.5B mark amid foreign buying',
-        category: 'Market',
-        time: '1 day ago',
-      },
-    ],
+    announcements: [],
   });
 
   const createSectionStatus = () => ({
@@ -64,6 +39,7 @@ export const MarketDataProvider = ({ children }) => {
     gainers: createSectionStatus(),
     losers: createSectionStatus(),
     sectors: createSectionStatus(),
+    announcements: createSectionStatus(),
   });
 
   const refreshIntervalMs = 60_000;
@@ -119,6 +95,11 @@ export const MarketDataProvider = ({ children }) => {
       loader: marketService.getMarketStatus,
       apply: (marketStatus) => setMarketData((prev) => ({ ...prev, marketStatus })),
       isEmpty: (s) => !s,
+    },
+    announcements: {
+      loader: marketService.getFinancialAnnouncements,
+      apply: (announcements) => setMarketData((prev) => ({ ...prev, announcements })),
+      isEmpty: (announcements) => !announcements || announcements.length === 0,
     },
   };
 
