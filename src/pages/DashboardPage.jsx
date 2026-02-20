@@ -38,7 +38,7 @@ const DashboardPage = () => {
   return (
     <MarketDataProvider>
       <div className="min-h-screen bg-primary-dark text-white font-sans">
-        <main className="container mx-auto px-6 pt-24 pb-12">
+        <main className="container mx-auto px-6 pt-24 pb-20">
           <DashboardHeader />
 
           <MarketOverview />
@@ -54,7 +54,7 @@ const DashboardPage = () => {
           </div>
           <StockTable />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4 mt-6">
             <div className="lg:col-span-2">
               <IndexCards />
             </div>
@@ -62,9 +62,12 @@ const DashboardPage = () => {
               <div className="flex-shrink-0">
                 <NewsWidget />
               </div>
-              <div className="flex-shrink-0">
-                <SectorPerformance />
-              </div>
+            </div>
+          </div>
+
+          <div className="mt-2 mb-12">
+            <div className="w-full lg:w-2/3 h-72">
+              <SectorPerformance />
             </div>
           </div>
         </main>
