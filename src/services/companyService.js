@@ -142,8 +142,16 @@ const companyService = {
     ]);
   },
 
-  getCompanies: async () => {
-    return await api.get('/cse/companies');
+  getCompanies: async (sectorId = null) => {
+    const params = new URLSearchParams();
+    if (sectorId && sectorId !== 'all') {
+      params.append('sectorId', sectorId);
+    }
+    const queryString = params.toString();
+    const url = queryString
+      ? `/cse/companies?${queryString}`
+      : '/cse/companies';
+    return await api.get(url);
   },
 
   getSectors: async () => {

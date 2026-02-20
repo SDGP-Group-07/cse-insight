@@ -23,54 +23,51 @@ const CompaniesPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchSectors = async () => {
       try {
-        const [companiesResponse, sectorsResponse] = await Promise.all([
-          companyService.getCompanies(),
-          companyService.getSectors(),
-        ]);
-
-        const companyList = Array.isArray(companiesResponse.data?.data)
-          ? companiesResponse.data.data
-          : [];
-        setCompanies(companyList);
-
+        const sectorsResponse = await companyService.getSectors();
         const sectorList = Array.isArray(sectorsResponse)
           ? sectorsResponse
           : [];
         setSectors(sectorList);
       } catch (error) {
+        console.error('Error fetching sectors:', error);
+        setSectors([]);
+      }
+    };
+
+    fetchSectors();
+  }, []);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      setLoading(true);
+      try {
+        const sectorIdToFetch =
+          selectedSector.id === 'all' ? null : selectedSector.id;
+        const companiesResponse =
+          await companyService.getCompanies(sectorIdToFetch);
+
+        const companyList = Array.isArray(companiesResponse.data?.data)
+          ? companiesResponse.data.data
+          : [];
+        setCompanies(companyList);
+      } catch (error) {
         console.error('Error fetching companies:', error);
         setCompanies([]);
-        setSectors([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCompanies();
-  }, []);
+  }, [selectedSector]);
 
   const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       company.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-    if (!matchesSearch) {
-      return false;
-    }
-
-    if (selectedSector.id === 'all') {
-      return true;
-    }
-
-    const sectorName = company.sector?.toLowerCase?.() ?? '';
-    const selectedName = selectedSector.name.toLowerCase();
-    const sectorId = company.sectorId ?? company.sector_id ?? company.indexId;
-
-    return (
-      sectorName === selectedName ||
-      String(sectorId) === String(selectedSector.id)
-    );
+    return matchesSearch;
   });
 
   return (
@@ -117,17 +114,17 @@ const CompaniesPage = () => {
             </button>
             {sectors.map((sector) => (
               <button
-                key={sector.id ?? sector.indexCode ?? sector.name}
+                key={sector.sectorId ?? sector.indexCode ?? sector.name}
                 type="button"
                 onClick={() =>
                   setSelectedSector({
-                    id: sector.id ?? sector.indexCode,
+                    id: sector.sectorId ?? sector.indexCode,
                     name: sector.name,
                   })
                 }
                 className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
                   String(selectedSector.id) ===
-                  String(sector.id ?? sector.indexCode)
+                  String(sector.sectorId ?? sector.indexCode)
                     ? 'bg-accent-cyan/20 border-accent-cyan text-accent-cyan'
                     : 'border-white/10 text-gray-300 hover:border-accent-cyan/50'
                 }`}
@@ -164,7 +161,7 @@ const CompaniesPage = () => {
                   ) : (
                     <TrendingDown size={16} />
                   )}
-                  {company.percentageChange.toFixed(2)}%
+                  {company.percentageChange?.toFixed(2)}%
                 </div>
               </div>
 
