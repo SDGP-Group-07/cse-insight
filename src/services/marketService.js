@@ -60,9 +60,9 @@ const normalizeStock = (raw) => ({
   change: parseNumber(raw?.change ?? raw?.priceChange ?? raw?.changeValue ?? 0),
   changePercent: parseNumber(
     raw?.changePercent ??
-      raw?.changePercentage ??
-      raw?.percentageChange ??
-      0,
+    raw?.changePercentage ??
+    raw?.percentageChange ??
+    0,
   ),
   volume:
     raw?.volume ??
@@ -89,7 +89,7 @@ const normalizeMover = (raw) => ({
   changePercent: parseNumber(
     raw?.changePercent ?? raw?.changePercentage ?? raw?.percentageChange ?? 0,
   ),
-    changePercent: parseNumber(
+  changePercent: parseNumber(
     raw?.changePercent ??
     raw?.changePercentage ??
     raw?.percentageChange ??
@@ -100,6 +100,18 @@ const normalizeMover = (raw) => ({
     raw?.lastTradedTime ??
     raw?.lastTradedAt ??
     null,
+      shareVolume: parseNumber(
+    raw?.shareVolume ??
+    raw?.volume ??
+    raw?.tradeVolume ??
+    0
+  ),
+  percentageShareVolume: parseNumber(
+    raw?.percentageShareVolume ??
+    raw?.percentageVolume ??
+    0
+  ),
+
 });
 
 const normalizeSector = (raw) => ({
@@ -122,7 +134,7 @@ const marketService = {
     const aspiRaw = unwrapApiData(aspiResponse);
     const snpRaw = unwrapApiData(snpResponse);
     const summaryRaw = unwrapApiData(summaryResponse);
-    
+
     // Extract from daily market summary (more reliable)
     let dailyData = null;
     const dailyRaw = unwrapApiData(dailyResponse);
@@ -138,21 +150,21 @@ const marketService = {
       sp20: normalizeIndexData(snpRaw),
       shareVolume: parseNumber(
         dailyData?.volumeOfTurnOverNumber ??
-          summaryRaw?.shareVolume ?? 0
+        summaryRaw?.shareVolume ?? 0
       ),
       turnover: formatShortNumber(
         dailyData?.marketTurnover ??
-          summaryRaw?.tradeVolume ??
-          summaryRaw?.turnover ??
-          summaryRaw?.marketTurnover ??
-          summaryRaw?.totalTurnover,
+        summaryRaw?.tradeVolume ??
+        summaryRaw?.turnover ??
+        summaryRaw?.marketTurnover ??
+        summaryRaw?.totalTurnover,
       ),
       trades: parseNumber(
         dailyData?.marketTrades ??
-          summaryRaw?.trades ??
-          summaryRaw?.totalTrades ??
-          summaryRaw?.tradeCount ??
-          0,
+        summaryRaw?.trades ??
+        summaryRaw?.totalTrades ??
+        summaryRaw?.tradeCount ??
+        0,
       ),
       lastUpdated: new Date().toISOString(),
     };
@@ -160,6 +172,12 @@ const marketService = {
 
   getStocks: async () => {
     return marketService.getMarketSummary();
+  },
+
+  getMostActive: async () => {
+    const response = await api.get('/cse/most-active');
+    const data = unwrapApiData(response) ?? [];
+    return Array.isArray(data) ? data.map(normalizeMover) : [];
   },
 
   getTopGainers: async () => {
@@ -189,7 +207,7 @@ const marketService = {
         ? data.reqTradeSummery
         : Array.isArray(data?.data)
           ? data.data
-        : [];
+          : [];
     return rows.map(normalizeStock);
   },
 
@@ -209,10 +227,10 @@ const marketService = {
     const response = await api.get('/cse/daily-market-summary');
     const data = unwrapApiData(response);
     if (!Array.isArray(data) || data.length === 0) return null;
-    
+
     const mostRecentDay = data[0];
     if (!Array.isArray(mostRecentDay) || mostRecentDay.length === 0) return null;
-    
+
     const summary = mostRecentDay[0];
     return {
       turnover: summary?.marketTurnover ?? 0,
@@ -225,11 +243,11 @@ const marketService = {
     const response = await api.get('/cse/announcements/financial');
     const data = unwrapApiData(response);
     if (!data) return [];
-    
+
     // Handle the API typo: reqFinancialAnnouncemnets
     const announcements = data.reqFinancialAnnouncemnets ?? data.announcements ?? [];
     if (!Array.isArray(announcements)) return [];
-    
+
     return announcements.map((item) => ({
       id: item.id,
       name: item.name ?? item.symbol ?? 'Unknown',

@@ -25,6 +25,7 @@ export const MarketDataProvider = ({ children }) => {
     losers: [],
     sectors: [],
     announcements: [],
+    mostActive: [],
   });
 
   const createSectionStatus = () => ({
@@ -40,6 +41,7 @@ export const MarketDataProvider = ({ children }) => {
     losers: createSectionStatus(),
     sectors: createSectionStatus(),
     announcements: createSectionStatus(),
+    mostActive: createSectionStatus(),
   });
 
   const refreshIntervalMs = 60_000;
@@ -100,6 +102,12 @@ export const MarketDataProvider = ({ children }) => {
       loader: marketService.getFinancialAnnouncements,
       apply: (announcements) => setMarketData((prev) => ({ ...prev, announcements })),
       isEmpty: (announcements) => !announcements || announcements.length === 0,
+    },
+    mostActive: {
+      loader: marketService.getMostActive,
+      apply: (mostActive) =>
+        setMarketData((prev) => ({ ...prev, mostActive })),
+      isEmpty: (mostActive) => !mostActive || mostActive.length === 0,
     },
   };
 
