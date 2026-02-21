@@ -5,11 +5,12 @@ import MarketOverview from '../components/dashboard/MarketOverview';
 import StockTable from '../components/dashboard/StockTable';
 import IndexCards from '../components/dashboard/IndexCards';
 import NewsWidget from '../components/dashboard/NewsWidget';
-import SectorPerformance from '../components/dashboard/SectorPerformance';
+// import SectorPerformance from '../components/dashboard/SectorPerformance';
 import { MarketDataProvider } from '../context/MarketDataContext';
 import { useMarketData } from '../context/MarketDataContext';
 import Button from '../components/common/Button';
 import MostActiveCard from '../components/dashboard/MostActiveCard';
+import MarketCapTable from '../components/dashboard/MarketCapTable';
 
 const DashboardHeader = () => {
   const { refreshAll, loading } = useMarketData();
@@ -68,7 +69,8 @@ const DashboardPage = () => {
             <MostActiveCard />
 
             <div className="lg:col-span-2">
-              <SectorPerformance />
+              {/* <SectorPerformance /> */}
+                <MarketCapTable />
             </div>
 
           </div>

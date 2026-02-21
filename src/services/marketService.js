@@ -81,6 +81,8 @@ const normalizeStock = (raw) => ({
   tradevolume: parseNumber(raw?.tradevolume ?? raw?.crossingTradeVol ?? 0),
   turnover: parseNumber(raw?.turnover ?? raw?.tradeTurnover ?? raw?.valueTraded ?? 0),
   lastTradedTime: raw?.lastTradedTime ?? raw?.lastTradedAt ?? raw?.lastTradedTimestamp ?? null,
+  marketCap: parseNumber(raw?.marketCap ?? 0),
+  marketCapPercentage: parseNumber(raw?.marketCapPercentage ?? 0),
 });
 
 const normalizeMover = (raw) => ({
@@ -100,7 +102,7 @@ const normalizeMover = (raw) => ({
     raw?.lastTradedTime ??
     raw?.lastTradedAt ??
     null,
-      shareVolume: parseNumber(
+  shareVolume: parseNumber(
     raw?.shareVolume ??
     raw?.volume ??
     raw?.tradeVolume ??
@@ -111,7 +113,8 @@ const normalizeMover = (raw) => ({
     raw?.percentageVolume ??
     0
   ),
-
+  marketCap: parseNumber(raw?.marketCap ?? 0),
+  marketCapPercentage: parseNumber(raw?.marketCapPercentage ?? 0),
 });
 
 const normalizeSector = (raw) => ({
