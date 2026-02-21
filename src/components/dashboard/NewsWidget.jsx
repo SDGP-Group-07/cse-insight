@@ -9,6 +9,10 @@ const NewsWidget = () => {
     const [currentPage, setCurrentPage] = useState(0);
 
     const itemsPerPage = 5;
+    // per-row fixed height in pixels
+    const rowHeight = 64;
+    // vertical gap used by Tailwind `space-y-4` is 16px
+    const rowGap = 16;
     const totalPages = Math.ceil(announcements.length / itemsPerPage);
     
     const startIdx = currentPage * itemsPerPage;
@@ -43,7 +47,7 @@ const NewsWidget = () => {
     };
 
     return (
-        <Card>
+        <Card className="flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <div className="p-2 rounded-lg bg-blue-500/10">
@@ -53,11 +57,18 @@ const NewsWidget = () => {
                 </div>
             </div>
 
-            <div className="space-y-4 mb-6">
+            <div
+                className="space-y-4 mb-6 overflow-hidden"
+                style={{ height: `${itemsPerPage * rowHeight + (itemsPerPage - 1) * rowGap}px` }}
+            >
                 {displayedItems.map((item) => (
-                    <div key={item.id} className="group cursor-pointer">
+                    <div
+                        key={item.id}
+                        className="group cursor-pointer flex flex-col justify-between"
+                        style={{ height: `${rowHeight}px` }}
+                    >
                         <div className="flex items-start justify-between gap-4 mb-1">
-                            <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 text-gray-300 group-hover:bg-accent-cyan/10 group-hover:text-accent-cyan transition-colors line-clamp-1">
+                            <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 text-gray-300 group-hover:bg-accent-cyan/10 group-hover:text-accent-cyan transition-colors truncate max-w-[60%] line-clamp-1">
                                 {item.symbol} - {item.name}
                             </span>
                             <div className="flex items-center gap-1 text-xs text-gray-500 whitespace-nowrap">
@@ -65,9 +76,25 @@ const NewsWidget = () => {
                                 {formatTime(item.uploadedDate)}
                             </div>
                         </div>
-                        <h4 className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors line-clamp-2">
+                        <h4 className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors line-clamp-2 overflow-hidden">
                             {item.title}
                         </h4>
+                        <div className="h-px bg-white/5 mt-4 group-last:hidden"></div>
+                    </div>
+                ))}
+
+                {/* placeholders to ensure exactly itemsPerPage rows per page */}
+                {Array.from({ length: Math.max(0, itemsPerPage - displayedItems.length) }).map((_, idx) => (
+                    <div
+                        key={`empty-${idx}`}
+                        className="group cursor-default flex flex-col justify-between opacity-40"
+                        style={{ height: `${rowHeight}px` }}
+                    >
+                        <div className="flex items-start justify-between gap-4 mb-1">
+                            <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 text-gray-600 truncate max-w-[60%]">&nbsp;</span>
+                            <div className="flex items-center gap-1 text-xs text-gray-600 whitespace-nowrap">&nbsp;</div>
+                        </div>
+                        <h4 className="text-sm font-medium text-gray-500 overflow-hidden">&nbsp;</h4>
                         <div className="h-px bg-white/5 mt-4 group-last:hidden"></div>
                     </div>
                 ))}

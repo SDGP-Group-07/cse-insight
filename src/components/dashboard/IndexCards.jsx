@@ -11,30 +11,51 @@ const IndexCards = () => {
 
   const StockList = ({ title, data, type, page, setPage }) => {
     const ITEMS_PER_PAGE = 5;
+    const rowHeight = 64;
+    const rowGap = 16;
+
     const totalPages = Math.max(1, Math.ceil(data.length / ITEMS_PER_PAGE));
     const start = (page - 1) * ITEMS_PER_PAGE;
     const pagedData = data.slice(start, start + ITEMS_PER_PAGE);
 
-    // ✅ Auto switch pages every 4 seconds
+    const [isHovered, setIsHovered] = useState(false);
+
+    const formatTradeDate = (timestamp) => {
+      if (!timestamp) return '';
+
+      const date = new Date(Number(timestamp));
+
+      return date.toLocaleString('en-LK', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    };
+    // Auto switch (pause on hover)
     useEffect(() => {
-      if (totalPages <= 1) return;
+      if (totalPages <= 1 || isHovered) return;
 
       const interval = setInterval(() => {
         setPage((prev) => (prev >= totalPages ? 1 : prev + 1));
       }, 4000);
 
       return () => clearInterval(interval);
-    }, [totalPages]);
+    }, [totalPages, isHovered]);
 
     return (
-      <Card className="h-full">
-        <div className="flex items-center gap-2 mb-4">
+      <Card
+        className="flex flex-col h-full"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="flex items-center gap-2 mb-6">
           <div
-            className={`p-2 rounded-lg ${
-              type === 'gainers'
-                ? 'bg-accent-green/10'
-                : 'bg-red-500/10'
-            }`}
+            className={`p-2 rounded-lg ${type === 'gainers'
+              ? 'bg-accent-green/10'
+              : 'bg-red-500/10'
+              }`}
           >
             {type === 'gainers' ? (
               <TrendingUp className="w-5 h-5 text-accent-green" />
@@ -45,11 +66,18 @@ const IndexCards = () => {
           <h3 className="text-lg font-bold text-white">{title}</h3>
         </div>
 
-        <div className="space-y-3">
+        {/* 🔥 Fixed height container (same as NewsWidget) */}
+        <div
+          className="space-y-4 overflow-hidden"
+          style={{
+            height: `${ITEMS_PER_PAGE * rowHeight + (ITEMS_PER_PAGE - 1) * rowGap}px`,
+          }}
+        >
           {pagedData.map((stock) => (
             <div
               key={stock.symbol}
               className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+              style={{ height: `${rowHeight}px` }}
               onClick={() =>
                 (window.location.href = `/company/${stock.symbol}`)
               }
@@ -59,32 +87,45 @@ const IndexCards = () => {
                 <p className="text-xs text-gray-400">
                   LKR {stock.price.toFixed(2)}
                 </p>
+                <p className="text-[11px] text-gray-500">
+                  {formatTradeDate(stock.tradeDate)}
+                </p>
               </div>
+
               <div
-                className={`text-sm font-bold ${
-                  type === 'gainers'
-                    ? 'text-accent-green'
-                    : 'text-red-500'
-                }`}
+                className={`text-sm font-bold ${type === 'gainers'
+                  ? 'text-accent-green'
+                  : 'text-red-500'
+                  }`}
               >
                 {type === 'gainers' ? '+' : ''}
                 {stock.changePercent.toFixed(2)}%
               </div>
             </div>
           ))}
+
+          {/* placeholders (same logic as NewsWidget) */}
+          {Array.from({
+            length: Math.max(0, ITEMS_PER_PAGE - pagedData.length),
+          }).map((_, idx) => (
+            <div
+              key={`empty-${idx}`}
+              className="opacity-40 rounded-lg bg-white/5"
+              style={{ height: `${rowHeight}px` }}
+            />
+          ))}
         </div>
 
-        {/* ✅ Dots Pagination */}
+        {/* Dots */}
         {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-center gap-2">
+          <div className="mt-6 flex items-center justify-center gap-2">
             {[...Array(totalPages)].map((_, index) => (
               <div
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  page === index + 1
-                    ? 'bg-white scale-110'
-                    : 'bg-white/30'
-                }`}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${page === index + 1
+                  ? 'bg-white scale-110'
+                  : 'bg-white/30'
+                  }`}
               />
             ))}
           </div>
@@ -129,7 +170,7 @@ const IndexCards = () => {
   }, [gainers, losers]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
       {gainersStatus.error ? (
         renderStateCard(
           'Failed to load top gainers.',

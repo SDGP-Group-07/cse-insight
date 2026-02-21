@@ -89,6 +89,17 @@ const normalizeMover = (raw) => ({
   changePercent: parseNumber(
     raw?.changePercent ?? raw?.changePercentage ?? raw?.percentageChange ?? 0,
   ),
+    changePercent: parseNumber(
+    raw?.changePercent ??
+    raw?.changePercentage ??
+    raw?.percentageChange ??
+    0
+  ),
+  tradeDate:
+    raw?.tradeDate ??
+    raw?.lastTradedTime ??
+    raw?.lastTradedAt ??
+    null,
 });
 
 const normalizeSector = (raw) => ({
