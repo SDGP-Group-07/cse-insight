@@ -38,7 +38,7 @@ const PriceChart = ({ symbol }) => {
       withdateranges: false,
       compareSymbols: [],
       studies: [],
-      autosize: false,
+      autosize: true,
     });
     containerRef.current.appendChild(script);
 
