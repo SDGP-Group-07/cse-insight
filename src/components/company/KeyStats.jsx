@@ -1,4 +1,5 @@
 import React from 'react';
+import { Info } from 'lucide-react';
 import Card from '../common/Card';
 
 const KeyStats = ({ company }) => {
@@ -37,9 +38,21 @@ const KeyStats = ({ company }) => {
       hover={false}
       className="bg-[#2a233d] border border-[#3e3753] rounded-lg h-full"
     >
-      <h3 className="text-[18px] font-normal text-white mb-4">
-        Key Statistics
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-[18px] font-normal text-white">
+          Key Statistics
+        </h3>
+        <a
+          href="/wiki/Fundamental%20analysis"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open fundamental analysis wiki article"
+          title="Learn about fundamental analysis"
+          className="inline-flex items-center justify-center rounded-full bg-white/5 border border-[#3e3753] p-1.5 text-[#9b96b2] hover:text-white hover:border-accent-cyan transition-colors"
+        >
+          <Info size={16} />
+        </a>
+      </div>
       <div className="grid grid-cols-2 text-sm">
         {(() => {
           let nonFullIndex = 0;
