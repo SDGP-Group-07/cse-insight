@@ -26,6 +26,7 @@ export const MarketDataProvider = ({ children }) => {
     sectors: [],
     announcements: [],
     mostActive: [],
+    marketCapData: [],
   });
 
   const createSectionStatus = () => ({

@@ -13,6 +13,7 @@ const stocksStatus = status.marketCapData;
   const pageSize = 8;
 
 const sortedData = useMemo(() => {
+  if (!Array.isArray(marketCapData)) return [];
   return [...marketCapData]
     .filter((s) => Number.isFinite(s.marketCap))
     .sort((a, b) => b.marketCap - a.marketCap);
