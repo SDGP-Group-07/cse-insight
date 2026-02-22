@@ -42,6 +42,7 @@ export const MarketDataProvider = ({ children }) => {
     sectors: createSectionStatus(),
     announcements: createSectionStatus(),
     mostActive: createSectionStatus(),
+    marketCapData: createSectionStatus(),
   });
 
   const refreshIntervalMs = 60_000;
@@ -77,6 +78,12 @@ export const MarketDataProvider = ({ children }) => {
       loader: marketService.getMarketSummary,
       apply: (stocks) => setMarketData((prev) => ({ ...prev, stocks })),
       isEmpty: (stocks) => !stocks || stocks.length === 0,
+    },
+    marketCapData: {
+      loader: marketService.getMarketCap,
+      apply: (marketCapData) =>
+        setMarketData((prev) => ({ ...prev, marketCapData })),
+      isEmpty: (marketCapData) => !marketCapData || marketCapData.length === 0,
     },
     gainers: {
       loader: marketService.getTopGainers,

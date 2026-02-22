@@ -6,17 +6,17 @@ import Button from '../common/Button';
 const MarketCapTable = () => {
   const { marketData, status } = useMarketData();
   const { stocks } = marketData;
-  const stocksStatus = status.stocks;
+  const { marketCapData } = marketData;
+const stocksStatus = status.marketCapData;
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
 
-  const sortedData = useMemo(() => {
-    return [...stocks]
-      .filter((s) => Number.isFinite(s.marketCap))
-      .sort((a, b) => b.marketCap - a.marketCap);
-  }, [stocks]);
-
+const sortedData = useMemo(() => {
+  return [...marketCapData]
+    .filter((s) => Number.isFinite(s.marketCap))
+    .sort((a, b) => b.marketCap - a.marketCap);
+}, [marketCapData]);
   const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize));
   const start = (currentPage - 1) * pageSize;
   const paginatedData = sortedData.slice(start, start + pageSize);

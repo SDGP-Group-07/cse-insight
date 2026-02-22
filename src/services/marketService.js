@@ -204,15 +204,28 @@ const marketService = {
   getMarketSummary: async () => {
     const response = await api.get('/cse/trade-summary');
     const data = unwrapApiData(response);
-    const rows = Array.isArray(data)
-      ? data
-      : Array.isArray(data?.reqTradeSummery)
-        ? data.reqTradeSummery
-        : Array.isArray(data?.data)
-          ? data.data
+
+    const rows =
+      Array.isArray(data?.reqByMarketcap)
+        ? data.reqByMarketcap
+        : Array.isArray(data?.reqTradeSummery)
+          ? data.reqTradeSummery
           : [];
+console.log(data);
     return rows.map(normalizeStock);
+    
   },
+
+  getMarketCap: async () => {
+  const response = await api.get('/cse/market-cap');
+  const data = unwrapApiData(response);
+
+  const rows = Array.isArray(data?.reqByMarketcap)
+    ? data.reqByMarketcap
+    : [];
+
+  return rows.map(normalizeStock);
+},
 
   getMarketStatus: async () => {
     const response = await api.get('/cse/market-status');
