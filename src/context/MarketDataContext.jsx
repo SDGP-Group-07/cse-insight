@@ -14,40 +14,18 @@ export const MarketDataProvider = ({ children }) => {
     indices: {
       aspi: { value: 0, change: 0, changePercent: 0 },
       sp20: { value: 0, change: 0, changePercent: 0 },
+      shareVolume: 0,
       turnover: '',
       trades: 0,
       lastUpdated: null,
     },
+    marketStatus: '',
     stocks: [],
     gainers: [],
     losers: [],
     sectors: [],
-    news: [
-      {
-        id: 1,
-        title: 'JKH reports strong Q3 earnings driven by tourism sector',
-        category: 'Earnings',
-        time: '2 hours ago',
-      },
-      {
-        id: 2,
-        title: 'Central Bank maintains policy rates steady',
-        category: 'Economy',
-        time: '4 hours ago',
-      },
-      {
-        id: 3,
-        title: 'Sampath Bank declares final dividend of Rs. 5.00',
-        category: 'Dividend',
-        time: '1 day ago',
-      },
-      {
-        id: 4,
-        title: 'CSE turnover crosses 2.5B mark amid foreign buying',
-        category: 'Market',
-        time: '1 day ago',
-      },
-    ],
+    announcements: [],
+    mostActive: [],
   });
 
   const createSectionStatus = () => ({
@@ -57,10 +35,14 @@ export const MarketDataProvider = ({ children }) => {
   });
   const [status, setStatus] = useState({
     indices: createSectionStatus(),
+    marketStatus: createSectionStatus(),
     stocks: createSectionStatus(),
     gainers: createSectionStatus(),
     losers: createSectionStatus(),
     sectors: createSectionStatus(),
+    announcements: createSectionStatus(),
+    mostActive: createSectionStatus(),
+    marketCapData: createSectionStatus(),
   });
 
   const refreshIntervalMs = 60_000;
@@ -97,6 +79,12 @@ export const MarketDataProvider = ({ children }) => {
       apply: (stocks) => setMarketData((prev) => ({ ...prev, stocks })),
       isEmpty: (stocks) => !stocks || stocks.length === 0,
     },
+    marketCapData: {
+      loader: marketService.getMarketCap,
+      apply: (marketCapData) =>
+        setMarketData((prev) => ({ ...prev, marketCapData })),
+      isEmpty: (marketCapData) => !marketCapData || marketCapData.length === 0,
+    },
     gainers: {
       loader: marketService.getTopGainers,
       apply: (gainers) => setMarketData((prev) => ({ ...prev, gainers })),
@@ -111,6 +99,22 @@ export const MarketDataProvider = ({ children }) => {
       loader: marketService.getSectorPerformance,
       apply: (sectors) => setMarketData((prev) => ({ ...prev, sectors })),
       isEmpty: (sectors) => !sectors || sectors.length === 0,
+    },
+    marketStatus: {
+      loader: marketService.getMarketStatus,
+      apply: (marketStatus) => setMarketData((prev) => ({ ...prev, marketStatus })),
+      isEmpty: (s) => !s,
+    },
+    announcements: {
+      loader: marketService.getFinancialAnnouncements,
+      apply: (announcements) => setMarketData((prev) => ({ ...prev, announcements })),
+      isEmpty: (announcements) => !announcements || announcements.length === 0,
+    },
+    mostActive: {
+      loader: marketService.getMostActive,
+      apply: (mostActive) =>
+        setMarketData((prev) => ({ ...prev, mostActive })),
+      isEmpty: (mostActive) => !mostActive || mostActive.length === 0,
     },
   };
 

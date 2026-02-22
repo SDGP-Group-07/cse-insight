@@ -122,7 +122,7 @@ const StockTable = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-max">
           <thead>
             <tr className="border-b border-white/10 text-left text-gray-400 text-sm">
               <th
@@ -132,10 +132,37 @@ const StockTable = () => {
                 Symbol <ArrowUpDown className="inline w-3 h-3 ml-1" />
               </th>
               <th
-                className="pb-4 font-medium cursor-pointer hover:text-white"
+                className="pb-4 font-medium cursor-pointer hover:text-white w-24"
                 onClick={() => handleSortWithReset('name')}
               >
                 Company
+              </th>
+              <th
+                className="pb-4 font-medium cursor-pointer hover:text-white w-24"
+                onClick={() => handleSortWithReset('sharevolume')}
+              >
+                Company
+              </th>
+              <th className="pb-4 text-right font-medium">
+                Share Volume
+              </th>
+              <th className="pb-4 text-right font-medium">
+                Trade Volume
+              </th>
+              <th
+                className="pb-4 text-right font-medium cursor-pointer hover:text-white"
+                onClick={() => handleSortWithReset('previousClose')}
+              >
+                Previous Close
+              </th>
+              <th className="pb-4 text-right font-medium">
+                Open
+              </th>
+              <th className="pb-4 text-right font-medium">
+                High
+              </th>
+              <th className="pb-4 text-right font-medium">
+                Low
               </th>
               <th
                 className="pb-4 text-right font-medium cursor-pointer hover:text-white"
@@ -147,19 +174,13 @@ const StockTable = () => {
                 className="pb-4 text-right font-medium cursor-pointer hover:text-white"
                 onClick={() => handleSortWithReset('change')}
               >
-                Change
+                Change(RS)
               </th>
               <th
                 className="pb-4 text-right font-medium cursor-pointer hover:text-white"
                 onClick={() => handleSortWithReset('changePercent')}
               >
-                % Change
-              </th>
-              <th className="pb-4 text-right font-medium hidden md:table-cell">
-                Volume
-              </th>
-              <th className="pb-4 text-right font-medium hidden md:table-cell">
-                Turnover
+                Change (%)
               </th>
               <th className="pb-4 pr-4 text-center font-medium">Action</th>
             </tr>
@@ -176,27 +197,48 @@ const StockTable = () => {
                 <td className="py-4 pl-4 font-medium text-accent-cyan">
                   {stock.symbol}
                 </td>
-                <td className="py-4 text-gray-300">{stock.name}</td>
+                <td className="py-4 text-gray-300 w-24 truncate">{stock.name}</td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.sharevolume)
+                    ? stock.sharevolume.toLocaleString()
+                    : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.tradevolume)
+                    ? stock.tradevolume.toLocaleString()
+                    : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.turnover)
+                    ? stock.turnover.toLocaleString()
+                    : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.previousClose)
+                    ? stock.previousClose.toFixed(2)
+                    : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.open) ? stock.open.toFixed(2) : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.high) ? stock.high.toFixed(2) : '-'}
+                </td>
+                <td className="py-4 text-right text-white">
+                  {Number.isFinite(stock.low) ? stock.low.toFixed(2) : '-'}
+                </td>
                 <td className="py-4 text-right text-white font-medium">
-                  {stock.price.toFixed(2)}
+                  {Number.isFinite(stock.price) ? stock.price.toFixed(2) : '-'}
                 </td>
                 <td
-                  className={`py-4 text-right font-medium ${stock.change >= 0 ? 'text-accent-green' : 'text-red-500'}`}
+                  className={`py-4 text-right font-medium ${Number.isFinite(stock.change) && stock.change >= 0 ? 'text-accent-green' : 'text-red-500'}`}
                 >
-                  {stock.change > 0 ? '+' : ''}
-                  {stock.change.toFixed(2)}
+                  {Number.isFinite(stock.change) ? (stock.change > 0 ? '+' : '') + stock.change.toFixed(2) : '-'}
                 </td>
                 <td
-                  className={`py-4 text-right font-medium ${stock.changePercent >= 0 ? 'text-accent-green' : 'text-red-500'}`}
+                  className={`py-4 text-right font-medium ${Number.isFinite(stock.changePercent) && stock.changePercent >= 0 ? 'text-accent-green' : 'text-red-500'}`}
                 >
-                  {stock.changePercent > 0 ? '+' : ''}
-                  {stock.changePercent.toFixed(2)}%
-                </td>
-                <td className="py-4 text-right text-gray-400 hidden md:table-cell">
-                  {stock.volume}
-                </td>
-                <td className="py-4 text-right text-gray-400 hidden md:table-cell">
-                  {stock.turnover}
+                  {Number.isFinite(stock.changePercent) ? (stock.changePercent > 0 ? '+' : '') + stock.changePercent.toFixed(2) + '%' : '-'}
                 </td>
                 <td className="py-4 pr-4 text-center">
                   <Button variant="ghost" className="p-2 h-auto">

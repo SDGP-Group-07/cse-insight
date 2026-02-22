@@ -5,10 +5,12 @@ import MarketOverview from '../components/dashboard/MarketOverview';
 import StockTable from '../components/dashboard/StockTable';
 import IndexCards from '../components/dashboard/IndexCards';
 import NewsWidget from '../components/dashboard/NewsWidget';
-import SectorPerformance from '../components/dashboard/SectorPerformance';
+// import SectorPerformance from '../components/dashboard/SectorPerformance';
 import { MarketDataProvider } from '../context/MarketDataContext';
 import { useMarketData } from '../context/MarketDataContext';
 import Button from '../components/common/Button';
+import MostActiveCard from '../components/dashboard/MostActiveCard';
+import MarketCapTable from '../components/dashboard/MarketCapTable';
 
 const DashboardHeader = () => {
   const { refreshAll, loading } = useMarketData();
@@ -38,34 +40,46 @@ const DashboardPage = () => {
   return (
     <MarketDataProvider>
       <div className="min-h-screen bg-primary-dark text-white font-sans">
-        <main className="container mx-auto px-6 pt-24 pb-12">
+        <main className="container mx-auto px-6 pt-24 pb-20">
           <DashboardHeader />
 
           <MarketOverview />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="flex justify-between items-center mb-4 mt-8">
+            <h2 className="text-xl font-bold">Market Movers</h2>
+            <Link
+              to="/companies"
+              className="text-sm text-accent-cyan hover:underline flex items-center gap-1"
+            >
+              View All Companies <ArrowRight size={14} />
+            </Link>
+          </div>
+          <StockTable />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4 mt-6">
+
+            {/* ROW 1 */}
             <div className="lg:col-span-2">
               <IndexCards />
-              <div className="flex justify-between items-center mb-4 mt-8">
-                <h2 className="text-xl font-bold">Market Movers</h2>
-                <Link
-                  to="/companies"
-                  className="text-sm text-accent-cyan hover:underline flex items-center gap-1"
-                >
-                  View All Companies <ArrowRight size={14} />
-                </Link>
-              </div>
-              <StockTable />
             </div>
-            <div className="lg:col-span-1 flex flex-col gap-6">
-              <div className="flex-shrink-0">
-                <NewsWidget />
-              </div>
-              <div className="flex-shrink-0">
-                <SectorPerformance />
-              </div>
+
+            <NewsWidget />
+
+            {/* ROW 2 */}
+            <MostActiveCard />
+
+            <div className="lg:col-span-2">
+              {/* <SectorPerformance /> */}
+                <MarketCapTable />
             </div>
+
           </div>
+
+          {/* <div className="mt-2 mb-12">
+            <div className="w-full lg:w-2/3 h-72">
+              <SectorPerformance />
+            </div>
+          </div> */}
         </main>
       </div>
     </MarketDataProvider>
