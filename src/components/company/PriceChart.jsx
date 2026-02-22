@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, memo } from 'react';
-import Card from '../common/Card';
+import { Info } from 'lucide-react';
 
 const PriceChart = ({ symbol }) => {
   const containerRef = useRef(null);
@@ -38,7 +38,7 @@ const PriceChart = ({ symbol }) => {
       withdateranges: false,
       compareSymbols: [],
       studies: [],
-      autosize: true,
+      autosize: false,
     });
     containerRef.current.appendChild(script);
 
@@ -50,10 +50,22 @@ const PriceChart = ({ symbol }) => {
   }, [tvSymbol]);
 
   return (
-    <div
-      className="tradingview-widget-container h-[600px]"
-      ref={containerRef}
-    />
+    <div className="relative">
+      <a
+        href="/wiki/Candlestick%20chart"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open candlestick chart wiki article"
+        title="Learn about candlestick charts"
+        className="absolute right-1 top-1 z-10 inline-flex items-center justify-center rounded-full bg-[#2a233d]/90 border border-[#3e3753] p-2 text-[#9b96b2] hover:text-white hover:border-accent-cyan transition-colors"
+      >
+        <Info size={16} />
+      </a>
+      <div
+        className="tradingview-widget-container h-[600px]"
+        ref={containerRef}
+      />
+    </div>
   );
 };
 

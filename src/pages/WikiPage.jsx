@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/common/Header';
 import WikiSidebar from '../components/wiki/WikiSidebar';
 import WikiArticle from '../components/wiki/WikiArticle';
 
 const WikiPage = () => {
-    const [activeTopic, setActiveTopic] = useState('What is a stock exchange?');
+    const { topic } = useParams();
+    const navigate = useNavigate();
+    const defaultTopic = 'What is a stock exchange?';
+    const [activeTopic, setActiveTopic] = useState(topic ? decodeURIComponent(topic) : defaultTopic);
+
+    React.useEffect(() => {
+        setActiveTopic(topic ? decodeURIComponent(topic) : defaultTopic);
+    }, [topic]);
+
+    const handleSelectTopic = (selectedTopic) => {
+        navigate(`/wiki/${encodeURIComponent(selectedTopic)}`);
+    };
 
     const handleMarkRead = () => {
         // Logic to mark as read
@@ -18,7 +30,7 @@ const WikiPage = () => {
             <div className="flex flex-col lg:flex-row pt-20">
                 {/* Sidebar - Hidden on mobile, toggleable in real app */}
                 <div className="hidden lg:block">
-                    <WikiSidebar activeTopic={activeTopic} onSelectTopic={setActiveTopic} />
+                    <WikiSidebar activeTopic={activeTopic} onSelectTopic={handleSelectTopic} />
                 </div>
 
                 {/* Main Content */}
