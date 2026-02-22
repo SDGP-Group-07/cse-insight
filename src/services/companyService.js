@@ -107,6 +107,49 @@ const normalizeCompanyProfile = (payload, symbolFallback) => {
   };
 };
 
+const buildFileUrl = (path) => {
+  if (!path || typeof path !== 'string') {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  return `https://cdn.cse.lk/${path.replace(/^\/+/, '')}`;
+};
+
+const normalizeReport = (report) => ({
+  id: report?.id ?? null,
+  title: report?.fileText ?? 'Annual Report',
+  path: report?.path ?? '',
+  url: buildFileUrl(report?.path),
+  manualDate: report?.manualDate ?? null,
+  uploadedDate: report?.uploadedDate ?? null,
+  authorizedDate: report?.authorizedDate ?? null,
+});
+
+const normalizeCompanyFinancials = (payload) => {
+  const annualReports = Array.isArray(payload?.infoAnnualData)
+    ? payload.infoAnnualData
+        .map(normalizeReport)
+        .sort((a, b) => {
+          const aDate = a.manualDate ?? a.uploadedDate ?? 0;
+          const bDate = b.manualDate ?? b.uploadedDate ?? 0;
+          return bDate - aDate;
+        })
+    : [];
+
+  const quarterlyReports = Array.isArray(payload?.infoQuarterlyData)
+    ? payload.infoQuarterlyData.map(normalizeReport)
+    : [];
+
+  return {
+    annualReports,
+    quarterlyReports,
+  };
+};
+
 const companyService = {
   getFinancials: async (symbol) => {
     // return api.get(`/companies/${symbol}/financials`);
@@ -182,6 +225,12 @@ const companyService = {
       symbol: profile.symbol || base.symbol,
       name: profile.name || base.name,
     };
+  },
+
+  getCompanyFinancials: async (symbol) => {
+    const response = await api.get(`/cse/company-financials/${symbol}`);
+    const data = unwrapApiData(response);
+    return normalizeCompanyFinancials(data);
   },
 
   getCompanyProfile: async (symbol) => {

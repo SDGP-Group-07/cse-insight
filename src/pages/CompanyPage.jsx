@@ -4,6 +4,7 @@ import CompanyHeader from '../components/company/CompanyHeader';
 import PriceChart from '../components/company/PriceChart';
 import KeyStats from '../components/company/KeyStats';
 import CompanyProfile from '../components/company/CompanyProfile';
+import AnnualReportsSlider from '../components/company/AnnualReportsSlider';
 import companyService from '../services/companyService';
 import { Loader, ArrowLeft } from 'lucide-react';
 
@@ -12,6 +13,8 @@ const CompanyPageContent = () => {
   const navigate = useNavigate();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reportsLoading, setReportsLoading] = useState(true);
+  const [annualReports, setAnnualReports] = useState([]);
 
   console.log('Fetching company data for symbol:', symbol);
 
@@ -21,18 +24,33 @@ const CompanyPageContent = () => {
     const fetchCompany = async () => {
       try {
         setLoading(true);
-        const response = await companyService.getCompany(symbol);
+        setReportsLoading(true);
+
+        const [companyResult, reportsResult] = await Promise.allSettled([
+          companyService.getCompany(symbol),
+          companyService.getCompanyFinancials(symbol),
+        ]);
+
         if (isActive) {
-          setCompany(response);
+          setCompany(
+            companyResult.status === 'fulfilled' ? companyResult.value : null,
+          );
+          setAnnualReports(
+            reportsResult.status === 'fulfilled'
+              ? reportsResult.value.annualReports
+              : [],
+          );
         }
       } catch (error) {
         if (isActive) {
           setCompany(null);
+          setAnnualReports([]);
         }
         console.error('Failed to load company data', error);
       } finally {
         if (isActive) {
           setLoading(false);
+          setReportsLoading(false);
         }
       }
     };
@@ -71,6 +89,10 @@ const CompanyPageContent = () => {
         </section>
 
         <CompanyProfile company={company} />
+
+        <section className="mt-6">
+          <AnnualReportsSlider reports={annualReports} loading={reportsLoading} />
+        </section>
       </main>
     </div>
   );
