@@ -1,50 +1,39 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Header from '../components/common/Header';
-import Card from '../components/common/Card';
-import TradingViewWidget from '../components/TechnicalAnalysis/TradingViewWidget';
-import companyService from '../services/companyService';
+import Card from '../common/Card';
 import { Settings, Maximize2, Share2, Save } from 'lucide-react';
+import TradingViewWidget from './TradingViewWidget';
+import companyService from '../../services/companyService';
 
-const normalizeCompanySymbol = (symbol) => {
-    if (!symbol) {
+const getSymbolFromCompany = (company) => {
+    if (!company) {
         return null;
     }
 
-    if (symbol.includes(':')) {
-        return symbol;
-    }
-
-    return `CSELK:${symbol}`;
+    return (
+        company.symbol ||
+        company.ticker ||
+        company.code ||
+        company.instrument ||
+        null
+    );
 };
 
-const extractCompanies = (response) => {
-    const payload = response?.data;
-
-    if (Array.isArray(payload?.data)) {
-        return payload.data;
+const toTradingViewSymbol = (rawSymbol) => {
+    if (!rawSymbol) {
+        return 'CSELK:JKH.N0000';
     }
 
-    if (Array.isArray(payload)) {
-        return payload;
+    if (rawSymbol.includes(':')) {
+        return rawSymbol;
     }
 
-    if (Array.isArray(payload?.companies)) {
-        return payload.companies;
-    }
-
-    if (Array.isArray(payload?.results)) {
-        return payload.results;
-    }
-
-    return [];
+    return `CSELK:${rawSymbol}`;
 };
 
 const TechnicalAnalysis = () => {
     const [chartType, setChartType] = useState('area');
     const [indicators, setIndicators] = useState({ sma: false, ema: false, vol: true });
-    const [companies, setCompanies] = useState([]);
-    const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
-    const [selectedCompanySymbol, setSelectedCompanySymbol] = useState('CSELK:JKH.N0000');
+    const [selectedSymbol, setSelectedSymbol] = useState('CSELK:JKH.N0000');
 
     useEffect(() => {
         let isMounted = true;
@@ -52,35 +41,22 @@ const TechnicalAnalysis = () => {
         const loadCompanies = async () => {
             try {
                 const response = await companyService.getCompanies();
-                const companyList = extractCompanies(response);
+                const companies = Array.isArray(response?.data)
+                    ? response.data
+                    : Array.isArray(response?.data?.data)
+                        ? response.data.data
+                        : [];
 
-                if (!isMounted) {
+                if (!companies.length || !isMounted) {
                     return;
                 }
 
-                setCompanies(companyList);
-
-                if (companyList.length > 0) {
-                    const firstSymbol =
-                        companyList[0]?.symbol ||
-                        companyList[0]?.ticker ||
-                        companyList[0]?.code ||
-                        companyList[0]?.instrument;
-
-                    const normalizedSymbol = normalizeCompanySymbol(firstSymbol);
-                    if (normalizedSymbol) {
-                        setSelectedCompanySymbol(normalizedSymbol);
-                    }
+                const firstSymbol = getSymbolFromCompany(companies[0]);
+                if (firstSymbol) {
+                    setSelectedSymbol(toTradingViewSymbol(firstSymbol));
                 }
             } catch (error) {
-                console.error('Error fetching companies:', error);
-                if (isMounted) {
-                    setCompanies([]);
-                }
-            } finally {
-                if (isMounted) {
-                    setIsLoadingCompanies(false);
-                }
+                console.error('Failed to load companies for technical analysis:', error);
             }
         };
 
@@ -91,48 +67,14 @@ const TechnicalAnalysis = () => {
         };
     }, []);
 
-    const companyOptions = useMemo(() => {
-        return companies
-            .map((company) => {
-                const rawSymbol = company?.symbol || company?.ticker || company?.code || company?.instrument;
-                const normalizedSymbol = normalizeCompanySymbol(rawSymbol);
-
-                if (!normalizedSymbol) {
-                    return null;
-                }
-
-                const displayName = company?.name || company?.companyName || rawSymbol;
-
-                return {
-                    value: normalizedSymbol,
-                    label: `${normalizedSymbol} — ${displayName}`,
-                };
-            })
-            .filter(Boolean);
-    }, [companies]);
+    const tradingViewSymbol = useMemo(() => toTradingViewSymbol(selectedSymbol), [selectedSymbol]);
 
     return (
         <div className="min-h-screen bg-primary-dark text-white font-sans">
-            <Header />
             <main className="container mx-auto px-6 pt-24 pb-12">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h1 className="text-3xl font-bold">Technical Analysis</h1>
-                    <div className="flex items-center gap-2">
-                        <select
-                            value={selectedCompanySymbol}
-                            onChange={(event) => setSelectedCompanySymbol(event.target.value)}
-                            className="max-w-[320px] bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-accent-cyan"
-                        >
-                            {isLoadingCompanies && <option value={selectedCompanySymbol}>Loading companies...</option>}
-                            {!isLoadingCompanies && companyOptions.length === 0 && (
-                                <option value={selectedCompanySymbol}>No companies found</option>
-                            )}
-                            {!isLoadingCompanies && companyOptions.map((company) => (
-                                <option key={company.value} value={company.value}>
-                                    {company.label}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="flex gap-2">
                         <button className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" title="Save Chart">
                             <Save size={20} />
                         </button>
@@ -146,7 +88,6 @@ const TechnicalAnalysis = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-                    {/* Sidebar Controls */}
                     <Card className="lg:col-span-1 h-full overflow-y-auto">
                         <h3 className="font-bold text-white mb-4 flex items-center gap-2">
                             <Settings size={18} /> Chart Settings
@@ -216,10 +157,9 @@ const TechnicalAnalysis = () => {
                         </div>
                     </Card>
 
-                    {/* Main Chart Area */}
                     <Card className="lg:col-span-3 h-full flex flex-col">
-                        <div className="flex-1 w-full min-h-0">
-                            <TradingViewWidget symbol={selectedCompanySymbol} />
+                        <div className="flex-1 w-full min-h-0 flex items-center justify-center">
+                            <TradingViewWidget symbol={tradingViewSymbol} />
                         </div>
                     </Card>
                 </div>
