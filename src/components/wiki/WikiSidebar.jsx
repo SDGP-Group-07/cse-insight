@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, FileText, TrendingUp, Users, AlertTriangle, BarChart2 } from 'lucide-react';
+import { BookOpen, FileText, TrendingUp, Users, AlertTriangle, BarChart2, CandlestickChart } from 'lucide-react';
 
 const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
     const topics = [
@@ -67,6 +67,14 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
                 'Technical analysis introduction',
                 'Reading stock charts',
                 'Using indices'
+            ]
+        },
+        {
+            id: 'charts',
+            title: 'Charts',
+            icon: CandlestickChart,
+            subtopics: [
+                'Candlestick chart'
             ]
         }
     ];

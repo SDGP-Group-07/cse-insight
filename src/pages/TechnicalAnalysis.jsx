@@ -17,26 +17,50 @@ const normalizeCompanySymbol = (symbol) => {
     return `CSELK:${symbol}`;
 };
 
+const getRawCompanySymbol = (symbol) => {
+    if (!symbol) {
+        return null;
+    }
+
+    return symbol.includes(':') ? symbol.split(':')[1] : symbol;
+};
+
 const extractCompanies = (response) => {
+    if (Array.isArray(response?.data?.data)) {
+        return response.data.data;
+    }
+
     const payload = response?.data;
-
-    if (Array.isArray(payload?.data)) {
-        return payload.data;
-    }
-
-    if (Array.isArray(payload)) {
-        return payload;
-    }
-
-    if (Array.isArray(payload?.companies)) {
-        return payload.companies;
-    }
-
-    if (Array.isArray(payload?.results)) {
-        return payload.results;
-    }
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.companies)) return payload.companies;
+    if (Array.isArray(payload?.results)) return payload.results;
+    if (Array.isArray(payload?.items)) return payload.items;
 
     return [];
+};
+
+const getCompanySymbol = (company) => {
+    return (
+        company?.symbol ||
+        company?.ticker ||
+        company?.code ||
+        company?.instrument ||
+        company?.symbolCode ||
+        company?.securityCode ||
+        company?.stockCode ||
+        null
+    );
+};
+
+const getCompanyName = (company) => {
+    return (
+        company?.name ||
+        company?.companyName ||
+        company?.displayName ||
+        company?.securityName ||
+        company?.stockName ||
+        null
+    );
 };
 
 const TechnicalAnalysis = () => {
@@ -44,6 +68,7 @@ const TechnicalAnalysis = () => {
     const [indicators, setIndicators] = useState({ sma: false, ema: false, vol: true });
     const [companies, setCompanies] = useState([]);
     const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
+    const [companiesError, setCompaniesError] = useState('');
     const [selectedCompanySymbol, setSelectedCompanySymbol] = useState('CSELK:JKH.N0000');
 
     useEffect(() => {
@@ -59,13 +84,14 @@ const TechnicalAnalysis = () => {
                 }
 
                 setCompanies(companyList);
+                if (companyList.length === 0) {
+                    setCompaniesError('No companies returned from /api/cse/companies');
+                } else {
+                    setCompaniesError('');
+                }
 
                 if (companyList.length > 0) {
-                    const firstSymbol =
-                        companyList[0]?.symbol ||
-                        companyList[0]?.ticker ||
-                        companyList[0]?.code ||
-                        companyList[0]?.instrument;
+                    const firstSymbol = getCompanySymbol(companyList[0]);
 
                     const normalizedSymbol = normalizeCompanySymbol(firstSymbol);
                     if (normalizedSymbol) {
@@ -76,6 +102,8 @@ const TechnicalAnalysis = () => {
                 console.error('Error fetching companies:', error);
                 if (isMounted) {
                     setCompanies([]);
+                    const serverMessage = error?.response?.data?.message || error?.message || 'Failed to load companies';
+                    setCompaniesError(serverMessage);
                 }
             } finally {
                 if (isMounted) {
@@ -94,18 +122,19 @@ const TechnicalAnalysis = () => {
     const companyOptions = useMemo(() => {
         return companies
             .map((company) => {
-                const rawSymbol = company?.symbol || company?.ticker || company?.code || company?.instrument;
+                const rawSymbol = getCompanySymbol(company);
                 const normalizedSymbol = normalizeCompanySymbol(rawSymbol);
+                const displaySymbol = getRawCompanySymbol(rawSymbol);
 
-                if (!normalizedSymbol) {
+                if (!normalizedSymbol || !displaySymbol) {
                     return null;
                 }
 
-                const displayName = company?.name || company?.companyName || rawSymbol;
+                const displayName = getCompanyName(company) || rawSymbol;
 
                 return {
                     value: normalizedSymbol,
-                    label: `${normalizedSymbol} — ${displayName}`,
+                    label: `${displaySymbol} - ${displayName}`,
                 };
             })
             .filter(Boolean);
@@ -133,6 +162,11 @@ const TechnicalAnalysis = () => {
                                 </option>
                             ))}
                         </select>
+                        {!isLoadingCompanies && companiesError && (
+                            <span className="text-xs text-red-400 max-w-[280px] truncate" title={companiesError}>
+                                {companiesError}
+                            </span>
+                        )}
                         <button className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" title="Save Chart">
                             <Save size={20} />
                         </button>
