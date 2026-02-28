@@ -197,6 +197,22 @@ const companyService = {
     return await api.get(url);
   },
 
+  getTechnicalAnalysisCompanies: async (searchTerm = '') => {
+    const params = new URLSearchParams();
+    const trimmedTerm = typeof searchTerm === 'string' ? searchTerm.trim() : '';
+
+    if (trimmedTerm) {
+      params.append('searchTerm', trimmedTerm);
+    }
+
+    const queryString = params.toString();
+    const url = queryString
+      ? `/cse/companies?${queryString}`
+      : '/cse/companies';
+
+    return await api.get(url);
+  },
+
   getSectors: async () => {
     const response = await api.get('/cse/sectors');
     const data = unwrapApiData(response);
