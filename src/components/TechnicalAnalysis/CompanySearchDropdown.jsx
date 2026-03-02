@@ -77,12 +77,6 @@ const CompanySearchDropdown = ({ value, onChange }) => {
                 setCompanies(companyList);
                 setError('');
 
-                if (companyList.length > 0 && !value) {
-                    const firstSymbol = normalizeCompanySymbol(getCompanySymbol(companyList[0]));
-                    if (firstSymbol) {
-                        onChange(firstSymbol);
-                    }
-                }
             } catch (err) {
                 if (!isMounted) return;
 
@@ -130,19 +124,6 @@ const CompanySearchDropdown = ({ value, onChange }) => {
         return mapped.filter((item) => item.searchText.includes(normalizedTerm));
     }, [companies, debouncedSearchTerm]);
 
-    useEffect(() => {
-        if (!value && companyOptions.length > 0) {
-            onChange(companyOptions[0].value);
-            return;
-        }
-
-        if (value && companyOptions.length > 0) {
-            const exists = companyOptions.some((item) => item.value === value);
-            if (!exists) {
-                onChange(companyOptions[0].value);
-            }
-        }
-    }, [companyOptions, onChange, value]);
 
     return (
         <div className="space-y-2">
@@ -154,14 +135,15 @@ const CompanySearchDropdown = ({ value, onChange }) => {
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-accent-cyan"
             />
             <select
-                value={value}
+                value={value || ''}
                 onChange={(event) => onChange(event.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-accent-cyan"
             >
-                {loading && <option value="">Loading companies...</option>}
-                {!loading && companyOptions.length === 0 && <option value="">No companies found</option>}
+                <option value="" disabled className="text-black bg-white">Select Company</option>
+                {loading && <option value="" disabled className="text-black bg-white">Loading companies...</option>}
+                {!loading && companyOptions.length === 0 && <option value="" disabled className="text-black bg-white">No companies found</option>}
                 {!loading && companyOptions.map((company) => (
-                    <option key={company.value} value={company.value}>
+                    <option key={company.value} value={company.value} className="text-black bg-white">
                         {company.label}
                     </option>
                 ))}

@@ -6,7 +6,7 @@ import CompanySearchDropdown from '../components/TechnicalAnalysis/CompanySearch
 import { Settings, Maximize2, Share2, Save } from 'lucide-react';
 
 const TechnicalAnalysis = () => {
-    const [selectedCompanySymbol, setSelectedCompanySymbol] = useState('CSELK:JKH.N0000');
+    const [selectedCompanySymbol, setSelectedCompanySymbol] = useState('');
 
     return (
         <div className="min-h-screen bg-primary-dark text-white font-sans">
