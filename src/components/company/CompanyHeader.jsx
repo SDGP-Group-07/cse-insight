@@ -8,11 +8,11 @@ const CompanyHeader = ({ company }) => {
   const { isSubscribed, subscribe, unsubscribe } = useNotification();
   const subscribed = isSubscribed(company.symbol);
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (subscribed) {
-      unsubscribe(company.symbol);
+      await unsubscribe(company.symbol);
     } else {
-      subscribe(company.symbol);
+      await subscribe(company.symbol);
     }
   };
 
