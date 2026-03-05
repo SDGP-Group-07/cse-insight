@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Megaphone, Landmark, Wallet } from 'lucide-react';
 import Header from '../components/common/Header';
 import DividentMainCalender from '../components/DividendCalender/DividentMainCalender';
 import FilterButton from '../components/DividendCalender/FilterButton';
@@ -68,29 +68,64 @@ const DividendCalendar = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1));
   };
 
+  const summaryStats = {
+    announcements: dividendData.length,
+    xdDates: dividendData.filter((item) => !!getIsoDate(item.xd)).length,
+    payments: dividendData.filter((item) => !!getIsoDate(item.payment)).length,
+  };
+
   return (
-    <div className="min-h-screen bg-[#0d0e12] text-slate-200 font-sans">
+    <div className="min-h-screen bg-primary-dark text-white font-sans">
+
       <Header />
       
-      <main className="container mx-auto px-6 pt-28 pb-12">
+      <main className="container mx-auto px-6 pt-24 pb-12">
         {/* Page Header & Top Filter */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight flex items-center gap-3 text-white">
-              <div className="p-2 bg-accent-cyan/10 rounded-lg text-accent-cyan">
+        <div className="mb-10 rounded-3xl border border-white/10 bg-primary-mid/50 p-5 sm:p-7 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+          <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3 text-white">
+                <div className="p-2.5 bg-accent-cyan/10 rounded-xl text-accent-cyan border border-accent-cyan/20">
                 <CalendarIcon size={28} />
-              </div>
-              Dividend Calendar
-            </h1>
-            <p className="text-slate-500 mt-1 uppercase text-[10px] font-bold tracking-[0.2em]">
-              Market Insights / <span className="text-accent-cyan">{activeFilter}</span>
-            </p>
+                </div>
+                Dividend Calendar
+              </h1>
+              <p className="text-slate-400 mt-2 uppercase text-[10px] font-bold tracking-[0.25em]">
+                Market Insights / <span className="text-accent-cyan">{activeFilter}</span>
+              </p>
+            </div>
+
+            <FilterButton activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
           </div>
 
-          <FilterButton activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+            <div className="rounded-2xl border border-white/10 bg-primary-mid/60 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black flex items-center gap-2">
+                <Megaphone size={14} className="text-amber-400" />
+                Announcements
+              </p>
+              <p className="text-xl font-black mt-1 text-white">{summaryStats.announcements}</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-primary-mid/60 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black flex items-center gap-2">
+                <Landmark size={14} className="text-sky-400" />
+                Ex-Dates
+              </p>
+              <p className="text-xl font-black mt-1 text-white">{summaryStats.xdDates}</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-primary-mid/60 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black flex items-center gap-2">
+                <Wallet size={14} className="text-blue-400" />
+                Payments
+              </p>
+              <p className="text-xl font-black mt-1 text-white">{summaryStats.payments}</p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Calendar Section */}
           <div className="lg:col-span-8">
             <DividentMainCalender
