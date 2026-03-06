@@ -23,7 +23,7 @@ const DividendSidebar = ({ dividendData }) => {
             <div className="flex justify-between items-start gap-4 mb-4">
               <div className="min-w-0">
                 <h4 className="text-lg sm:text-xl font-black text-white leading-tight truncate">
-                  {div.symbol.split('.')[0]}
+                  {(div.symbol || '').split('.')[0] || 'N/A'}
                 </h4>
                 <p className="mt-1 text-[10px] text-slate-500 font-bold uppercase tracking-wider line-clamp-2">
                   {div.company}
@@ -34,6 +34,7 @@ const DividendSidebar = ({ dividendData }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Open announcement file for ${div.symbol}`}
+                title={div.fileOriginalName || 'Open announcement file'}
                 className="p-2.5 bg-primary-mid/60 hover:bg-primary-mid/80 text-slate-400 hover:text-accent-cyan rounded-xl transition-all border border-white/10 hover:border-accent-cyan/30"
               >
                 <FileText size={20} />

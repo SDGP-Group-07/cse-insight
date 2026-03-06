@@ -16,12 +16,14 @@ const DividendCalendar = () => {
 
   useEffect(() => {
     let isMounted = true;
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
 
     const loadDividendCalendar = async () => {
       try {
         setIsLoading(true);
         setLoadError('');
-        const calendar = await dividendService.getCalendar();
+        const calendar = await dividendService.getCalendar(year, month);
 
         if (isMounted) {
           setDividendData(Array.isArray(calendar) ? calendar : []);
@@ -43,11 +45,12 @@ const DividendCalendar = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [currentDate]);
 
   // 3. Date Utility: Handles "DD MMM YYYY" string to "YYYY-MM-DD" comparison
   const getIsoDate = (dateValue) => {
     if (!dateValue) return null;
+
     if (
       typeof dateValue === 'string' &&
       dateValue.toLowerCase().includes('notified')
@@ -55,10 +58,47 @@ const DividendCalendar = () => {
       return null;
     }
 
+    if (typeof dateValue === 'string') {
+      const isoLike = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (isoLike) {
+        return `${isoLike[1]}-${isoLike[2]}-${isoLike[3]}`;
+      }
+
+      const shortMonthMatch = dateValue.match(
+        /^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/,
+      );
+      if (shortMonthMatch) {
+        const [, dd, mon, yyyy] = shortMonthMatch;
+        const monthMap = {
+          Jan: '01',
+          Feb: '02',
+          Mar: '03',
+          Apr: '04',
+          May: '05',
+          Jun: '06',
+          Jul: '07',
+          Aug: '08',
+          Sep: '09',
+          Oct: '10',
+          Nov: '11',
+          Dec: '12',
+        };
+
+        const monthPart = monthMap[mon];
+        if (monthPart) {
+          return `${yyyy}-${monthPart}-${dd.padStart(2, '0')}`;
+        }
+      }
+    }
+
     try {
       const d = new Date(dateValue);
       if (isNaN(d.getTime())) return null;
-      return d.toISOString().split('T')[0];
+
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
     } catch {
       return null;
     }
