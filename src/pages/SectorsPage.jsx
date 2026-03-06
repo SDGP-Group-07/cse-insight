@@ -28,7 +28,36 @@ const SectorInsightCard = ({ sectorResponse }) => {
   return (
     <Card className="p-6 group hover:bg-white/10 transition-all">
       {/* Header */}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded">
+            {header?.indexCodeSp}
+          </span>
 
+          <h3 className="text-xl font-black text-white mt-2 group-hover:text-accent-cyan transition-colors">
+            {header?.sectorName}
+          </h3>
+        </div>
+
+        <div className="text-right">
+          <div className="text-lg font-mono font-bold text-white tracking-tighter">
+            {header?.indexValue?.toLocaleString()}
+          </div>
+
+          <div
+            className={`flex items-center justify-end gap-1 text-[11px] font-bold ${
+              isNegative ? "text-red-500" : "text-accent-green"
+            }`}
+          >
+            {isNegative ? (
+              <ArrowDownRight size={12} />
+            ) : (
+              <ArrowUpRight size={12} />
+            )}
+            {header?.percentage?.toFixed(2)}%
+          </div>
+        </div>
+      </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-2 gap-4 mb-6">
