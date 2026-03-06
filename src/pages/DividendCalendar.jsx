@@ -1,46 +1,62 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Calendar as CalendarIcon, Megaphone, Landmark, Wallet } from 'lucide-react';
 import Header from '../components/common/Header';
 import DividentMainCalender from '../components/DividendCalender/DividentMainCalender';
 import FilterButton from '../components/DividendCalender/FilterButton';
 import DividendSidebar from '../components/DividendCalender/DividendSidebar';
+import dividendService from '../services/dividendService';
 
 const DividendCalendar = () => {
   // 1. State Management
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeFilter, setActiveFilter] = useState('XD or Payment');
+  const [dividendData, setDividendData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
-  // 2. Mock Data (Matches your refined .NET DTO structure)
-  const dividendData = [
-    {
-      symbol: "AAF.N0000",
-      company: "ASIA ASSET FINANCE PLC",
-      xd: "16 Dec 2025",
-      payment: "05 Jan 2026",
-      dateOfAnnouncement: "05 Dec 2025",
-      fileUrl: "https://cdn.cse.lk/cmt/announcement_portal_prod/Announcement_38722237209017294.pdf",
-      remarks: "Fixed - Non Cumulative Dividend of Cents .70 for the Financial Year 2024/2025"
-    },
-    {
-      symbol: "BUKI.N0000",
-/**
- * Move the calendar to the next month.
- * @memberof DividendCalendar
- */
-      company: "BUKIT DARAH PLC",
-      xd: "17 Dec 2025",
-      payment: "06 Jan 2026",
-      dateOfAnnouncement: "08 Dec 2025",
-      fileUrl: "https://cdn.cse.lk/cmt/announcement_portal_prod/BUKIT_38983850502714039.pdf",
-      remarks: "FIRST INTERIM DIVIDEND OF RS.14/43 PER ORDINARY SHARE"
-    }
-  ];
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadDividendCalendar = async () => {
+      try {
+        setIsLoading(true);
+        setLoadError('');
+        const calendar = await dividendService.getCalendar();
+
+        if (isMounted) {
+          setDividendData(Array.isArray(calendar) ? calendar : []);
+        }
+      } catch {
+        if (isMounted) {
+          setLoadError('Failed to load dividend calendar data.');
+          setDividendData([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadDividendCalendar();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // 3. Date Utility: Handles "DD MMM YYYY" string to "YYYY-MM-DD" comparison
-  const getIsoDate = (dateStr) => {
-    if (!dateStr || dateStr.toLowerCase().includes("notified")) return null;
+  const getIsoDate = (dateValue) => {
+    if (!dateValue) return null;
+    if (
+      typeof dateValue === 'string' &&
+      dateValue.toLowerCase().includes('notified')
+    ) {
+      return null;
+    }
+
     try {
-      const d = new Date(dateStr);
+      const d = new Date(dateValue);
       if (isNaN(d.getTime())) return null;
       return d.toISOString().split('T')[0];
     } catch {
@@ -80,6 +96,12 @@ const DividendCalendar = () => {
       <Header />
       
       <main className="container mx-auto px-6 pt-24 pb-12">
+        {loadError && (
+          <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {loadError}
+          </div>
+        )}
+
         {/* Page Header & Top Filter */}
         <div className="mb-10 rounded-3xl border border-white/10 bg-primary-mid/50 p-5 sm:p-7 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
           <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
@@ -123,6 +145,12 @@ const DividendCalendar = () => {
               <p className="text-xl font-black mt-1 text-white">{summaryStats.payments}</p>
             </div>
           </div>
+
+          {isLoading && (
+            <p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">
+              Loading dividend events...
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
