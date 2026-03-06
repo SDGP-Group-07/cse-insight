@@ -104,31 +104,7 @@ const SectorInsightCard = ({ sectorResponse }) => {
           </span>
         </div>
 
-        {/* Market Breadth */}
-        <div className="pt-2">
-          <div className="flex h-1.5 w-full rounded-full overflow-hidden bg-white/10">
-            <div
-              style={{ width: `${advancersWidth}%` }}
-              className="bg-accent-green"
-            />
 
-            <div
-              style={{ width: `${unchangedWidth}%` }}
-              className="bg-gray-500"
-            />
-
-            <div
-              style={{ width: `${declinersWidth}%` }}
-              className="bg-red-500"
-            />
-          </div>
-
-          <div className="flex justify-between mt-2 text-[9px] font-bold text-gray-500 uppercase">
-            <span>{insights?.advancers} Up</span>
-            <span>{insights?.decliners} Down</span>
-          </div>
-        </div>
-      </div>
 
       {/* Top Contributor */}
       <div className="pt-4 border-t border-white/10">
@@ -152,6 +128,56 @@ const SectorInsightCard = ({ sectorResponse }) => {
 
 /* ============Page Content================*/
 
+const SectorsPageContent = () => {
+  const [sectors, setSectors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadSectors = async () => {
+      try {
+        const data = await sectorService.getSectors();
+        setSectors(data);
+      } catch (error) {
+        console.error("Failed to load sector insights", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSectors();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-primary-dark flex items-center justify-center">
+        <Loader className="w-10 h-10 text-accent-cyan animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-primary-dark text-white font-sans pt-24 pb-12">
+      <div className="container mx-auto px-6">
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold mb-2">Market Sectors</h1>
+
+          <p className="text-gray-400">
+            Real-time aggregated analytics across CSE industries
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sectors.map((sector, index) => (
+            <SectorInsightCard
+              key={sector.header?.sectorId || index}
+              sectorResponse={{ data: sector }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 
 
