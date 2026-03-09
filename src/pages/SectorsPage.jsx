@@ -3,11 +3,19 @@ import { ArrowUpRight, ArrowDownRight, Loader } from "lucide-react";
 import Card from "../components/common/Card";
 import { MarketDataProvider } from "../context/MarketDataContext";
 import sectorService from "../services/sectorService";
+import { useNavigate } from "react-router-dom";
 
 /* =============Sector Card Component=============== */
 
 const SectorInsightCard = ({ sectorResponse }) => {
+
+  const navigate = useNavigate();
+
   const { header, valuation, insights } = sectorResponse.data;
+
+  const handleClick = () => {
+    navigate(`/companies?sector=${header.sectorId}`);
+  };
 
   const formatCurrency = (val) => {
     if (!val) return "-";
@@ -26,7 +34,7 @@ const SectorInsightCard = ({ sectorResponse }) => {
     (insights?.decliners / valuation?.companiesListed) * 100 || 0;
 
   return (
-    <Card className="p-6 group hover:bg-white/10 transition-all">
+    <Card  onClick={handleClick} className="p-6 group hover:bg-white/10 transition-all">
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
