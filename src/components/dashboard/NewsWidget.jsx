@@ -64,6 +64,7 @@ const NewsWidget = () => {
                 {displayedItems.map((item) => (
                     <div
                         key={item.id}
+                        onClick={() => window.open(item.url, "_blank")}
                         className="group cursor-pointer flex flex-col justify-between"
                         style={{ height: `${rowHeight}px` }}
                     >
