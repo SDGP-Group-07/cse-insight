@@ -64,6 +64,7 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
             icon: BarChart2,
             subtopics: [
                 'Fundamental analysis',
+                'Sector dashboard',
                 'Technical analysis introduction',
                 'Reading stock charts',
                 'Using indices'
