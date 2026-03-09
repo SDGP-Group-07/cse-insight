@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react';
 
-const DividendSidebar = ({ dividendData, activeFilter }) => {
+const DividendSidebar = ({ dividendData, activeFilter, isLoading = false }) => {
   const ITEMS_PER_PAGE = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const totalItems = dividendData.length;
@@ -26,7 +26,20 @@ const DividendSidebar = ({ dividendData, activeFilter }) => {
       </div>
 
       <div className="space-y-4 overflow-y-auto max-h-[720px] pr-2 custom-scrollbar">
-        {paginatedData.map((div, i) => (
+        {isLoading && (
+          <div className="rounded-2xl border border-white/10 bg-primary-mid/50 p-6">
+            <div className="flex items-center justify-center gap-2 text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-accent-cyan animate-bounce [animation-delay:-0.2s]" />
+              <span className="h-2 w-2 rounded-full bg-accent-cyan animate-bounce [animation-delay:-0.1s]" />
+              <span className="h-2 w-2 rounded-full bg-accent-cyan animate-bounce" />
+            </div>
+            <p className="mt-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+              Loading dividend data...
+            </p>
+          </div>
+        )}
+
+        {!isLoading && paginatedData.map((div, i) => (
           <article key={`${div.symbol || 'symbol'}-${(div.dateOfAnnouncement || div.xd || div.payment || 'date')}-${i}`} className="group p-4 sm:p-5 bg-primary-mid/60 border border-white/10 rounded-3xl hover:bg-primary-mid/80 hover:border-white/20 transition-all border-l-4 border-l-transparent hover:border-l-accent-cyan relative overflow-hidden">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-accent-cyan/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -74,14 +87,14 @@ const DividendSidebar = ({ dividendData, activeFilter }) => {
           </article>
         ))}
 
-        {totalItems === 0 && (
+        {!isLoading && totalItems === 0 && (
           <div className="rounded-2xl border border-white/10 bg-primary-mid/50 p-6 text-center text-sm text-slate-400">
             No {activeFilter.toLowerCase()} entries available.
           </div>
         )}
       </div>
 
-      {totalItems > 0 && (
+      {!isLoading && totalItems > 0 && (
         <div className="flex items-center justify-between rounded-xl border border-white/10 bg-primary-mid/40 px-3 py-2">
           <button
             type="button"

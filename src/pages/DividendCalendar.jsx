@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { Calendar as CalendarIcon, Megaphone, Landmark, Wallet } from 'lucide-react';
 import Header from '../components/common/Header';
 import DividentMainCalender from '../components/DividendCalender/DividentMainCalender';
@@ -13,20 +13,32 @@ const DividendCalendar = () => {
   const [dividendData, setDividendData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
+  const calendarCacheRef = useRef(new Map());
 
   useEffect(() => {
     let isMounted = true;
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
+    const cacheKey = `${year}-${String(month).padStart(2, '0')}`;
 
     const loadDividendCalendar = async () => {
+      const cachedData = calendarCacheRef.current.get(cacheKey);
+      if (cachedData) {
+        setDividendData(cachedData);
+        setIsLoading(false);
+        setLoadError('');
+        return;
+      }
+
       try {
         setIsLoading(true);
         setLoadError('');
         const calendar = await dividendService.getCalendar(year, month);
+        const normalizedData = Array.isArray(calendar) ? calendar : [];
 
         if (isMounted) {
-          setDividendData(Array.isArray(calendar) ? calendar : []);
+          calendarCacheRef.current.set(cacheKey, normalizedData);
+          setDividendData(normalizedData);
         }
       } catch {
         if (isMounted) {
@@ -45,7 +57,7 @@ const DividendCalendar = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentDate, activeFilter]);
+  }, [currentDate]);
 
   // 3. Date Utility: Handles "DD MMM YYYY" string to "YYYY-MM-DD" comparison
   const getIsoDate = useCallback((dateValue) => {
@@ -190,7 +202,9 @@ const DividendCalendar = () => {
                 <Megaphone size={14} className="text-amber-400" />
                 Announcements
               </p>
-              <p className="text-xl font-black mt-1 text-white">{summaryStats.announcements}</p>
+              <p className="text-xl font-black mt-1 text-white">
+                {isLoading ? '...' : summaryStats.announcements}
+              </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-primary-mid/60 px-4 py-3">
@@ -198,7 +212,9 @@ const DividendCalendar = () => {
                 <Landmark size={14} className="text-sky-400" />
                 Ex-Dates
               </p>
-              <p className="text-xl font-black mt-1 text-white">{summaryStats.xdDates}</p>
+              <p className="text-xl font-black mt-1 text-white">
+                {isLoading ? '...' : summaryStats.xdDates}
+              </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-primary-mid/60 px-4 py-3">
@@ -206,7 +222,9 @@ const DividendCalendar = () => {
                 <Wallet size={14} className="text-blue-400" />
                 Payments
               </p>
-              <p className="text-xl font-black mt-1 text-white">{summaryStats.payments}</p>
+              <p className="text-xl font-black mt-1 text-white">
+                {isLoading ? '...' : summaryStats.payments}
+              </p>
             </div>
           </div>
 
@@ -238,6 +256,7 @@ const DividendCalendar = () => {
             key={`${activeFilter}-${year}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`}
             dividendData={filteredSidebarData}
             activeFilter={activeFilter}
+            isLoading={isLoading}
           />
         </div>
       </main>
