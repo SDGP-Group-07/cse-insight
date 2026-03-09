@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUpRight, ArrowDownRight, Loader } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Loader, Info } from "lucide-react";
 import Card from "../components/common/Card";
 import { MarketDataProvider } from "../context/MarketDataContext";
 import sectorService from "../services/sectorService";
-import { useNavigate } from "react-router-dom";
 
 /* =============Sector Card Component=============== */
 
@@ -213,7 +212,20 @@ const SectorsPageContent = () => {
     <div className="min-h-screen bg-primary-dark text-white font-sans pt-24 pb-12">
       <div className="container mx-auto px-6">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Market Sectors</h1>
+          <div className="flex items-center justify-between gap-4 mb-2">
+            <h1 className="text-4xl font-bold">Market Sectors</h1>
+            <a
+              href="/wiki/Sector%20dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open sector dashboard wiki article"
+              title="Learn how to read sector cards"
+              className="inline-flex items-center gap-2 rounded-full bg-[#2a233d]/90 border border-[#3e3753] px-3 py-2 text-[#9b96b2] hover:text-white hover:border-accent-cyan transition-colors"
+            >
+              <Info size={16} />
+              <span className="text-xs font-medium uppercase tracking-wide">What is this?</span>
+            </a>
+          </div>
 
           <p className="text-gray-400">
             Real-time aggregated analytics across CSE industries
