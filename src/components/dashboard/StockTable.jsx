@@ -141,13 +141,14 @@ const StockTable = () => {
                 className="pb-4 font-medium cursor-pointer hover:text-white w-24"
                 onClick={() => handleSortWithReset('sharevolume')}
               >
-                Company
-              </th>
-              <th className="pb-4 text-right font-medium">
                 Share Volume
               </th>
+
               <th className="pb-4 text-right font-medium">
                 Trade Volume
+              </th>
+              <th className="pb-4 text-right font-medium">
+                Turnover
               </th>
               <th
                 className="pb-4 text-right font-medium cursor-pointer hover:text-white"
