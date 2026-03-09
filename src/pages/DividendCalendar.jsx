@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Calendar as CalendarIcon, Megaphone, Landmark, Wallet } from 'lucide-react';
 import Header from '../components/common/Header';
 import DividentMainCalender from '../components/DividendCalender/DividentMainCalender';
@@ -45,10 +45,10 @@ const DividendCalendar = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentDate]);
+  }, [currentDate, activeFilter]);
 
   // 3. Date Utility: Handles "DD MMM YYYY" string to "YYYY-MM-DD" comparison
-  const getIsoDate = (dateValue) => {
+  const getIsoDate = useCallback((dateValue) => {
     if (!dateValue) return null;
 
     if (
@@ -102,7 +102,7 @@ const DividendCalendar = () => {
     } catch {
       return null;
     }
-  };
+  }, []);
 
   // 4. Calendar Logic (Fixed firstDay error)
   const { days, firstDay, monthName, year } = useMemo(() => {
@@ -129,6 +129,30 @@ const DividendCalendar = () => {
     xdDates: dividendData.filter((item) => !!getIsoDate(item.xd)).length,
     payments: dividendData.filter((item) => !!getIsoDate(item.payment)).length,
   };
+
+  const filteredSidebarData = useMemo(() => {
+    const targetYearMonth = `${year}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+    const isInCurrentMonth = (dateValue) => {
+      const isoDate = getIsoDate(dateValue);
+      return isoDate ? isoDate.startsWith(targetYearMonth) : false;
+    };
+
+    if (activeFilter === 'Announcement') {
+      return dividendData.filter((item) => isInCurrentMonth(item.dateOfAnnouncement));
+    }
+
+    if (activeFilter === 'XD') {
+      return dividendData.filter((item) => isInCurrentMonth(item.xd));
+    }
+
+    if (activeFilter === 'Payment') {
+      return dividendData.filter((item) => isInCurrentMonth(item.payment));
+    }
+
+    return dividendData.filter(
+      (item) => isInCurrentMonth(item.xd) || isInCurrentMonth(item.payment),
+    );
+  }, [activeFilter, currentDate, dividendData, getIsoDate, year]);
 
   return (
     <div className="min-h-screen bg-primary-dark text-white font-sans">
@@ -210,7 +234,11 @@ const DividendCalendar = () => {
           </div>
 
           {/* Sidebar: Detail View */}
-          <DividendSidebar dividendData={dividendData} />
+          <DividendSidebar
+            key={`${activeFilter}-${year}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`}
+            dividendData={filteredSidebarData}
+            activeFilter={activeFilter}
+          />
         </div>
       </main>
     </div>
