@@ -8,152 +8,174 @@ import { useNavigate } from "react-router-dom";
 /* =============Sector Card Component=============== */
 
 const SectorInsightCard = ({ sectorResponse }) => {
-
-  const navigate = useNavigate();
-
   const { header, valuation, insights } = sectorResponse.data;
-
-  const handleClick = () => {
-    navigate(`/companies?sector=${header.sectorId}`);
-  };
-
-  const formatCurrency = (val) => {
-    if (!val) return "-";
-    if (val >= 1e12) return `${(val / 1e12).toFixed(2)}T`;
-    if (val >= 1e9) return `${(val / 1e9).toFixed(2)}B`;
-    return val.toLocaleString();
-  };
 
   const isNegative = header?.change < 0;
 
-  const advancersWidth =
-    (insights?.advancers / valuation?.companiesListed) * 100 || 0;
-  const unchangedWidth =
-    (insights?.unchanged / valuation?.companiesListed) * 100 || 0;
-  const declinersWidth =
-    (insights?.decliners / valuation?.companiesListed) * 100 || 0;
+  const formatCap = (val) => {
+    if (!val) return "-";
+    if (val >= 1e12) return (val / 1e12).toFixed(2) + "T";
+    if (val >= 1e9) return (val / 1e9).toFixed(2) + "B";
+    return val.toLocaleString();
+  };
+
+  const advWidth =
+    (insights.advancers / valuation.companiesListed) * 100 || 0;
+  const uncWidth =
+    (insights.unchanged / valuation.companiesListed) * 100 || 0;
+  const decWidth =
+    (insights.decliners / valuation.companiesListed) * 100 || 0;
 
   return (
-    <Card  onClick={handleClick} className="p-6 group hover:bg-white/10 transition-all">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded">
-            {header?.indexCodeSp}
-          </span>
+    <Card className="overflow-hidden p-0 hover:border-accent-cyan/40 transition-all">
 
-          <h3 className="text-xl font-black text-white mt-2 group-hover:text-accent-cyan transition-colors">
-            {header?.sectorName}
-          </h3>
-        </div>
+      {/* HEADER */}
+      <div className="p-5 border-b border-white/10">
+        <div className="flex justify-between items-start">
 
-        <div className="text-right">
-          <div className="text-lg font-mono font-bold text-white tracking-tighter">
-            {header?.indexValue?.toLocaleString()}
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white">
+                {header.sectorName}
+                <span className="text-gray-400 ml-1 text-sm">
+                  #{header.sectorId}
+                </span>
+              </h2>
+            </div>
+
+            <p className="text-xs font-semibold text-gray-400 mt-1 uppercase tracking-wider">
+              Index: {header.indexCodeSp}
+            </p>
           </div>
 
-          <div
-            className={`flex items-center justify-end gap-1 text-[11px] font-bold ${
-              isNegative ? "text-red-500" : "text-accent-green"
-            }`}
-          >
-            {isNegative ? (
-              <ArrowDownRight size={12} />
-            ) : (
-              <ArrowUpRight size={12} />
-            )}
-            {header?.percentage?.toFixed(2)}%
+          <div className="text-right">
+            <p className="text-xl font-bold text-white leading-none">
+              {header.indexValue.toLocaleString()}
+            </p>
+
+            <p
+              className={`text-sm font-medium flex items-center justify-end gap-1 mt-1 ${
+                isNegative ? "text-red-500" : "text-accent-green"
+              }`}
+            >
+              {isNegative ? (
+                <ArrowDownRight size={14} />
+              ) : (
+                <ArrowUpRight size={14} />
+              )}
+              {header.change} ({header.percentage.toFixed(2)}%)
+            </p>
           </div>
+
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-white/5 p-3 rounded-xl border border-white/10">
-          <p className="text-[9px] uppercase font-bold text-gray-400 mb-1">
-            Market Cap
-          </p>
-          <p className="text-sm font-bold text-white">
-            LKR {formatCurrency(insights?.totalMarketCap)}
-          </p>
-        </div>
+      {/* MARKET BREADTH */}
+      <div className="px-5 py-4 bg-white/5">
 
-        <div className="bg-white/5 p-3 rounded-xl border border-white/10">
-          <p className="text-[9px] uppercase font-bold text-gray-400 mb-1">
-            Weighted Beta
-          </p>
-          <p
-            className={`text-sm font-bold ${
-              insights?.weightedBeta > 1.2
-                ? "text-red-500"
-                : "text-accent-green"
-            }`}
-          >
-            {insights?.weightedBeta?.toFixed(2)}
-          </p>
-        </div>
-      </div>
+        <div className="flex justify-between text-[10px] uppercase font-bold tracking-wider mb-2 text-gray-400">
+          <span>Market Breadth</span>
 
-      {/* Valuation */}
-      <div className="space-y-3 mb-6">
-        <div className="flex justify-between items-center text-[11px]">
-          <span className="text-gray-400 font-bold uppercase">P/E Ratio</span>
-          <span className="text-accent-green font-bold font-mono">
-            {valuation?.pe}x
-          </span>
-        </div>
-
-        <div className="flex justify-between items-center text-[11px]">
-          <span className="text-gray-400 font-bold uppercase">
-            Dividend Yield
-          </span>
-          <span className="text-accent-cyan font-bold font-mono">
-            {valuation?.dividendYield}%
-          </span>
-        </div>
-
-        {/* Market Breadth */}
-        <div className="pt-2">
-          <div className="flex h-1.5 w-full rounded-full overflow-hidden bg-white/10">
-            <div
-              style={{ width: `${advancersWidth}%` }}
-              className="bg-accent-green"
-            />
-
-            <div
-              style={{ width: `${unchangedWidth}%` }}
-              className="bg-gray-500"
-            />
-
-            <div
-              style={{ width: `${declinersWidth}%` }}
-              className="bg-red-500"
-            />
-          </div>
-
-          <div className="flex justify-between mt-2 text-[9px] font-bold text-gray-500 uppercase">
-            <span>{insights?.advancers} Up</span>
-            <span>{insights?.decliners} Down</span>
+          <div className="flex gap-3">
+            <span className="text-accent-green">{insights.advancers} Adv</span>
+            <span className="text-gray-400">{insights.unchanged} Unc</span>
+            <span className="text-red-500">{insights.decliners} Dec</span>
           </div>
         </div>
+
+        <div className="flex h-1.5 w-full rounded-full overflow-hidden bg-white/10">
+          <div style={{ width: `${advWidth}%` }} className="bg-accent-green" />
+          <div style={{ width: `${uncWidth}%` }} className="bg-gray-500" />
+          <div style={{ width: `${decWidth}%` }} className="bg-red-500" />
+        </div>
+
       </div>
 
-      {/* Top Contributor */}
-      <div className="pt-4 border-t border-white/10">
-        <p className="text-[9px] text-gray-400 font-bold uppercase mb-2">
+      {/* STATS GRID */}
+      <div className="grid grid-cols-2 divide-x divide-white/10 border-t border-white/10">
+
+        {/* VALUATION */}
+        <div className="p-4 space-y-3">
+          <p className="text-[10px] uppercase font-bold tracking-widest text-gray-400">
+            Valuation
+          </p>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">P/E Ratio</span>
+            <span className="font-semibold text-white">
+              {valuation.pe}x
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">P/B Ratio</span>
+            <span className="font-semibold text-white">
+              {valuation.pb}x
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">Div. Yield</span>
+            <span className="font-semibold text-accent-green">
+              {valuation.dividendYield}%
+            </span>
+          </div>
+        </div>
+
+        {/* INSIGHTS */}
+        <div className="p-4 space-y-3">
+          <p className="text-[10px] uppercase font-bold tracking-widest text-gray-400">
+            Insights
+          </p>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">Market Cap</span>
+            <span className="font-semibold text-white">
+              {formatCap(insights.totalMarketCap)}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">Wtd. Beta</span>
+            <span className="font-semibold text-white">
+              {insights.weightedBeta.toFixed(2)}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-400">Companies</span>
+            <span className="font-semibold text-white">
+              {valuation.companiesTraded} / {valuation.companiesListed}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      {/* FOOTER */}
+      <div className="px-5 py-3 flex items-center justify-between bg-primary-dark/40 border-t border-white/10">
+
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase text-gray-400">
           Top Contributor
-        </p>
-
-        <div className="flex justify-between items-center">
-          <span className="text-xs font-bold text-accent-cyan">
-            {insights?.topContributor?.symbol}
-          </span>
-
-          <span className="text-[10px] font-mono text-gray-400">
-            {(insights?.topContributor?.turnover / 1e6).toFixed(1)}M
-          </span>
         </div>
+
+        <div className="flex gap-4 items-center">
+          <span className="text-xs font-bold font-mono text-white">
+            {insights.topContributor.symbol}
+          </span>
+
+          <div className="h-3 w-px bg-white/20" />
+
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-400 uppercase">Vol</span>
+            <span className="text-xs font-bold text-accent-cyan">
+              {(insights.topContributor.turnover / 1e6).toFixed(1)}M
+            </span>
+          </div>
+        </div>
+
       </div>
+
     </Card>
   );
 };
