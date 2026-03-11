@@ -303,10 +303,10 @@ const TradingBrokers = () => {
 														<img
 															src={broker.logo}
 															alt={broker.name}
-															className="h-12 w-24 object-contain"
+															className="h-20 w-36 object-contain"
 														/>
 													) : (
-														<div className="flex h-12 w-24 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black tracking-wide text-white">
+														<div className="flex h-20 w-36 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black tracking-wide text-white">
 															{getInitials(broker.name)}
 														</div>
 													)}

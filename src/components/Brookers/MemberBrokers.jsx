@@ -407,10 +407,10 @@ const MemberBrokers = () => {
 															<img
 																src={broker.logo}
 																alt={broker.name}
-																className="h-12 w-24 object-contain"
+																className="h-16 w-32 object-contain"
 															/>
 														) : (
-															<div className="flex h-12 w-24 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black tracking-wide text-white">
+															<div className="flex h-16 w-32 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black tracking-wide text-white">
 																{getInitials(broker.name)}
 															</div>
 														)}
@@ -498,7 +498,7 @@ const MemberBrokers = () => {
 												type="button"
 												onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
 												disabled={currentPage === 1}
-												className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+												className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
 											>
 												Prev
 											</button>
@@ -510,8 +510,8 @@ const MemberBrokers = () => {
 													onClick={() => setCurrentPage(pageNumber)}
 													className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
 														currentPage === pageNumber
-															? 'border-sky-500 bg-sky-600 text-white'
-															: 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+															? 'border-accent-cyan bg-accent-cyan/20 text-accent-cyan'
+															: 'border-white/10 bg-white/5 text-white hover:bg-white/10'
 													}`}
 												>
 													{pageNumber}
@@ -522,7 +522,7 @@ const MemberBrokers = () => {
 												type="button"
 												onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
 												disabled={currentPage === totalPages}
-												className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+												className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
 											>
 												Next
 											</button>
