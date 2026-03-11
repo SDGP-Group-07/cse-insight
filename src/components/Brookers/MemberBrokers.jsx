@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-	Building2,
 	Globe,
-	Landmark,
 	Mail,
 	MapPin,
 	Phone,
@@ -10,9 +8,7 @@ import {
 	Search,
 	ShieldCheck,
 	UserRound,
-	Users,
 } from 'lucide-react';
-import Header from '../common/Header';
 import BrokerService from '../../services/BrokerService';
 
 const brokerLogoModules = import.meta.glob(
@@ -231,7 +227,7 @@ const MemberBrokers = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 8;
+	const itemsPerPage = 4;
 
 	useEffect(() => {
 		let isMounted = true;
@@ -314,118 +310,39 @@ const MemberBrokers = () => {
 		}
 	}, [currentPage, totalPages]);
 
-	const stats = useMemo(() => {
-		const total = brokers.length;
-		const withWebsites = brokers.filter((broker) => broker.websiteHref).length;
-		const withEmail = brokers.filter((broker) => broker.email).length;
-		const representatives = brokers.reduce(
-			(count, broker) => count + broker.representatives.length,
-			0,
-		);
-
-		return [
-			{
-				label: 'Registered Members',
-				value: isLoading ? '...' : String(total).padStart(2, '0'),
-				icon: Building2,
-				accent: 'text-sky-600',
-				chip: 'bg-sky-100 text-sky-700',
-			},
-			{
-				label: 'Broker Websites',
-				value: isLoading ? '...' : String(withWebsites).padStart(2, '0'),
-				icon: Globe,
-				accent: 'text-cyan-600',
-				chip: 'bg-cyan-100 text-cyan-700',
-			},
-			{
-				label: 'Contact Points',
-				value: isLoading ? '...' : String(withEmail + representatives).padStart(2, '0'),
-				icon: Users,
-				accent: 'text-indigo-600',
-				chip: 'bg-indigo-100 text-indigo-700',
-			},
-		];
-	}, [brokers, isLoading]);
-
 	return (
-		<div className="min-h-screen overflow-hidden bg-primary-dark text-white font-sans">
-			<Header />
-
-			<main className="relative px-4 pb-16 pt-24 sm:px-6 lg:px-8">
-				<div className="pointer-events-none absolute inset-0 overflow-hidden">
-					<div className="absolute left-[-8rem] top-24 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
-					<div className="absolute right-[-6rem] top-40 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
-					<div className="absolute inset-x-0 top-0 h-[22rem] bg-[radial-gradient(circle_at_top,_rgba(148,163,184,0.24),_transparent_58%)]" />
-				</div>
-
-				<div className="relative mx-auto max-w-7xl">
-					<section className="overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-200 via-slate-100 to-slate-300 text-slate-900 shadow-[0_35px_80px_rgba(2,6,23,0.35)]">
-						<div className="grid gap-8 px-6 py-8 sm:px-8 lg:grid-cols-[1.3fr_0.9fr] lg:px-10 lg:py-10">
-							<div>
-								<div className="inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.28em] text-slate-600">
-									<ShieldCheck size={14} className="text-sky-600" />
-									CSE Member Brokers
-								</div>
-
-								<h1 className="mt-5 max-w-3xl text-3xl font-black uppercase tracking-tight text-slate-950 sm:text-4xl lg:text-[2.8rem] lg:leading-[1.05]">
-									Member brokers directory with a sharper, cleaner market-facing presentation.
-								</h1>
-
-								<p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-									Designed around the layout you shared, with a stronger visual hierarchy, softer dividend-calendar-style page atmosphere, and broker cards that surface contact details without feeling cramped.
-								</p>
-
-								<div className="mt-6 flex flex-wrap gap-3">
-									<div className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-900/10">
-										<Landmark size={16} className="text-cyan-300" />
-										Verified member broker contacts
-									</div>
-									<div className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700">
-										<Users size={16} className="text-indigo-500" />
-										Built for quick lookup and comparison
-									</div>
-								</div>
+		<div className="relative mx-auto max-w-7xl">
+					<section className="rounded-[1.6rem] border border-white/10 bg-primary-mid/60 px-5 py-4 backdrop-blur-md sm:px-6">
+						<div className="flex flex-wrap items-center justify-between gap-3">
+							<div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-black uppercase tracking-[0.24em] text-white">
+								<ShieldCheck size={30} className="text-accent-cyan" />
+								CSE Member Brokers
 							</div>
-
-							<div className="grid gap-3 self-end sm:grid-cols-3 lg:grid-cols-1">
-								{stats.map((item) => (
-									<div
-										key={item.label}
-										className="rounded-[1.6rem] border border-white/70 bg-white/75 p-4 backdrop-blur-sm"
-									>
-										<div className={`inline-flex rounded-2xl p-3 ${item.chip}`}>
-											<item.icon size={18} className={item.accent} />
-										</div>
-										<p className="mt-4 text-[11px] font-black uppercase tracking-[0.24em] text-slate-500">
-											{item.label}
-										</p>
-										<p className="mt-1 text-3xl font-black text-slate-950">{item.value}</p>
-									</div>
-								))}
-							</div>
+							<p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+								{isLoading ? 'Loading...' : `${filteredBrokers.length} Listed Brokers`}
+							</p>
 						</div>
 					</section>
 
-					<section className="mt-8 rounded-[2rem] border border-white/10 bg-slate-100/95 p-5 shadow-[0_25px_70px_rgba(15,23,42,0.18)] backdrop-blur-md sm:p-6 lg:p-7">
+					<section className="mt-4 rounded-[2rem] border border-white/10 bg-primary-mid/60 p-5 backdrop-blur-md sm:p-6 lg:p-7">
 						<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 							<div>
-								<p className="text-[11px] font-black uppercase tracking-[0.28em] text-slate-500">
+								<p className="text-[11px] font-black uppercase tracking-[0.28em] text-gray-500">
 									Directory Search
 								</p>
-								<h2 className="mt-2 text-2xl font-black uppercase tracking-tight text-slate-900">
-									Find a member broker in seconds
+								<h2 className="mt-2 text-2xl font-black uppercase tracking-tight text-white">
+									Broker Members
 								</h2>
 							</div>
 
 							<div className="relative w-full max-w-xl">
-								<Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+								<Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 								<input
 									type="text"
 									value={searchTerm}
 									onChange={(event) => setSearchTerm(event.target.value)}
 									placeholder="Search by broker, city, email, website, or representative"
-									className="w-full rounded-2xl border border-slate-300 bg-white px-12 py-3.5 text-sm text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+									className="w-full rounded-2xl border border-white/10 bg-white/5 px-12 py-3.5 text-sm text-white placeholder-gray-500 outline-none transition focus:border-accent-cyan focus:ring-4 focus:ring-accent-cyan/20"
 								/>
 							</div>
 						</div>
@@ -437,7 +354,7 @@ const MemberBrokers = () => {
 						)}
 
 						{isLoading ? (
-							<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+							<div className="mt-6 grid gap-5">
 								{Array.from({ length: 6 }).map((_, index) => (
 									<div
 										key={`skeleton-${index}`}
@@ -461,14 +378,14 @@ const MemberBrokers = () => {
 						) : (
 							<>
 								<div className="mt-5 flex items-center justify-between gap-4">
-									<p className="text-sm font-semibold text-slate-600">
+									{/* <p className="text-sm font-semibold text-slate-600">
 										Showing <span className="text-slate-950">{filteredBrokers.length}</span> broker{filteredBrokers.length === 1 ? '' : 's'}
-									</p>
-									{filteredBrokers.length > 0 && (
-										<p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+									</p> */}
+									{/* {filteredBrokers.length > 0 && (
+										<p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
 											Page {currentPage} / {totalPages}
 										</p>
-									)}
+									)} */}
 								</div>
 
 								{filteredBrokers.length === 0 ? (
@@ -478,11 +395,11 @@ const MemberBrokers = () => {
 									</div>
 								) : (
 									<>
-										<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-											{paginatedBrokers.map((broker, index) => (
+										<div className="mt-6 grid grid-cols-4 gap-5">
+											{paginatedBrokers.map((broker) => (
 											<article
 												key={broker.id}
-												className="group overflow-hidden rounded-[1.9rem] border border-slate-300 bg-[#eff3f7] shadow-[0_14px_30px_rgba(15,23,42,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(15,23,42,0.14)]"
+												className="group overflow-hidden rounded-[1.9rem] border border-white/10 bg-primary-mid/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-primary-mid/80 hover:shadow-[0_10px_30px_rgba(0,245,212,0.1)]"
 											>
 												<div className="px-6 pb-0 pt-6">
 													<div className="flex justify-center">
@@ -493,47 +410,46 @@ const MemberBrokers = () => {
 																className="h-12 w-24 object-contain"
 															/>
 														) : (
-															<div className="flex h-12 w-24 items-center justify-center rounded-full bg-white text-base font-black tracking-wide text-slate-700">
+															<div className="flex h-12 w-24 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black tracking-wide text-white">
 																{getInitials(broker.name)}
 															</div>
 														)}
 													</div>
 
-													<p className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500">
-														Member {String((currentPage - 1) * itemsPerPage + index + 1).padStart(2, '0')}
-													</p>
+													<p className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.24em] text-gray-500">
+																											</p>
 
-													<h3 className="mx-auto mt-2 max-w-[18rem] text-center text-xl font-black uppercase leading-tight text-slate-950">
+													<h3 className="mx-auto mt-2 max-w-[18rem] text-center text-sm font-black uppercase leading-tight text-white">
 														{broker.name}
 													</h3>
 
-													<div className="my-5 h-px bg-slate-300" />
+													<div className="my-5 h-px bg-white/10" />
 
-													<div className="space-y-3 text-base text-slate-600">
+													<div className="space-y-2 text-xs text-gray-400">
 														{broker.address && (
 															<div className="flex items-start gap-3">
-																<MapPin size={22} className="mt-0.5 shrink-0 text-blue-700" />
-																<span className="text-base leading-tight text-slate-700">{broker.address}</span>
+																<MapPin size={14} className="mt-0.5 shrink-0 text-accent-cyan" />
+																<span className="text-xs leading-tight text-gray-300">{broker.address}</span>
 															</div>
 														)}
 														{broker.phone && (
 															<div className="flex items-center gap-3">
-																<Phone size={22} className="shrink-0 text-blue-700" />
-																<span className="text-base text-slate-700">{broker.phone}</span>
+																<Phone size={14} className="shrink-0 text-accent-cyan" />
+																<span className="text-xs text-gray-300">{broker.phone}</span>
 															</div>
 														)}
 														{broker.fax && (
 															<div className="flex items-center gap-3">
-																<Printer size={22} className="shrink-0 text-blue-700" />
-																<span className="text-base text-slate-700">{broker.fax}</span>
+																<Printer size={14} className="shrink-0 text-accent-cyan" />
+																<span className="text-xs text-gray-300">{broker.fax}</span>
 															</div>
 														)}
 														{broker.email && (
 															<div className="flex items-center gap-3">
-																<Mail size={22} className="shrink-0 text-blue-700" />
+																<Mail size={14} className="shrink-0 text-accent-cyan" />
 																<a
 																	href={`mailto:${broker.email}`}
-																className="truncate text-base text-blue-500 transition hover:text-blue-700 hover:underline"
+																className="truncate text-xs text-accent-cyan transition hover:text-white hover:underline"
 																>
 																	{broker.email}
 																</a>
@@ -541,12 +457,12 @@ const MemberBrokers = () => {
 														)}
 														{broker.websiteHref && (
 															<div className="flex items-center gap-3">
-																<Globe size={22} className="shrink-0 text-blue-700" />
+																<Globe size={14} className="shrink-0 text-accent-cyan" />
 																<a
 																	href={broker.websiteHref}
 																	target="_blank"
 																	rel="noreferrer"
-																className="truncate text-base text-blue-500 transition hover:text-blue-700 hover:underline"
+																className="truncate text-xs text-accent-cyan transition hover:text-white hover:underline"
 																>
 																	{broker.websiteLabel}
 																</a>
@@ -556,16 +472,16 @@ const MemberBrokers = () => {
 												</div>
 
 													{broker.representatives.length > 0 && (
-														<div className="mt-6 border-t border-slate-300 bg-[linear-gradient(160deg,rgba(210,230,246,0.6),rgba(232,239,247,0.7))] px-6 py-5">
+														<div className="mt-6 border-t border-white/10 bg-white/5 px-6 py-5">
 															<div className="space-y-4">
 																{broker.representatives.map((person, personIndex) => (
 																	<div key={`${broker.id}-${person.name}-${personIndex}`} className="flex items-center gap-3">
-																		<div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-200 to-blue-300 text-blue-700">
-																			<UserRound size={22} />
+																		<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-cyan/20 text-accent-cyan">
+																			<UserRound size={14} />
 																		</div>
 																		<div className="min-w-0">
-																			<p className="truncate text-lg font-black text-slate-900">{person.name}</p>
-																			<p className="text-sm text-slate-600">{person.role}</p>
+																			<p className="truncate text-xs font-black text-white">{person.name}</p>
+																			<p className="text-[10px] text-gray-400">{person.role}</p>
 																		</div>
 																	</div>
 																))}
@@ -617,9 +533,7 @@ const MemberBrokers = () => {
 							</>
 						)}
 					</section>
-				</div>
-			</main>
-		</div>
+	</div>
 	);
 };
 
