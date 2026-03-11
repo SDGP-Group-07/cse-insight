@@ -1,18 +1,117 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-	ArrowUpRight,
 	Building2,
 	Globe,
 	Landmark,
 	Mail,
 	MapPin,
 	Phone,
+	Printer,
 	Search,
 	ShieldCheck,
+	UserRound,
 	Users,
 } from 'lucide-react';
 import Header from '../common/Header';
 import BrokerService from '../../services/BrokerService';
+
+const brokerLogoModules = import.meta.glob(
+	'../../assets/imgs/brokers/*.{png,jpg,jpeg,webp,svg}',
+	{ eager: true, import: 'default' },
+);
+
+const brokerLogosByFile = Object.fromEntries(
+	Object.entries(brokerLogoModules).map(([path, value]) => {
+		const fileName = path.split('/').pop();
+		return [fileName, value];
+	}),
+);
+
+const normalizeLogoFileKey = (fileName) => {
+	if (!fileName) {
+		return '';
+	}
+
+	return fileName
+		.toLowerCase()
+		.replace(/'/g, '')
+		// Handle names like "logo.png.png" by removing repeated extensions.
+		.replace(/(\.(png|jpg|jpeg|webp|svg))+$/g, '')
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+};
+
+const brokerLogosByKey = Object.fromEntries(
+	Object.entries(brokerLogosByFile).map(([fileName, value]) => [
+		normalizeLogoFileKey(fileName),
+		value,
+	]),
+);
+
+const brokerLogoKeyMap = {
+	'bartleet religare securities': 'bartleet-religare',
+	'hnb stockbrokers': 'hnb-stockbrokers',
+	'hnb stock brokers': 'hnb-stockbrokers',
+	'john keells stock brokers': 'john-keells-stock-brokers',
+	'asha securities': 'asia-securities-limited',
+	'almas equities': 'almas-equities',
+	'somerville stockbrokers': 'somerville-stockbrokers',
+	'somerville stock brokers': 'somerville-stockbrokers',
+	'j b securities': 'jb-securities',
+	'lanka securities': 'ubsl',
+	'asia securities': 'asia-securities',
+	'capital trust securities': 'capital-trust-securities',
+	'sampath securities': 'sampath-securities',
+	'ct smith securities': 'ct-smith-securities',
+	'first capital equities': 'first-capital',
+	'ndb securities': 'ndb-securities',
+	'acs capital': 'acs-capital',
+};
+
+const normalizeBrokerName = (name) => {
+	if (!name) {
+		return '';
+	}
+
+	return name
+		.toLowerCase()
+		.replace(/\(pvt\)|ltd\.?|limited|private|stock\s*brokers?/g, (match) => {
+			if (match.includes('stock')) {
+				return 'stock brokers';
+			}
+			if (match.includes('limited') || match.includes('ltd')) {
+				return '';
+			}
+			return '';
+		})
+		.replace(/[^a-z0-9\s]/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+};
+
+const resolveBrokerLogo = (name, apiLogo) => {
+	const normalizedName = normalizeBrokerName(name);
+	const mappedLogoKey =
+		brokerLogoKeyMap[normalizedName] || normalizedName.replace(/\s+/g, '-');
+
+	if (mappedLogoKey && brokerLogosByKey[mappedLogoKey]) {
+		return brokerLogosByKey[mappedLogoKey];
+	}
+
+	// Fallback for slightly mismatched file keys.
+	const fuzzyKey = Object.keys(brokerLogosByKey).find(
+		(key) => key.includes(mappedLogoKey) || mappedLogoKey.includes(key),
+	);
+	if (fuzzyKey) {
+		return brokerLogosByKey[fuzzyKey];
+	}
+
+	if (typeof apiLogo === 'string' && apiLogo.trim()) {
+		return apiLogo;
+	}
+
+	return '';
+};
 
 const valueFrom = (source, keys) => {
 	for (const key of keys) {
@@ -100,13 +199,16 @@ const buildRepresentatives = (broker) => {
 };
 
 const normalizeBroker = (broker, index) => {
+	const name =
+		valueFrom(broker, ['name', 'brokerName', 'memberName', 'companyName']) ||
+		'Unnamed Broker';
 	const website = normalizeWebsite(
 		valueFrom(broker, ['website', 'webSite', 'url', 'siteUrl', 'web']),
 	);
 
 	return {
 		id: valueFrom(broker, ['id', 'memberId', 'brokerId']) || `broker-${index}`,
-		name: valueFrom(broker, ['name', 'brokerName', 'memberName', 'companyName']) || 'Unnamed Broker',
+		name,
 		address: valueFrom(broker, ['address', 'companyAddress', 'registeredAddress', 'location', 'officeAddress']),
 		phone: valueFrom(broker, ['phone', 'telephone', 'telephoneNo', 'phoneNumber', 'contactNo']),
 		fax: valueFrom(broker, ['fax', 'faxNo', 'facsimile']),
@@ -115,7 +217,10 @@ const normalizeBroker = (broker, index) => {
 		websiteHref: website.href,
 		license: valueFrom(broker, ['license', 'licenseNo', 'memberCode', 'brokerCode']),
 		city: valueFrom(broker, ['city', 'district', 'town']),
-		logo: valueFrom(broker, ['logo', 'logoUrl', 'imageUrl', 'image']),
+		logo: resolveBrokerLogo(
+			name,
+			valueFrom(broker, ['logo', 'logoUrl', 'imageUrl', 'image']),
+		),
 		representatives: buildRepresentatives(broker),
 	};
 };
@@ -125,6 +230,8 @@ const MemberBrokers = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState('');
+	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 8;
 
 	useEffect(() => {
 		let isMounted = true;
@@ -190,6 +297,22 @@ const MemberBrokers = () => {
 			return haystack.includes(query);
 		});
 	}, [brokers, searchTerm]);
+
+	const totalPages = Math.max(1, Math.ceil(filteredBrokers.length / itemsPerPage));
+	const paginatedBrokers = useMemo(() => {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		return filteredBrokers.slice(startIndex, startIndex + itemsPerPage);
+	}, [currentPage, filteredBrokers]);
+
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [searchTerm, brokers.length]);
+
+	useEffect(() => {
+		if (currentPage > totalPages) {
+			setCurrentPage(totalPages);
+		}
+	}, [currentPage, totalPages]);
 
 	const stats = useMemo(() => {
 		const total = brokers.length;
@@ -314,7 +437,7 @@ const MemberBrokers = () => {
 						)}
 
 						{isLoading ? (
-							<div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+							<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
 								{Array.from({ length: 6 }).map((_, index) => (
 									<div
 										key={`skeleton-${index}`}
@@ -341,6 +464,11 @@ const MemberBrokers = () => {
 									<p className="text-sm font-semibold text-slate-600">
 										Showing <span className="text-slate-950">{filteredBrokers.length}</span> broker{filteredBrokers.length === 1 ? '' : 's'}
 									</p>
+									{filteredBrokers.length > 0 && (
+										<p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+											Page {currentPage} / {totalPages}
+										</p>
+									)}
 								</div>
 
 								{filteredBrokers.length === 0 ? (
@@ -349,80 +477,63 @@ const MemberBrokers = () => {
 										<p className="mt-2 text-sm text-slate-500">Try a broker name, city, email, or representative name.</p>
 									</div>
 								) : (
-									<div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-										{filteredBrokers.map((broker, index) => (
+									<>
+										<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+											{paginatedBrokers.map((broker, index) => (
 											<article
 												key={broker.id}
-												className="group relative overflow-hidden rounded-[1.9rem] border border-slate-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_70px_rgba(14,116,144,0.16)]"
+												className="group overflow-hidden rounded-[1.9rem] border border-slate-300 bg-[#eff3f7] shadow-[0_14px_30px_rgba(15,23,42,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(15,23,42,0.14)]"
 											>
-												<div className="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(135deg,rgba(186,230,253,0.36),rgba(226,232,240,0.15)_55%,rgba(191,219,254,0.34))]" />
-												<div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-sky-100/60 blur-2xl transition duration-300 group-hover:bg-cyan-100/70" />
-
-												<div className="relative">
-													<div className="flex items-start justify-between gap-4">
-														<div className="flex min-w-0 items-center gap-4">
-															{broker.logo ? (
-																<img
-																	src={broker.logo}
-																	alt={broker.name}
-																	className="h-14 w-20 rounded-2xl border border-slate-200 bg-white object-contain p-2"
-																/>
-															) : (
-																<div className="flex h-14 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-cyan-500 text-lg font-black text-white shadow-lg shadow-sky-200">
-																	{getInitials(broker.name)}
-																</div>
-															)}
-
-															<div className="min-w-0">
-																<p className="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400">
-																	Member {String(index + 1).padStart(2, '0')}
-																</p>
-																<h3 className="mt-2 line-clamp-2 text-2xl font-black uppercase leading-tight text-slate-950">
-																	{broker.name}
-																</h3>
+												<div className="px-6 pb-0 pt-6">
+													<div className="flex justify-center">
+														{broker.logo ? (
+															<img
+																src={broker.logo}
+																alt={broker.name}
+																className="h-12 w-24 object-contain"
+															/>
+														) : (
+															<div className="flex h-12 w-24 items-center justify-center rounded-full bg-white text-base font-black tracking-wide text-slate-700">
+																{getInitials(broker.name)}
 															</div>
-														</div>
-
-														{broker.websiteHref && (
-															<a
-																href={broker.websiteHref}
-																target="_blank"
-																rel="noreferrer"
-																className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-500 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
-																aria-label={`Visit ${broker.name} website`}
-															>
-																<ArrowUpRight size={18} />
-															</a>
 														)}
 													</div>
 
-													<div className="my-5 h-px bg-slate-200" />
+													<p className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500">
+														Member {String((currentPage - 1) * itemsPerPage + index + 1).padStart(2, '0')}
+													</p>
 
-													<div className="space-y-3 text-[15px] text-slate-600">
+													<h3 className="mx-auto mt-2 max-w-[18rem] text-center text-xl font-black uppercase leading-tight text-slate-950">
+														{broker.name}
+													</h3>
+
+													<div className="my-5 h-px bg-slate-300" />
+
+													<div className="space-y-3 text-base text-slate-600">
 														{broker.address && (
 															<div className="flex items-start gap-3">
-																<MapPin size={18} className="mt-0.5 shrink-0 text-sky-600" />
-																<span>{broker.address}</span>
+																<MapPin size={22} className="mt-0.5 shrink-0 text-blue-700" />
+																<span className="text-base leading-tight text-slate-700">{broker.address}</span>
 															</div>
 														)}
 														{broker.phone && (
 															<div className="flex items-center gap-3">
-																<Phone size={18} className="shrink-0 text-cyan-600" />
-																<span>{broker.phone}</span>
+																<Phone size={22} className="shrink-0 text-blue-700" />
+																<span className="text-base text-slate-700">{broker.phone}</span>
 															</div>
 														)}
 														{broker.fax && (
 															<div className="flex items-center gap-3">
-																<Landmark size={18} className="shrink-0 text-indigo-500" />
-																<span>{broker.fax}</span>
+																<Printer size={22} className="shrink-0 text-blue-700" />
+																<span className="text-base text-slate-700">{broker.fax}</span>
 															</div>
 														)}
 														{broker.email && (
 															<div className="flex items-center gap-3">
-																<Mail size={18} className="shrink-0 text-blue-600" />
+																<Mail size={22} className="shrink-0 text-blue-700" />
 																<a
 																	href={`mailto:${broker.email}`}
-																	className="truncate text-sky-600 transition hover:text-sky-800 hover:underline"
+																className="truncate text-base text-blue-500 transition hover:text-blue-700 hover:underline"
 																>
 																	{broker.email}
 																</a>
@@ -430,40 +541,78 @@ const MemberBrokers = () => {
 														)}
 														{broker.websiteHref && (
 															<div className="flex items-center gap-3">
-																<Globe size={18} className="shrink-0 text-sky-700" />
+																<Globe size={22} className="shrink-0 text-blue-700" />
 																<a
 																	href={broker.websiteHref}
 																	target="_blank"
 																	rel="noreferrer"
-																	className="truncate text-sky-600 transition hover:text-sky-800 hover:underline"
+																className="truncate text-base text-blue-500 transition hover:text-blue-700 hover:underline"
 																>
 																	{broker.websiteLabel}
 																</a>
 															</div>
 														)}
 													</div>
+												</div>
 
 													{broker.representatives.length > 0 && (
-														<div className="relative mt-6 border-t border-slate-200 pt-5">
-															<div className="space-y-3">
+														<div className="mt-6 border-t border-slate-300 bg-[linear-gradient(160deg,rgba(210,230,246,0.6),rgba(232,239,247,0.7))] px-6 py-5">
+															<div className="space-y-4">
 																{broker.representatives.map((person, personIndex) => (
 																	<div key={`${broker.id}-${person.name}-${personIndex}`} className="flex items-center gap-3">
-																		<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-100 to-indigo-100 text-sky-700">
-																			<Users size={18} />
+																		<div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-200 to-blue-300 text-blue-700">
+																			<UserRound size={22} />
 																		</div>
 																		<div className="min-w-0">
-																			<p className="truncate text-base font-bold text-slate-900">{person.name}</p>
-																			<p className="text-sm text-slate-500">{person.role}</p>
+																			<p className="truncate text-lg font-black text-slate-900">{person.name}</p>
+																			<p className="text-sm text-slate-600">{person.role}</p>
 																		</div>
 																	</div>
 																))}
 															</div>
 														</div>
 													)}
-												</div>
 											</article>
-										))}
-									</div>
+											))}
+										</div>
+
+										{totalPages > 1 && (
+											<div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+											<button
+												type="button"
+												onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+												disabled={currentPage === 1}
+												className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+											>
+												Prev
+											</button>
+
+											{Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNumber) => (
+												<button
+													key={pageNumber}
+													type="button"
+													onClick={() => setCurrentPage(pageNumber)}
+													className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
+														currentPage === pageNumber
+															? 'border-sky-500 bg-sky-600 text-white'
+															: 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+													}`}
+												>
+													{pageNumber}
+												</button>
+											))}
+
+											<button
+												type="button"
+												onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+												disabled={currentPage === totalPages}
+												className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+											>
+												Next
+											</button>
+											</div>
+										)}
+									</>
 								)}
 							</>
 						)}
