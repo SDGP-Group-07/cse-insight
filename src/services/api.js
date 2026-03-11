@@ -1,20 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
-//const API_BASE_URL = 'http://localhost:5244/api';
-const API_BASE_URL =
-  'https://cse-insight-api-btgbf9efd3g7fze2.southeastasia-01.azurewebsites.net/api';
+const API_BASE_URL = "http://localhost:5244/api";
+// const API_BASE_URL =
+//   'https://cse-insight-api-btgbf9efd3g7fze2.southeastasia-01.azurewebsites.net/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Request Interceptor: Attach Token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
