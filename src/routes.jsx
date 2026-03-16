@@ -113,7 +113,7 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: '/predictions',
+        path: '/tools/price-predictions',
         element: (
             <ProtectedRoute>
                 <AppLayout><PredictionPage /></AppLayout>

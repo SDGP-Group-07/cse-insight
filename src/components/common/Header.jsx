@@ -49,7 +49,7 @@ const Header = () => {
             dropdown: [
                 { name: 'AI Chatbot', path: '#', icon: MessageSquare, action: 'toggleChat' },
                 { name: 'Document Analyzer', path: '#', icon: FileText, disabled: true },
-                { name: 'Price Predictions', path: '#', icon: TrendingUp, disabled: true },
+                { name: 'Price Predictions', path: '/tools/price-predictions', icon: TrendingUp },
                 { name: 'Dividend Calendar', path: '/tools/dividends', icon: Calendar },
                 { name: 'Brokers Directory', path: '/tools/brokers', icon: User },
                 { name: 'Technical Analysis', path: '/tools/technical-analysis', icon: BarChart2 }
