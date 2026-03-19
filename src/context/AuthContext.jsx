@@ -16,26 +16,21 @@ export const AuthProvider = ({ children }) => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                // Use verifyToken or getCurrentUser depending on what's available/preferred
-                // The user requested verifyToken, so we'll use that if it returns user data,
-                // otherwise we might need to fetch user data separately.
-                // Looking at authService, verifyToken returns boolean.
-                // Let's use getCurrentUser for now as it's synchronous in the mock, 
-                // but ideally we should verify with backend.
-                // For now, let's stick to the user's requested logic structure but adapt to our service.
-
-                const isValid = await authService.verifyToken();
-                if (isValid) {
-                    const userData = authService.getCurrentUser();
+                const userData = await authService.getCurrentUser();
+                if (userData) {
                     setUser(userData);
                 } else {
                     localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('refreshToken');
                     setUser(null);
                 }
             }
         } catch (err) {
             console.error('Auth check failed:', err);
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('refreshToken');
             setUser(null);
         } finally {
             setLoading(false);
@@ -45,38 +40,49 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             setError(null);
-            const user = await authService.login({ email, password });
-            // authService.login already sets localStorage in our current implementation,
-            // but the user's snippet does it here. We should align.
-            // Our authService.login returns the user object.
-            // We'll let authService handle the API call, and we update state here.
-            setUser(user);
+            const userData = await authService.login({ email, password });
+            setUser(userData);
             return { success: true };
         } catch (err) {
-            setError(err.message || 'Login failed');
-            return { success: false, error: err.message || 'Login failed' };
+            const msg = err.message || err.Message || 'Login failed';
+            setError(msg);
+            return { success: false, error: msg };
         }
     };
 
     const register = async (userData) => {
         try {
             setError(null);
-            const user = await authService.register(userData);
-            setUser(user);
+            const newUser = await authService.register(userData);
+            setUser(newUser);
             return { success: true };
         } catch (err) {
-            setError(err.message || 'Registration failed');
-            return { success: false, error: err.message || 'Registration failed' };
+            const msg = err.message || err.Message || 'Registration failed';
+            setError(msg);
+            return { success: false, error: msg };
         }
     };
 
-    const logout = () => {
-        authService.logout();
+    const logout = async () => {
+        await authService.logout();
         setUser(null);
     };
 
+    const updateProfile = async (profileData) => {
+        try {
+            setError(null);
+            const updatedUser = await authService.updateProfile(profileData);
+            setUser(updatedUser);
+            return { success: true, user: updatedUser };
+        } catch (err) {
+            const msg = err.message || err.Message || 'Profile update failed';
+            setError(msg);
+            return { success: false, error: msg };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, error, login, register, logout, checkAuth }}>
+        <AuthContext.Provider value={{ user, loading, error, login, register, logout, updateProfile, checkAuth }}>
             {children}
         </AuthContext.Provider>
     );

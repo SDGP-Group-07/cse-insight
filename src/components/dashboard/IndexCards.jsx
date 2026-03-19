@@ -122,9 +122,10 @@ const IndexCards = () => {
             {[...Array(totalPages)].map((_, index) => (
               <div
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${page === index + 1
-                  ? 'bg-white scale-110'
-                  : 'bg-white/30'
+                onClick={() => setPage(index + 1)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${page === index + 1
+                    ? 'bg-white scale-110'
+                    : 'bg-white/30 hover:bg-white/60'
                   }`}
               />
             ))}

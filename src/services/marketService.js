@@ -211,21 +211,21 @@ const marketService = {
         : Array.isArray(data?.reqTradeSummery)
           ? data.reqTradeSummery
           : [];
-console.log(data);
+    console.log(data);
     return rows.map(normalizeStock);
-    
+
   },
 
   getMarketCap: async () => {
-  const response = await api.get('/cse/market-cap');
-  const data = unwrapApiData(response);
+    const response = await api.get('/cse/market-cap');
+    const data = unwrapApiData(response);
 
-  const rows = Array.isArray(data?.reqByMarketcap)
-    ? data.reqByMarketcap
-    : [];
+    const rows = Array.isArray(data?.reqByMarketcap)
+      ? data.reqByMarketcap
+      : [];
 
-  return rows.map(normalizeStock);
-},
+    return rows.map(normalizeStock);
+  },
 
   getMarketStatus: async () => {
     const response = await api.get('/cse/market-status');
@@ -263,7 +263,25 @@ console.log(data);
     // Handle the API typo: reqFinancialAnnouncemnets
     const announcements = data.reqFinancialAnnouncemnets ?? data.announcements ?? [];
     if (!Array.isArray(announcements)) return [];
+    const buildFileUrl = (path) => {
+      if (!path || typeof path !== "string") return "";
 
+      if (/^https?:\/\//i.test(path)) return path;
+
+      return `https://cdn.cse.lk/${path.replace(/^\/+/, "")}`;
+    };
+
+    return announcements.map((item) => ({
+      id: item.id,
+      name: item.name ?? item.symbol ?? "Unknown",
+      symbol: item.symbol ?? "",
+      title: item.fileText ?? "",
+      uploadedDate: item.uploadedDate ?? "",
+      logoUrl: item.logoUrl ?? "",
+      path: item.path ?? "",
+      url: buildFileUrl(item.path), // ⭐ full PDF link
+    }));
+    
     return announcements.map((item) => ({
       id: item.id,
       name: item.name ?? item.symbol ?? 'Unknown',

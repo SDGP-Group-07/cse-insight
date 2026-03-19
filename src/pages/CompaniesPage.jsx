@@ -11,33 +11,49 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import companyService from '../services/companyService';
+import { useSearchParams } from "react-router-dom";
 
 const CompaniesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSector, setSelectedSector] = useState({
-    id: 'all',
-    name: 'All',
-  });
+  const [searchParams] = useSearchParams();
+  const sectorFromURL = searchParams.get("sector");
+const [selectedSector, setSelectedSector] = useState({
+  id: sectorFromURL || "all",
+  name: "All",
+});
   const [companies, setCompanies] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchSectors = async () => {
-      try {
-        const sectorsResponse = await companyService.getSectors();
-        const sectorList = Array.isArray(sectorsResponse)
-          ? sectorsResponse
-          : [];
-        setSectors(sectorList);
-      } catch (error) {
-        console.error('Error fetching sectors:', error);
-        setSectors([]);
-      }
-    };
+useEffect(() => {
+  const fetchSectors = async () => {
+    try {
+      const sectorsResponse = await companyService.getSectors();
+      const sectorList = Array.isArray(sectorsResponse) ? sectorsResponse : [];
 
-    fetchSectors();
-  }, []);
+      setSectors(sectorList);
+
+      if (sectorFromURL) {
+        const sector = sectorList.find(
+          (s) => String(s.sectorId) === String(sectorFromURL)
+        );
+
+        if (sector) {
+          setSelectedSector({
+            id: sector.sectorId,
+            name: sector.name,
+          });
+        }
+      }
+
+    } catch (error) {
+      console.error("Error fetching sectors:", error);
+      setSectors([]);
+    }
+  };
+
+  fetchSectors();
+}, []);
 
   useEffect(() => {
     const fetchCompanies = async () => {
