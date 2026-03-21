@@ -30,7 +30,7 @@ const ConfidenceGauge = ({ confidence }) => {
   const needleY = cy - (r - strokeWidth / 2) * Math.sin(angleRad);
 
   return (
-    <div className="bg-primary-mid border border-white/10 rounded-2xl p-5 flex flex-col gap-3">
+    <div className="bg-primary-mid hover:bg-primary-light border border-white/10 hover:border-white/20 rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 cursor-default">
       <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase">Confidence Level</p>
 
       <div className="flex flex-col items-center">
