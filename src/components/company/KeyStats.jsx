@@ -36,7 +36,7 @@ const KeyStats = ({ company }) => {
   return (
     <Card
       hover={false}
-      className="bg-[#2a233d] border border-[#3e3753] rounded-lg h-full"
+      className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-[#3e3753] rounded-lg h-full"
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-[18px] font-normal text-white">
