@@ -33,7 +33,10 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
                 'Blue chip vs growth stocks',
                 'Value investing',
                 'Dividend investing',
-                'Risk management'
+                'Risk management',
+                'Day trading basics',
+                'Swing trading basics',
+                'Position trading basics'
             ]
         },
         {

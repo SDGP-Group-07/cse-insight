@@ -15,6 +15,13 @@ import investmentBestPracticesMarkdown from '../../assets/docs/wiki/investment_b
 import redFlagsMarkdown from '../../assets/docs/wiki/red_flags.md?raw';
 import portfolioDiversificationMarkdown from '../../assets/docs/wiki/portfolio_diversification.md?raw';
 import emotionalDisciplineMarkdown from '../../assets/docs/wiki/emotional_discipline.md?raw';
+import blueChipMarkdown from '../../assets/docs/wiki/blue_chip.md?raw';
+import valueInvestingMarkdown from '../../assets/docs/wiki/value_investing.md?raw';
+import dividendInvestingMarkdown from '../../assets/docs/wiki/dividend_investing.md?raw';
+import riskManagementMarkdown from '../../assets/docs/wiki/risk_management.md?raw';
+import dayTradingMarkdown from '../../assets/docs/wiki/day_trading.md?raw';
+import swingTradingMarkdown from '../../assets/docs/wiki/swing_trading.md?raw';
+import positionTradingMarkdown from '../../assets/docs/wiki/position_trading.md?raw';
 import candleBarChartImage from '../../assets/imgs/candle_bar_chart.png';
 import companyResearchImage from '../../assets/imgs/company_research.jpeg';
 import sectorCardImage from '../../assets/imgs/sector_card.png';
@@ -79,6 +86,34 @@ const wikiTopicConfig = {
   'Key financial ratios': {
     section: 'Financial Statements',
     markdown: keyFinancialRatiosMarkdown,
+  },
+  'Blue chip vs growth stocks': {
+    section: 'Investment Strategies',
+    markdown: blueChipMarkdown,
+  },
+  'Value investing': {
+    section: 'Investment Strategies',
+    markdown: valueInvestingMarkdown,
+  },
+  'Dividend investing': {
+    section: 'Investment Strategies',
+    markdown: dividendInvestingMarkdown,
+  },
+  'Risk management': {
+    section: 'Investment Strategies',
+    markdown: riskManagementMarkdown,
+  },
+  'Day trading basics': {
+    section: 'Investment Strategies',
+    markdown: dayTradingMarkdown,
+  },
+  'Swing trading basics': {
+    section: 'Investment Strategies',
+    markdown: swingTradingMarkdown,
+  },
+  'Position trading basics': {
+    section: 'Investment Strategies',
+    markdown: positionTradingMarkdown,
   },
   'Investment best practices': {
     section: "Dos and Don'ts",
