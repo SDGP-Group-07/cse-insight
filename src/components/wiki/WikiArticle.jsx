@@ -11,6 +11,10 @@ import balanceSheetBasicsMarkdown from '../../assets/docs/wiki/balance_sheet_bas
 import incomeStatementInterpretationMarkdown from '../../assets/docs/wiki/income_statement_intepretation.md?raw';
 import cashFlowAnalysisMarkdown from '../../assets/docs/wiki/cash_flow_analysis.md?raw';
 import keyFinancialRatiosMarkdown from '../../assets/docs/wiki/key_financial_ratios.md?raw';
+import investmentBestPracticesMarkdown from '../../assets/docs/wiki/investment_best_practices.md?raw';
+import redFlagsMarkdown from '../../assets/docs/wiki/red_flags.md?raw';
+import portfolioDiversificationMarkdown from '../../assets/docs/wiki/portfolio_diversification.md?raw';
+import emotionalDisciplineMarkdown from '../../assets/docs/wiki/emotional_discipline.md?raw';
 import candleBarChartImage from '../../assets/imgs/candle_bar_chart.png';
 import companyResearchImage from '../../assets/imgs/company_research.jpeg';
 import sectorCardImage from '../../assets/imgs/sector_card.png';
@@ -75,6 +79,22 @@ const wikiTopicConfig = {
   'Key financial ratios': {
     section: 'Financial Statements',
     markdown: keyFinancialRatiosMarkdown,
+  },
+  'Investment best practices': {
+    section: "Dos and Don'ts",
+    markdown: investmentBestPracticesMarkdown,
+  },
+  'Red flags to avoid': {
+    section: "Dos and Don'ts",
+    markdown: redFlagsMarkdown,
+  },
+  'Portfolio diversification': {
+    section: "Dos and Don'ts",
+    markdown: portfolioDiversificationMarkdown,
+  },
+  'Emotional discipline': {
+    section: "Dos and Don'ts",
+    markdown: emotionalDisciplineMarkdown,
   },
   'Fundamental analysis': {
     section: 'Market Analysis',
