@@ -1,82 +1,76 @@
-import React from 'react';
-import { TrendingUp, TrendingDown, Minus, Activity, Zap } from 'lucide-react';
-import Card from '../common/Card';
+import { Zap } from 'lucide-react';
 
-const signalConfig = {
-  BUY: {
-    color: '#4ade80',
-    bg: 'rgba(74,222,128,0.1)',
-    border: 'rgba(74,222,128,0.4)',
-    icon: TrendingUp,
-  },
-  SELL: {
-    color: '#ef4444',
-    bg: 'rgba(239,68,68,0.1)',
-    border: 'rgba(239,68,68,0.4)',
-    icon: TrendingDown,
-  },
-  HOLD: {
-    color: '#f59e0b',
-    bg: 'rgba(245,158,11,0.1)',
-    border: 'rgba(245,158,11,0.4)',
-    icon: Minus,
-  },
+const getSignalStyle = (signal) => {
+  switch (signal?.toUpperCase()) {
+    case 'BUY':  return { color: 'text-accent-green', border: 'border-l-accent-green' };
+    case 'SELL': return { color: 'text-red-400',      border: 'border-l-red-400' };
+    default:     return { color: 'text-yellow-400',   border: 'border-l-yellow-400' };
+  }
 };
 
-const EngineSignalCard = ({ data }) => {
-  const { ai_recommendation, reason, confidence, probability_up, probability_down } = data;
+const getVolatility = (probUp, probDown, confidence) => {
+  const spread = Math.abs(probUp - probDown);
+  if (spread < 2 || confidence < 45) return { label: 'High',   color: 'text-yellow-400' };
+  if (spread < 10 || confidence < 65) return { label: 'Medium', color: 'text-orange-400' };
+  return { label: 'Low', color: 'text-accent-green' };
+};
 
-  const signal = ai_recommendation?.toUpperCase() || 'HOLD';
-  const cfg = signalConfig[signal] || signalConfig.HOLD;
+const getMomentum = (probUp) => {
+  if (probUp > 60) return { label: 'Strong Bullish', color: 'text-accent-green' };
+  if (probUp > 52) return { label: 'Mild Bullish',   color: 'text-accent-cyan' };
+  if (probUp > 48) return { label: 'Neutral',        color: 'text-gray-400' };
+  if (probUp > 40) return { label: 'Mild Bearish',   color: 'text-orange-400' };
+  return { label: 'Strong Bearish', color: 'text-red-400' };
+};
 
-  const metrics = [
-    { label: 'Volatility Index', value: confidence < 45 ? 'High' : confidence < 65 ? 'Moderate' : 'Low', color: confidence < 45 ? '#ef4444' : confidence < 65 ? '#f59e0b' : '#4ade80' },
-    { label: 'Bullish Probability', value: `${probability_up.toFixed(2)}%`, color: '#4ade80' },
-    { label: 'Bearish Probability', value: `${probability_down.toFixed(2)}%`, color: '#ef4444' },
-    { label: 'Confidence Score', value: `${confidence.toFixed(2)}%`, color: cfg.color },
-  ];
+const EngineSignalCard = ({ signal, reason, confidence, probabilityUp, probabilityDown }) => {
+  const { color, border } = getSignalStyle(signal);
+  const volatility = getVolatility(probabilityUp, probabilityDown, confidence);
+  const momentum = getMomentum(probabilityUp);
 
   return (
-    <Card
-      className="flex flex-col gap-5 h-full"
-      style={{ borderLeft: `3px solid ${cfg.color}` }}
-    >
-      {/* Badge */}
-      <div
-        className="self-start px-3 py-1 rounded text-xs font-bold tracking-widest uppercase"
-        style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}
-      >
-        Engine Signal
+    <div className={`bg-primary-mid border border-white/10 rounded-2xl p-5 border-l-4 ${border} flex flex-col gap-4`}>
+      {/* Engine signal badge */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 bg-yellow-500/20 border border-yellow-500/30 rounded px-2 py-0.5">
+          <Zap size={11} className="text-yellow-400" />
+          <span className="text-yellow-400 text-xs font-bold tracking-wider">ENGINE SIGNAL</span>
+        </div>
       </div>
 
       {/* Signal */}
       <div>
-        <h2
-          className="text-6xl font-black tracking-tight leading-none"
-          style={{ color: cfg.color }}
-        >
-          {signal}
-        </h2>
-        <p className="text-sm text-gray-400 mt-2 italic">"{reason}"</p>
+        <p className={`text-5xl font-black tracking-wide ${color}`}>{signal?.toUpperCase()}</p>
+        <p className="text-gray-400 text-sm mt-2 leading-relaxed">"{reason}"</p>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-white/10" />
-
-      {/* Metrics */}
-      <div className="flex flex-col gap-3">
-        <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase flex items-center gap-2">
-          <Activity size={12} />
-          Key Metrics Summary
-        </p>
-        {metrics.map((m) => (
-          <div key={m.label} className="flex justify-between items-center text-sm">
-            <span className="text-gray-400">{m.label}</span>
-            <span className="font-semibold" style={{ color: m.color }}>{m.value}</span>
+      {/* Key metrics */}
+      <div>
+        <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-3">Key Metrics Summary</p>
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-400">Volatility Index</span>
+            <span className={`text-sm font-semibold ${volatility.color}`}>{volatility.label}</span>
           </div>
-        ))}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-400">Momentum</span>
+            <span className={`text-sm font-semibold ${momentum.color}`}>{momentum.label}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-400">Confidence Score</span>
+            <span className={`text-sm font-semibold ${confidence < 45 ? 'text-red-400' : confidence < 70 ? 'text-yellow-400' : 'text-accent-green'}`}>
+              {confidence.toFixed(2)}%
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-400">Bull/Bear Spread</span>
+            <span className="text-sm font-semibold text-gray-300">
+              {Math.abs(probabilityUp - probabilityDown).toFixed(2)}%
+            </span>
+          </div>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

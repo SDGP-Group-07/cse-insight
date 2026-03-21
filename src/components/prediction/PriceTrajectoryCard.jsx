@@ -1,81 +1,87 @@
-import React from 'react';
-import { ArrowUp, ArrowDown } from 'lucide-react';
-import Card from '../common/Card';
-
-const Sparkline = ({ isUp }) => {
-  // Generate a smooth SVG path that trends upward (or downward)
-  const points = isUp
-    ? [[0, 60], [30, 58], [60, 52], [90, 48], [120, 44], [150, 38], [180, 32], [210, 26], [240, 20]]
-    : [[0, 20], [30, 26], [60, 32], [90, 38], [120, 44], [150, 50], [180, 54], [210, 58], [240, 62]];
-
-  const toPath = (pts) => {
-    const d = pts.map(([x, y], i) => (i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`)).join(' ');
-    return d;
-  };
-
-  const linePath = toPath(points);
-
-  const fillPath =
-    `${linePath} L ${points[points.length - 1][0]} 80 L 0 80 Z`;
-
-  const color = isUp ? '#4ade80' : '#ef4444';
-  const fillColor = isUp ? 'rgba(74,222,128,0.15)' : 'rgba(239,68,68,0.15)';
-
-  return (
-    <svg viewBox="0 0 240 80" className="w-full h-16" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id={`sparkGrad-${isUp ? 'up' : 'down'}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={fillPath} fill={`url(#sparkGrad-${isUp ? 'up' : 'down'})`} />
-      <path d={linePath} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+import { AreaChart, Area, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+const generateChartData = (currentClose, predictedClose) => {
+  const points = [];
+  const base = currentClose * 0.975;
+  for (let i = 0; i < 10; i++) {
+    const t = i / 9;
+    points.push({
+      day: `D-${9 - i}`,
+      price: parseFloat((base + (currentClose - base) * t).toFixed(2)),
+    });
+  }
+  points.push({ day: 'Pred', price: predictedClose });
+  return points;
 };
 
-const PriceTrajectoryCard = ({ data }) => {
-  const { last_close, predicted_close, predicted_date } = data;
-  const isUp = predicted_close >= last_close;
-  const change = predicted_close - last_close;
-  const changePct = ((change / last_close) * 100).toFixed(2);
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-primary-mid border border-white/10 rounded-lg px-3 py-2 text-xs">
+        <p className="text-gray-400">{label}</p>
+        <p className="text-accent-cyan font-bold">{payload[0].value.toFixed(2)}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+const PriceTrajectoryCard = ({ currentClose, predictedClose, predictedDate }) => {
+  const isUp = predictedClose >= currentClose;
+  const change = predictedClose - currentClose;
+  const changePct = ((change / currentClose) * 100).toFixed(2);
+  const data = generateChartData(currentClose, predictedClose);
 
   return (
-    <Card className="flex flex-col gap-4">
+    <div className="bg-primary-mid border border-white/10 rounded-2xl p-5 flex flex-col gap-3">
       <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase">Price Trajectory</p>
 
-      <div className="flex items-end justify-between">
+      <div className="flex justify-between items-start">
         <div>
           <p className="text-xs text-gray-400 mb-1">Current Close</p>
-          <p className="text-3xl font-bold text-white">{last_close.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-white">{currentClose.toFixed(2)}</p>
         </div>
-
-        <div className="flex items-center gap-1 mb-1">
-          {isUp ? (
-            <ArrowUp size={18} className="text-accent-green" />
-          ) : (
-            <ArrowDown size={18} className="text-red-400" />
-          )}
-        </div>
-
         <div className="text-right">
-          <p className="text-xs mb-1" style={{ color: isUp ? '#4ade80' : '#ef4444' }}>
-            Predicted ({predicted_date})
-          </p>
-          <p className="text-3xl font-bold" style={{ color: isUp ? '#4ade80' : '#ef4444' }}>
-            {predicted_close.toFixed(2)}
-          </p>
-          <p className="text-xs mt-0.5" style={{ color: isUp ? '#4ade80' : '#ef4444' }}>
+          <p className="text-xs text-accent-cyan mb-1">Predicted ({predictedDate})</p>
+          <div className="flex items-center justify-end gap-1">
+            {isUp
+              ? <TrendingUp size={18} className="text-accent-cyan" />
+              : <TrendingDown size={18} className="text-red-400" />
+            }
+            <p className={`text-3xl font-bold ${isUp ? 'text-accent-cyan' : 'text-red-400'}`}>
+              {predictedClose.toFixed(2)}
+            </p>
+          </div>
+          <p className={`text-xs mt-0.5 ${isUp ? 'text-accent-green' : 'text-red-400'}`}>
             {isUp ? '+' : ''}{change.toFixed(2)} ({isUp ? '+' : ''}{changePct}%)
           </p>
         </div>
       </div>
 
-      <div className="mt-1">
-        <Sparkline isUp={isUp} />
+      <div className="h-28">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 5, right: 5, left: -30, bottom: 0 }}>
+            <defs>
+              <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isUp ? '#00f5d4' : '#ef4444'} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={isUp ? '#00f5d4' : '#ef4444'} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <Tooltip content={<CustomTooltip />} />
+            <ReferenceLine x="Pred" stroke="rgba(255,255,255,0.2)" strokeDasharray="3 3" />
+            <Area
+              type="monotone"
+              dataKey="price"
+              stroke={isUp ? '#00f5d4' : '#ef4444'}
+              strokeWidth={2}
+              fill="url(#priceGradient)"
+              dot={false}
+              activeDot={{ r: 4, fill: isUp ? '#00f5d4' : '#ef4444' }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
-    </Card>
+    </div>
   );
 };
 

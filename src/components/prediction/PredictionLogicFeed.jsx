@@ -1,71 +1,65 @@
-import React, { useState } from 'react';
-import { Brain, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
-import Card from '../common/Card';
+import { useState } from 'react';
+import { ChevronDown, ChevronUp, Lightbulb, Cpu } from 'lucide-react';
 
-const FeedItem = ({ item, index }) => {
+const FeedItem = ({ item }) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="flex gap-3 py-4 border-b border-white/5 last:border-0">
-      <div className="mt-1.5 shrink-0">
-        <div className="w-2.5 h-2.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.6)]" />
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <div
-          className="flex items-start justify-between gap-2 cursor-pointer"
-          onClick={() => setExpanded((v) => !v)}
-        >
-          <p className="text-sm font-semibold text-white leading-snug">{item.observation}</p>
-          <button className="text-gray-500 shrink-0 mt-0.5 hover:text-gray-300 transition-colors">
-            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          </button>
+    <div className="border-b border-white/5 last:border-b-0 pb-4 last:pb-0">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full text-left flex items-start gap-3 group"
+      >
+        <span className="w-2 h-2 rounded-full bg-accent-cyan shrink-0 mt-2" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-white group-hover:text-accent-cyan transition-colors leading-snug">
+            {item.observation}
+          </p>
         </div>
+        <span className="text-gray-500 shrink-0 mt-0.5">
+          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </span>
+      </button>
 
-        {expanded && (
-          <div className="mt-2 space-y-2">
-            <p className="text-xs text-gray-400 leading-relaxed">{item.why_it_matters}</p>
-
-            <div className="flex items-start gap-1.5 px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <Lightbulb size={12} className="text-blue-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-blue-300">
-                <span className="font-semibold">Pro-Tip:</span> {item.tip}
-              </p>
-            </div>
+      {expanded && (
+        <div className="ml-5 mt-2 flex flex-col gap-2">
+          <p className="text-xs text-gray-400 leading-relaxed">{item.why_it_matters}</p>
+          <div className="flex items-start gap-2 bg-accent-cyan/5 border border-accent-cyan/15 rounded-lg px-3 py-2">
+            <Lightbulb size={12} className="text-accent-cyan shrink-0 mt-0.5" />
+            <p className="text-xs text-accent-cyan leading-relaxed">
+              <span className="font-semibold">Pro-Tip:</span> {item.tip}
+            </p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const PredictionLogicFeed = ({ data }) => {
-  const { model_prediction_explanation } = data;
-  const nodeCount = model_prediction_explanation?.length || 0;
-
+const PredictionLogicFeed = ({ items }) => {
   return (
-    <Card className="flex flex-col gap-0 h-full">
+    <div className="bg-primary-mid border border-white/10 rounded-2xl flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-            <Brain size={16} className="text-blue-400" />
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-accent-cyan/15 flex items-center justify-center">
+            <Cpu size={16} className="text-accent-cyan" />
           </div>
-          <h3 className="text-base font-bold text-white">AI Prediction Logic Feed</h3>
+          <span className="font-semibold text-white">AI Prediction Logic Feed</span>
         </div>
-
-        <span className="text-xs font-semibold text-gray-400 tracking-widest uppercase">
-          {nodeCount} Nodes Active
-        </span>
+        <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded px-2 py-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
+          <span className="text-xs text-gray-400 font-medium">{items.length} NODES ACTIVE</span>
+        </div>
       </div>
 
       {/* Feed items */}
-      <div className="flex-1 overflow-y-auto max-h-[400px] pr-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-        {model_prediction_explanation?.map((item, i) => (
-          <FeedItem key={i} item={item} index={i} />
+      <div className="flex flex-col gap-4 p-5 overflow-y-auto">
+        {items.map((item, i) => (
+          <FeedItem key={i} item={item} />
         ))}
       </div>
-    </Card>
+    </div>
   );
 };
 
