@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, memo } from 'react';
 
-function TradingViewWidget({ symbol }) {
+function TradingViewWidget({ symbol, interval = '1D', onLoadingChange }) {
     const containerRef = useRef(null);
 
     useEffect(() => {
         const container = containerRef.current;
         if (!container || !symbol) return;
+
+        onLoadingChange?.(true);
 
         container.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
 
@@ -13,12 +15,27 @@ function TradingViewWidget({ symbol }) {
         script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
         script.type = 'text/javascript';
         script.async = true;
+
+        const fallbackReadyTimer = window.setTimeout(() => {
+            onLoadingChange?.(false);
+        }, 1400);
+
+        script.onload = () => {
+            window.setTimeout(() => {
+                onLoadingChange?.(false);
+            }, 220);
+        };
+
+        script.onerror = () => {
+            onLoadingChange?.(false);
+        };
+
         script.innerHTML = JSON.stringify({
             colorTheme: 'dark',
             displayMode: 'single',
             isTransparent: true,
             locale: 'en',
-            interval: '1D',
+            interval,
             disableInterval: false,
             width: '100%',
             height: 460,
@@ -29,9 +46,10 @@ function TradingViewWidget({ symbol }) {
         container.appendChild(script);
 
         return () => {
+            window.clearTimeout(fallbackReadyTimer);
             container.innerHTML = '';
         };
-    }, [symbol]);
+    }, [symbol, interval, onLoadingChange]);
 
     if (!symbol) {
         return (
@@ -107,3 +125,4 @@ function TradingViewWidget({ symbol }) {
 }
 
 export default memo(TradingViewWidget);
+ 
