@@ -23,7 +23,7 @@ const CompanyHeader = ({ company }) => {
           <h1 className="text-3xl font-semibold text-white tracking-tight">
             {company.symbol}
           </h1>
-          <span className="px-3 py-1 rounded-full bg-[#2a233d] text-xs text-[#9b96b2]">
+          <span className="px-3 py-1 rounded-full bg-purple-500/20 text-xs text-purple-300">
             {company.sector}
           </span>
         </div>
@@ -49,7 +49,7 @@ const CompanyHeader = ({ company }) => {
 
         <Button
           variant="ghost"
-          className={`h-10 w-10 rounded-full p-0 border border-[#3e3753] ${subscribed ? 'bg-[#5a5278] text-white' : 'bg-[#2a233d] text-[#9b96b2] hover:text-white'}`}
+          className={`h-10 w-10 rounded-full p-0 border ${subscribed ? 'bg-purple-500/30 border-purple-400 text-purple-100' : 'bg-purple-500/20 border-purple-500/30 text-purple-300 hover:text-purple-200'}`}
           onClick={handleSubscribe}
           title={subscribed ? 'Unsubscribe' : 'Subscribe for alerts'}
         >
