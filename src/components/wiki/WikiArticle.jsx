@@ -7,6 +7,10 @@ import candlestickMarkdown from '../../assets/docs/wiki/candle_stick.md?raw';
 import fundamentalAnalysisMarkdown from '../../assets/docs/wiki/fundamental_analysis.md?raw';
 import sectorCardMarkdown from '../../assets/docs/wiki/sector_card.md?raw';
 import marketIntelligenceMarkdown from '../../assets/docs/wiki/market_intelligence_terminal.md?raw';
+import balanceSheetBasicsMarkdown from '../../assets/docs/wiki/balance_sheet_basics.md?raw';
+import incomeStatementInterpretationMarkdown from '../../assets/docs/wiki/income_statement_intepretation.md?raw';
+import cashFlowAnalysisMarkdown from '../../assets/docs/wiki/cash_flow_analysis.md?raw';
+import keyFinancialRatiosMarkdown from '../../assets/docs/wiki/key_financial_ratios.md?raw';
 import candleBarChartImage from '../../assets/imgs/candle_bar_chart.png';
 import companyResearchImage from '../../assets/imgs/company_research.jpeg';
 import sectorCardImage from '../../assets/imgs/sector_card.png';
@@ -133,6 +137,274 @@ const WikiArticle = ({ topic, onMarkRead }) => {
               {marketIntelligenceMarkdown}
             </ReactMarkdown>
           </div>
+          <div className="mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+            <button
+              onClick={onMarkRead}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 text-accent-green rounded-lg hover:bg-accent-green/20 transition-colors"
+            >
+              <CheckCircle size={18} />
+              Mark as Read
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (topic === 'Balance sheet basics') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <span>Wiki</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Financial Statements</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Balance sheet basics</span>
+        </div>
+
+        <Card className="p-8">
+          <div className="max-w-none text-gray-300">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-2xl font-semibold text-white mt-8 mb-3">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-semibold text-white mt-6 mb-2">{children}</h3>,
+                p: ({ children }) => <p className="text-gray-300 leading-8 mb-4">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-5">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside space-y-2 mb-5">{children}</ol>,
+                li: ({ children }) => <li className="text-gray-300">{children}</li>,
+                hr: () => <hr className="border-white/15 my-6" />,
+                strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+                a: ({ href, children }) => (
+                  <a href={href} className="text-accent-cyan hover:underline" target="_blank" rel="noreferrer">
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-accent-cyan bg-white/5 rounded-r-md px-4 py-3 my-5 text-gray-200">
+                    {children}
+                  </blockquote>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-6">
+                    <table className="w-full border-collapse">{children}</table>
+                  </div>
+                ),
+                thead: ({ children }) => <thead className="bg-white/5">{children}</thead>,
+                th: ({ children }) => <th className="border border-white/20 px-3 py-2 text-left text-white font-semibold">{children}</th>,
+                td: ({ children }) => <td className="border border-white/10 px-3 py-2 text-gray-300 align-top">{children}</td>,
+              }}
+            >
+              {balanceSheetBasicsMarkdown}
+            </ReactMarkdown>
+          </div>
+
+          <div className="mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+            <button
+              onClick={onMarkRead}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 text-accent-green rounded-lg hover:bg-accent-green/20 transition-colors"
+            >
+              <CheckCircle size={18} />
+              Mark as Read
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (topic === 'Income statement interpretation') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <span>Wiki</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Financial Statements</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Income statement interpretation</span>
+        </div>
+
+        <Card className="p-8">
+          <div className="max-w-none text-gray-300">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-2xl font-semibold text-white mt-8 mb-3">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-semibold text-white mt-6 mb-2">{children}</h3>,
+                p: ({ children }) => <p className="text-gray-300 leading-8 mb-4">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-5">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside space-y-2 mb-5">{children}</ol>,
+                li: ({ children }) => <li className="text-gray-300">{children}</li>,
+                hr: () => <hr className="border-white/15 my-6" />,
+                strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+                a: ({ href, children }) => (
+                  <a href={href} className="text-accent-cyan hover:underline" target="_blank" rel="noreferrer">
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-accent-cyan bg-white/5 rounded-r-md px-4 py-3 my-5 text-gray-200">
+                    {children}
+                  </blockquote>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-6">
+                    <table className="w-full border-collapse">{children}</table>
+                  </div>
+                ),
+                thead: ({ children }) => <thead className="bg-white/5">{children}</thead>,
+                th: ({ children }) => <th className="border border-white/20 px-3 py-2 text-left text-white font-semibold">{children}</th>,
+                td: ({ children }) => <td className="border border-white/10 px-3 py-2 text-gray-300 align-top">{children}</td>,
+              }}
+            >
+              {incomeStatementInterpretationMarkdown}
+            </ReactMarkdown>
+          </div>
+
+          <div className="mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+            <button
+              onClick={onMarkRead}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 text-accent-green rounded-lg hover:bg-accent-green/20 transition-colors"
+            >
+              <CheckCircle size={18} />
+              Mark as Read
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (topic === 'Cash flow analysis') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <span>Wiki</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Financial Statements</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Cash flow analysis</span>
+        </div>
+
+        <Card className="p-8">
+          <div className="max-w-none text-gray-300">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-2xl font-semibold text-white mt-8 mb-3">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-semibold text-white mt-6 mb-2">{children}</h3>,
+                p: ({ children }) => <p className="text-gray-300 leading-8 mb-4">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-5">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside space-y-2 mb-5">{children}</ol>,
+                li: ({ children }) => <li className="text-gray-300">{children}</li>,
+                hr: () => <hr className="border-white/15 my-6" />,
+                strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+                a: ({ href, children }) => (
+                  <a href={href} className="text-accent-cyan hover:underline" target="_blank" rel="noreferrer">
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-accent-cyan bg-white/5 rounded-r-md px-4 py-3 my-5 text-gray-200">
+                    {children}
+                  </blockquote>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-6">
+                    <table className="w-full border-collapse">{children}</table>
+                  </div>
+                ),
+                thead: ({ children }) => <thead className="bg-white/5">{children}</thead>,
+                th: ({ children }) => <th className="border border-white/20 px-3 py-2 text-left text-white font-semibold">{children}</th>,
+                td: ({ children }) => <td className="border border-white/10 px-3 py-2 text-gray-300 align-top">{children}</td>,
+              }}
+            >
+              {cashFlowAnalysisMarkdown}
+            </ReactMarkdown>
+          </div>
+
+          <div className="mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+            <button
+              onClick={onMarkRead}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 text-accent-green rounded-lg hover:bg-accent-green/20 transition-colors"
+            >
+              <CheckCircle size={18} />
+              Mark as Read
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (topic === 'Key financial ratios') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <span>Wiki</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Financial Statements</span>
+          <ChevronRight size={14} />
+          <span className="text-accent-cyan">Key financial ratios</span>
+        </div>
+
+        <Card className="p-8">
+          <div className="max-w-none text-gray-300">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-2xl font-semibold text-white mt-8 mb-3">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-semibold text-white mt-6 mb-2">{children}</h3>,
+                p: ({ children }) => <p className="text-gray-300 leading-8 mb-4">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-5">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside space-y-2 mb-5">{children}</ol>,
+                li: ({ children }) => <li className="text-gray-300">{children}</li>,
+                hr: () => <hr className="border-white/15 my-6" />,
+                strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+                a: ({ href, children }) => (
+                  <a href={href} className="text-accent-cyan hover:underline" target="_blank" rel="noreferrer">
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-accent-cyan bg-white/5 rounded-r-md px-4 py-3 my-5 text-gray-200">
+                    {children}
+                  </blockquote>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-6">
+                    <table className="w-full border-collapse">{children}</table>
+                  </div>
+                ),
+                thead: ({ children }) => <thead className="bg-white/5">{children}</thead>,
+                th: ({ children }) => <th className="border border-white/20 px-3 py-2 text-left text-white font-semibold">{children}</th>,
+                td: ({ children }) => <td className="border border-white/10 px-3 py-2 text-gray-300 align-top">{children}</td>,
+              }}
+            >
+              {keyFinancialRatiosMarkdown}
+            </ReactMarkdown>
+          </div>
+
           <div className="mt-12 pt-6 border-t border-white/10 flex justify-between items-center">
             <p className="text-gray-400 text-sm">
               Last updated: {new Date().toLocaleDateString()}
