@@ -66,6 +66,7 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
                 'Fundamental analysis',
                 'Sector dashboard',
                 'Technical analysis introduction',
+                'Market Intelligence Terminal',
                 'Reading stock charts',
                 'Using indices'
             ]
