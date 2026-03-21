@@ -3,7 +3,7 @@ import Header from '../components/common/Header';
 import Card from '../components/common/Card';
 import TradingViewWidget from '../components/TechnicalAnalysis/TradingViewWidget';
 import CompanySearchDropdown from '../components/TechnicalAnalysis/CompanySearchDropdown';
-import { Settings, Maximize2, Share2, Save } from 'lucide-react';
+import { Settings, Maximize2, Share2, Save, Info } from 'lucide-react';
 
 const TechnicalAnalysis = () => {
     const [selectedCompanySymbol, setSelectedCompanySymbol] = useState('');
@@ -13,7 +13,19 @@ const TechnicalAnalysis = () => {
             <Header />
             <main className="container mx-auto px-6 pt-24 pb-12">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h1 className="text-3xl font-bold">Technical Analysis</h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-bold">Technical Analysis</h1>
+                        <a
+                            href="/wiki/Technical%20analysis%20gauge"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Open technical analysis wiki article"
+                            title="Learn technical analysis gauge"
+                            className="inline-flex items-center justify-center rounded-full bg-accent-cyan/10 border border-accent-cyan/20 p-1.5 text-accent-cyan hover:bg-accent-cyan/20 transition-colors"
+                        >
+                            <Info size={16} />
+                        </a>
+                    </div>
                     <div className="flex items-center gap-2">
                         <button className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors" title="Save Chart">
                             <Save size={20} />

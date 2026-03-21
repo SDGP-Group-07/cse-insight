@@ -35,8 +35,8 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
                 'Dividend investing',
                 'Risk management',
                 'Day trading basics',
-                'Swing trading basics',
-                'Position trading basics'
+                'Position trading basics',
+                'Swing trading basics'
             ]
         },
         {
@@ -68,7 +68,7 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
             subtopics: [
                 'Fundamental analysis',
                 'Sector dashboard',
-                'Technical analysis introduction',
+                'Technical analysis gauge',
                 'Market Intelligence Terminal',
                 'Reading stock charts',
                 'Using indices'

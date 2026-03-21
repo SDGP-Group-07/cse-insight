@@ -7,6 +7,7 @@ import candlestickMarkdown from '../../assets/docs/wiki/candle_stick.md?raw';
 import fundamentalAnalysisMarkdown from '../../assets/docs/wiki/fundamental_analysis.md?raw';
 import sectorCardMarkdown from '../../assets/docs/wiki/sector_card.md?raw';
 import marketIntelligenceMarkdown from '../../assets/docs/wiki/market_intelligence_terminal.md?raw';
+import technicalAnalysisMarkdown from '../../assets/docs/wiki/technical_analysis.md?raw';
 import balanceSheetBasicsMarkdown from '../../assets/docs/wiki/balance_sheet_basics.md?raw';
 import incomeStatementInterpretationMarkdown from '../../assets/docs/wiki/income_statement_intepretation.md?raw';
 import cashFlowAnalysisMarkdown from '../../assets/docs/wiki/cash_flow_analysis.md?raw';
@@ -70,6 +71,10 @@ const wikiTopicConfig = {
   'Market Intelligence Terminal': {
     section: 'Market Analysis',
     markdown: marketIntelligenceMarkdown,
+  },
+  'Technical analysis gauge': {
+    section: 'Market Analysis',
+    markdown: technicalAnalysisMarkdown,
   },
   'Balance sheet basics': {
     section: 'Financial Statements',
