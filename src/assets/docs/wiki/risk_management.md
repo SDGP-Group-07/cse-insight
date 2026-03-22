@@ -52,7 +52,7 @@ How you approach a trade determines whether you are an investor or a gambler.
 
 ---
 
-> **Note for CSE Investors:** In the Sri Lankan market, **Liquidity Risk** is a major factor. Many "Penny Stocks" (stocks trading under LKR 5) can jump 20% in a day, but when you try to sell your 50,000 shares, there may not be enough buyers. **Risk Management Tip:** Avoid putting more than 5% of your portfolio into "Illiquid" stocks, even if the AI Stock Engine shows a Bullish bias. Stick to "Liquid" stocks for your core holdings so you can exit quickly if the trend changes.
+> **Note for CSE Investors:** In the Sri Lankan market, **Liquidity Risk** is a major factor. Many "Penny Stocks" (stocks trading under LKR 5) can jump 20% in a day, but when you try to sell your 50,000 shares, there may not be enough buyers. **Risk Management Tip:** Avoid putting more than 5% of your portfolio into "Illiquid" stocks, even if the Market Intelligence Terminal shows a Bullish bias. Stick to "Liquid" stocks for your core holdings so you can exit quickly if the trend changes.
 
 ---
 *Last updated: March 2026*

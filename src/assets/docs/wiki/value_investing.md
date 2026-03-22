@@ -44,7 +44,7 @@ How does a value investor's mindset differ from other types of traders?
 
 ---
 
-> **Note for CSE Investors:** On the Colombo Stock Exchange, the **Banking** and **Manufacturing** sectors frequently offer "Value" opportunities. Many established Sri Lankan companies trade at a **Price-to-Book (P/B) ratio below 1.0**, meaning you are technically buying the company's assets for less than they are worth on paper. However, always check the **AI Stock Engine** to ensure it isn't a "Value Trap"—a company that is cheap because its business is actually dying.
+> **Note for CSE Investors:** On the Colombo Stock Exchange, the **Banking** and **Manufacturing** sectors frequently offer "Value" opportunities. Many established Sri Lankan companies trade at a **Price-to-Book (P/B) ratio below 1.0**, meaning you are technically buying the company's assets for less than they are worth on paper. However, always check the **Market Intelligence Terminal** to ensure it isn't a "Value Trap"—a company that is cheap because its business is actually dying.
 
 ---
 *Last updated: March 2026*

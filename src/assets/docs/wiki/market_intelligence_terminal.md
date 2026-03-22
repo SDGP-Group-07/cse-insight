@@ -1,6 +1,6 @@
 # Market Intelligence Terminal
 
-To navigate the **Colombo Stock Exchange (CSE)** with precision, you need tools that go beyond simple price tracking. The **AI Stock Engine** is a high-performance terminal that uses machine learning to forecast next-day price movements while explaining the "why" behind every prediction.
+To navigate the **Colombo Stock Exchange (CSE)** with precision, you need tools that go beyond simple price tracking. The **Market Intelligence Terminal** is a high-performance terminal that uses machine learning to forecast next-day price movements while explaining the "why" behind every prediction.
 
 While traditional charts tell you where a stock has been, this engine uses **Explainable AI (XAI)** to show you where it is likely going and which technical factors are driving that move.
 

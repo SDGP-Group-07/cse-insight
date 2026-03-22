@@ -39,7 +39,7 @@ How does Swing Trading compare to the two extremes we've already covered?
 ---
 
 ## The Swing Trader's Workflow
-1. **The Evening Scan:** Spend 20 minutes after the CSE closes at 2:30 PM looking at the **AI Stock Engine** for stocks with high confidence scores.
+1. **The Evening Scan:** Spend 20 minutes after the CSE closes at 2:30 PM looking at the **Market Intelligence Terminal** for stocks with high confidence scores.
 2. **The Set-and-Forget:** Place your "Limit Orders" and "Stop-Losses" in the morning.
 3. **The Harvest:** Once the stock hits your target price (usually 5% to 10% gain), you sell and move your capital to the next opportunity.
 
