@@ -4,6 +4,14 @@ import { BookOpen, FileText, TrendingUp, Users, AlertTriangle, BarChart2, Candle
 const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
     const topics = [
         {
+            id: 'glossary',
+            title: 'Stock Market Glossary',
+            icon: BookOpen,
+            subtopics: [
+                'Glossary'
+            ]
+        },
+        {
             id: 'cse-basics',
             title: 'How the CSE Works',
             icon: BookOpen,
@@ -40,17 +48,6 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
             ]
         },
         {
-            id: 'brokers',
-            title: 'Role of Stockbrokers',
-            icon: Users,
-            subtopics: [
-                'What brokers do',
-                'How to choose a broker',
-                'Account opening process',
-                'Brokerage fees structure'
-            ]
-        },
-        {
             id: 'dos-donts',
             title: "Dos and Don'ts",
             icon: AlertTriangle,
@@ -70,8 +67,18 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
                 'Sector dashboard',
                 'Technical analysis gauge',
                 'Market Intelligence Terminal',
-                'Reading stock charts',
                 'Using indices'
+            ]
+        },
+        {
+            id: 'brokers',
+            title: 'Role of Stockbrokers',
+            icon: Users,
+            subtopics: [
+                'What brokers do',
+                'How to choose a broker',
+                'Account opening process',
+                'Brokerage fees structure'
             ]
         },
         {
