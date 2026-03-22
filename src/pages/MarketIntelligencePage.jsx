@@ -1,6 +1,6 @@
 import PredictionDashboard from '../components/prediction/PredictionDashboard';
 
-const PredictionPage = () => {
+const MarketIntelligencePage = () => {
     return (
         <div className="pt-24 min-h-screen text-white px-6 pb-12">
             <div className="container mx-auto max-w-6xl">
@@ -10,4 +10,4 @@ const PredictionPage = () => {
     );
 };
 
-export default PredictionPage;
+export default MarketIntelligencePage;

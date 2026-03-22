@@ -54,7 +54,7 @@ The gauge allows you to change the **Time Interval** (e.g., 1-minute, 1-hour, 1-
 * **Beware the "Neutral" Zone:** When the needle is stuck in the middle, it often means the market is waiting for news. Avoid large entries during a Neutral phase in the CSE.
 * **Check the Volume:** A "Strong Buy" signal is much more powerful if the trading volume for that stock is also increasing.
 
-> **Note for CSE Investors:** In 2026, the CSE can experience sudden "Gaps" in price due to overnight economic announcements. While the Technical Analysis Gauge is excellent at showing *current* momentum, always combine it with the **AI Stock Engine's** "Confidence Score" to see if the engine believes the current trend is sustainable or likely to reverse tomorrow.
+> **Note for CSE Investors:** In 2026, the CSE can experience sudden "Gaps" in price due to overnight economic announcements. While the Technical Analysis Gauge is excellent at showing *current* momentum, always combine it with the **Market Intelligence Terminal's** "Confidence Score" to see if the engine believes the current trend is sustainable or likely to reverse tomorrow.
 
 ---
 *Last updated: March 2026*

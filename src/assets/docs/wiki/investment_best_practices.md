@@ -13,7 +13,7 @@ Successful investors don't rely on luck; they rely on a repeatable system.
 ### 1. Fundamental Research (The "Homework" Phase)
 Never buy a stock because of a "tip" on a WhatsApp group. 
 * **Analyze the Business:** Does the company provide a product or service that people in Sri Lanka will still need in 5 years?
-* **Check the Health:** Use the **AI Stock Engine** and **Sector Cards** to verify if the company is actually profitable and has manageable debt.
+* **Check the Health:** Use the **Market Intelligence Terminal** and **Sector Cards** to verify if the company is actually profitable and has manageable debt.
 
 ### 2. Time Horizon (Thinking in Years, Not Days)
 The CSE can be volatile in the short term due to political or economic news.

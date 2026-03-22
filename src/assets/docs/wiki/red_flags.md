@@ -49,7 +49,7 @@ Not all price rises are healthy. Sometimes, a stock price is artificially pushed
 
 ---
 
-> **Note for CSE Investors:** Be wary of "Speculative Runs" in small-cap companies with low liquidity. Because these companies have very few shares available, a small group of traders can easily manipulate the price. If a stock with zero profit is consistently on the "Top Gainers" list for a week, it is a major red flag. Always check the **AI Stock Engine** for the "Confidence Score" before joining a trend.
+> **Note for CSE Investors:** Be wary of "Speculative Runs" in small-cap companies with low liquidity. Because these companies have very few shares available, a small group of traders can easily manipulate the price. If a stock with zero profit is consistently on the "Top Gainers" list for a week, it is a major red flag. Always check the **Market Intelligence Terminal** for the "Confidence Score" before joining a trend.
 
 ---
 *Last updated: March 2026*
