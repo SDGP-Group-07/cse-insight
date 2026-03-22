@@ -3,11 +3,13 @@ import Card from '../common/Card';
 import { ChevronRight, CheckCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import glossaryMarkdown from '../../assets/docs/wiki/glossary.md?raw';
 import candlestickMarkdown from '../../assets/docs/wiki/candle_stick.md?raw';
 import fundamentalAnalysisMarkdown from '../../assets/docs/wiki/fundamental_analysis.md?raw';
 import sectorCardMarkdown from '../../assets/docs/wiki/sector_card.md?raw';
 import marketIntelligenceMarkdown from '../../assets/docs/wiki/market_intelligence_terminal.md?raw';
 import technicalAnalysisMarkdown from '../../assets/docs/wiki/technical_analysis.md?raw';
+import usingIndicesMarkdown from '../../assets/docs/wiki/using_indices.md?raw';
 import balanceSheetBasicsMarkdown from '../../assets/docs/wiki/balance_sheet_basics.md?raw';
 import incomeStatementInterpretationMarkdown from '../../assets/docs/wiki/income_statement_intepretation.md?raw';
 import cashFlowAnalysisMarkdown from '../../assets/docs/wiki/cash_flow_analysis.md?raw';
@@ -59,6 +61,10 @@ const markdownComponents = {
 };
 
 const wikiTopicConfig = {
+  'Glossary': {
+    section: 'Glossary',
+    markdown: glossaryMarkdown,
+  },
   'Candlestick chart': {
     section: 'Charts',
     markdown: candlestickMarkdown,
@@ -153,6 +159,10 @@ const wikiTopicConfig = {
       alt: 'Sector dashboard card breakdown',
       className: 'w-full rounded-lg border border-white/10 mb-8',
     },
+  },
+  'Using indices': {
+    section: 'Market Analysis',
+    markdown: usingIndicesMarkdown,
   },
 };
 
