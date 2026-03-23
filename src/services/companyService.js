@@ -75,7 +75,7 @@ const normalizeCompany = (payload, symbolFallback) => {
     high52,
     low52,
     marketCap: formatShortNumber(info.marketCap ?? 0),
-    totalMarketCap: parseNumber(info.marketCapPercentage ?? 0) * 100,
+    totalMarketCap: parseNumber(info.marketCapPercentage ?? 0),
     hiTrade: parseNumber(info.hiTrade ?? 0),
     lowTrade: parseNumber(info.lowTrade ?? 0),
     peRatio: parseNumber(payload?.peRatio ?? 0),

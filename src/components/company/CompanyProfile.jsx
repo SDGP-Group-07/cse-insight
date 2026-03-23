@@ -8,7 +8,7 @@ const CompanyProfile = ({ company }) => {
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_487px] gap-6">
       <Card
         hover={false}
-        className="bg-[#2a233d] border border-[#3e3753] rounded-lg"
+        className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-[#3e3753] rounded-lg"
       >
         <h3 className="text-[18px] font-normal text-white mb-4">
           Company Profile
@@ -41,7 +41,7 @@ const CompanyProfile = ({ company }) => {
 
       <Card
         hover={false}
-        className="bg-[#2a233d] border border-[#3e3753] rounded-lg"
+        className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-[#3e3753] rounded-lg"
       >
         <h3 className="text-[18px] font-normal text-white mb-4">
           Financial Highlights
@@ -63,7 +63,7 @@ const CompanyProfile = ({ company }) => {
                 <td className="text-right text-white">4.5B</td>
                 <td className="text-right pr-3 text-white">3.20</td>
               </tr>
-              <tr className="border-t border-[#3e3753] bg-[#1f1a2b]">
+              <tr className="border-t border-[#3e3753] bg-purple-900/20">
                 <td className="py-3 pl-3 text-white">Q2 2024</td>
                 <td className="text-right text-white">42.1B</td>
                 <td className="text-right text-white">3.8B</td>

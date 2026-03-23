@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Info } from 'lucide-react';
 import Card from '../common/Card';
 
-const REPORTS_PER_SLIDE = 6;
+const REPORTS_PER_SLIDE = 4;
 
 const formatReportDate = (timestamp) => {
   if (!timestamp) {
@@ -46,10 +46,22 @@ const AnnualReportsSlider = ({ reports = [], loading = false }) => {
   return (
     <Card
       hover={false}
-      className="bg-[#2a233d] border border-[#3e3753] rounded-lg"
+      className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-[#3e3753] rounded-lg"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[18px] font-normal text-white">Annual Reports</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-[18px] font-normal text-white">Annual Reports</h3>
+          <a
+            href="/wiki/Balance%20sheet%20basics"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open balance sheet basics wiki article"
+            title="Learn about balance sheet basics"
+            className="inline-flex items-center justify-center rounded-full bg-purple-500/20 border border-purple-500/30 p-1.5 text-purple-300 hover:text-purple-200 hover:border-purple-400 transition-colors"
+          >
+            <Info size={14} />
+          </a>
+        </div>
 
         {totalSlides > 1 && (
           <div className="flex items-center gap-2">
@@ -85,7 +97,7 @@ const AnnualReportsSlider = ({ reports = [], loading = false }) => {
           No annual reports available.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {visibleReports.map((report) => (
             <a
               key={report.id ?? report.path}

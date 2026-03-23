@@ -7,46 +7,20 @@ import EngineSignalCard from './EngineSignalCard';
 import PredictionLogicFeed from './PredictionLogicFeed';
 import predictionService from '../../services/predictionService';
 
+const SYMBOL_OPTIONS = [
+  'JKH.N0000',
+  'CTC.N0000',
+  'COMB.N0000',
+  'DIAL.N0000',
+  'DIST.N0000',
+  'LOLC.N0000',
+  'MELS.N0000',
+  'HNB.N0000',
+  'CARG.N0000',
+  'SAMP.N0000',
+];
 
-const MOCK_DATA = {
-  symbol: 'CSELK:CARG.N0000',
-  current_date: '2026-03-15',
-  predicted_date: '2026-03-16',
-  last_close: 700.00,
-  predicted_close: 709.94,
-  probability_up: 50.11,
-  probability_down: 49.89,
-  confidence: 39.13,
-  ai_recommendation: 'HOLD',
-  reason: 'Indecision and volatility suggest maintaining position',
-  model_prediction_explanation: [
-    {
-      observation: 'Recent trading volume is lower than usual',
-      why_it_matters: 'Decreased trading volume can indicate reduced market interest or participation, which may lead to increased volatility',
-      tip: 'Monitor for potential breakouts or breakdowns once volume returns to normal levels',
-    },
-    {
-      observation: 'Current volume compared to the 5-day average is lower than usual',
-      why_it_matters: 'A volume drop relative to the recent trend may signal a lack of conviction among traders',
-      tip: 'Be cautious about entering positions until volume stabilizes',
-    },
-    {
-      observation: 'Price change over the last 10 days is lower than usual',
-      why_it_matters: 'Diminished price movement suggests consolidation or a lack of momentum in the market',
-      tip: 'Look for patterns that may indicate a potential breakout or continuation',
-    },
-    {
-      observation: 'Price compared to the 50-day average is lower than usual',
-      why_it_matters: 'Trading below the 50-day average can indicate a bearish trend or weakening bullish sentiment',
-      tip: 'Consider setting alerts for a potential crossover back above the average',
-    },
-    {
-      observation: 'Price compared to the 20-day average is lower than usual',
-      why_it_matters: 'Being below the 20-day average suggests short-term weakness and may lead to further declines',
-      tip: 'Watch for signs of support at key levels to gauge potential bounce points',
-    },
-  ],
-};
+const normalizeSymbol = (value) => (value?.includes(':') ? value.split(':')[1] : value);
 
 const Skeleton = ({ className }) => (
   <div className={`animate-pulse bg-white/5 rounded-xl ${className}`} />
@@ -70,7 +44,10 @@ const PredictionDashboard = ({ symbol: symbolProp }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const symbol = symbolProp ?? MOCK_DATA.symbol;
+  const defaultSymbol = normalizeSymbol(symbolProp) ?? SYMBOL_OPTIONS[0];
+  const [selectedSymbol, setSelectedSymbol] = useState(
+    SYMBOL_OPTIONS.includes(defaultSymbol) ? defaultSymbol : SYMBOL_OPTIONS[0]
+  );
 
   const fetchPrediction = async (sym) => {
     setLoading(true);
@@ -81,8 +58,7 @@ const PredictionDashboard = ({ symbol: symbolProp }) => {
       setData(result);
     } catch (err) {
       console.error('Prediction fetch error:', err);
-      // Fall back to mock data so the UI is never empty
-      setData(MOCK_DATA);
+      setData(null);
       setError(err?.response?.data?.message ?? err?.message ?? 'Request failed');
     } finally {
       setLoading(false);
@@ -90,8 +66,15 @@ const PredictionDashboard = ({ symbol: symbolProp }) => {
   };
 
   useEffect(() => {
-    fetchPrediction(symbol);
-  }, [symbol]);
+    const nextSymbol = normalizeSymbol(symbolProp);
+    if (nextSymbol && SYMBOL_OPTIONS.includes(nextSymbol)) {
+      setSelectedSymbol(nextSymbol);
+    }
+  }, [symbolProp]);
+
+  useEffect(() => {
+    fetchPrediction(selectedSymbol);
+  }, [selectedSymbol]);
 
   const lastSync = data
     ? `${data.current_date} ${new Date().toISOString().slice(11, 19)} UTC`
@@ -106,7 +89,7 @@ const PredictionDashboard = ({ symbol: symbolProp }) => {
             <TrendingUp size={20} className="text-accent-cyan" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">Market Predictions</h2>
+            <h2 className="text-lg font-bold text-white">Market Intelligence Terminal</h2>
             <div className="flex items-center gap-1.5 mt-0.5">
               {loading
                 ? <Loader2 size={11} className="text-gray-500 animate-spin" />
@@ -119,23 +102,34 @@ const PredictionDashboard = ({ symbol: symbolProp }) => {
           </div>
         </div>
 
-        {/* Symbol selector — wire to your stock search/dropdown */}
-        <div className="flex items-center gap-2 bg-white/5 border border-white/15 rounded-lg px-3 py-2 cursor-pointer hover:bg-white/10 transition-colors">
-          <span className="text-sm font-semibold text-white">{data?.symbol ?? symbol}</span>
-          <ChevronDown size={14} className="text-gray-400" />
+        {/* Symbol selector */}
+        <div className="relative flex items-center bg-white/5 border border-white/15 rounded-lg hover:bg-white/10 transition-colors">
+          <select
+            value={selectedSymbol}
+            onChange={(event) => setSelectedSymbol(event.target.value)}
+            className="appearance-none bg-transparent text-sm font-semibold text-white px-3 py-2 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-cyan/50"
+            aria-label="Select symbol"
+          >
+            {SYMBOL_OPTIONS.map((option) => (
+              <option key={option} value={option} className="bg-primary-mid text-white">
+                {option}
+              </option>
+            ))}
+          </select>
+          <ChevronDown size={14} className="text-gray-400 pointer-events-none absolute right-3" />
         </div>
       </div>
 
-      {/* API error banner (shows alongside fallback data) */}
-      {error && data && (
+      {/* API error banner */}
+      {error && (
         <div className="flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-4 py-3">
           <AlertTriangle size={16} className="text-yellow-400 shrink-0 mt-0.5" />
           <div>
-            <p className="text-yellow-400 text-xs font-semibold">API unavailable — showing sample data</p>
+            <p className="text-yellow-400 text-xs font-semibold">API unavailable</p>
             <p className="text-yellow-300/70 text-xs mt-0.5">{error}</p>
           </div>
           <button
-            onClick={() => fetchPrediction(symbol)}
+            onClick={() => fetchPrediction(selectedSymbol)}
             className="ml-auto shrink-0 flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300"
           >
             <RefreshCw size={12} /> Retry

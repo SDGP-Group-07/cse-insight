@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, Activity, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, DollarSign, Info } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import { useMarketData } from '../../context/MarketDataContext';
@@ -125,7 +125,17 @@ const MarketOverview = () => {
     };
 
     return (
-      <Card className="relative overflow-hidden">
+      <Card className="relative overflow-hidden flex flex-col">
+        <a
+          href="/wiki/Using%20indices"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open using indices wiki article"
+          title="Learn about indices"
+          className="absolute top-3 right-3 z-20 inline-flex items-center justify-center rounded-full bg-white/5 border border-[#3e3753] p-1 text-[#9b96b2] hover:text-white hover:border-accent-cyan transition-colors"
+        >
+          <Info size={14} />
+        </a>
         <div className="relative z-10 flex divide-x divide-gray-700">
           {renderItem({ title: 'ASPI', ...indices.aspi }, Activity, 'text-accent-cyan')}
           {renderItem({ title: 'S&P SL20', ...indices.sp20 }, Activity, 'text-accent-purple')}

@@ -5,6 +5,7 @@ import PriceChart from '../components/company/PriceChart';
 import KeyStats from '../components/company/KeyStats';
 import CompanyProfile from '../components/company/CompanyProfile';
 import AnnualReportsSlider from '../components/company/AnnualReportsSlider';
+import DocumentAnalyzer from '../components/company/DocumentAnalyzer';
 import companyService from '../services/companyService';
 import { Loader, ArrowLeft } from 'lucide-react';
 
@@ -90,8 +91,9 @@ const CompanyPageContent = () => {
 
         <CompanyProfile company={company} />
 
-        <section className="mt-6">
+        <section className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
           <AnnualReportsSlider reports={annualReports} loading={reportsLoading} />
+          <DocumentAnalyzer />
         </section>
       </main>
     </div>

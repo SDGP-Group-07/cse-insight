@@ -27,7 +27,7 @@ const PriceChart = ({ symbol }) => {
       hotlist: false,
       interval: 'D',
       locale: 'en',
-      save_image: true,
+      save_image: false,
       style: '1',
       symbol: tvSymbol,
       theme: 'dark',
@@ -57,7 +57,7 @@ const PriceChart = ({ symbol }) => {
         rel="noopener noreferrer"
         aria-label="Open candlestick chart wiki article"
         title="Learn about candlestick charts"
-        className="absolute right-1 top-1 z-10 inline-flex items-center justify-center rounded-full bg-[#2a233d]/90 border border-[#3e3753] p-2 text-[#9b96b2] hover:text-white hover:border-accent-cyan transition-colors"
+        className="absolute right-1 top-1 z-10 inline-flex items-center justify-center rounded-full bg-purple-900/50 border border-purple-500/30 p-2 text-purple-200 hover:text-purple-100 hover:border-purple-400 transition-colors"
       >
         <Info size={16} />
       </a>

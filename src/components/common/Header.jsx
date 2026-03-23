@@ -31,6 +31,8 @@ const Header = () => {
         setIsMobileMenuOpen(false);
     };
 
+    const isExternalPath = (path) => /^https?:\/\//i.test(path);
+
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Market Dashboard', path: '/dashboard', protected: true },
@@ -48,8 +50,8 @@ const Header = () => {
             path: '#',
             dropdown: [
                 { name: 'AI Chatbot', path: '#', icon: MessageSquare, action: 'toggleChat' },
-                { name: 'Document Analyzer', path: '#', icon: FileText, disabled: true },
-                { name: 'Price Predictions', path: '/tools/price-predictions', icon: TrendingUp },
+                { name: 'Document Analyzer', path: 'http://localhost:8501/', icon: FileText },
+                { name: 'Market Intelligence Terminal', path: '/tools/market-intelligence', icon: TrendingUp },
                 { name: 'Dividend Calendar', path: '/tools/dividends', icon: Calendar },
                 { name: 'Brokers Directory', path: '/tools/brokers', icon: User },
                 { name: 'Technical Analysis', path: '/tools/technical-analysis', icon: BarChart2 }
@@ -106,21 +108,42 @@ const Header = () => {
                                     {/* Dropdown Menu */}
                                     <div className={`absolute top-full left-0 w-56 pt-2 transition-all duration-200 ${activeDropdown === link.name ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-2 invisible'}`}>
                                         <div className="bg-primary-mid border border-white/10 rounded-xl shadow-xl overflow-hidden p-2">
-                                            {link.dropdown.map((item) => (
-                                                <Link
-                                                    key={item.name}
-                                                    to={item.path}
-                                                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${item.disabled
-                                                        ? 'text-gray-600 cursor-not-allowed'
-                                                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                                                        }`}
-                                                    onClick={(e) => item.disabled && e.preventDefault()}
-                                                >
-                                                    <item.icon size={16} className={item.disabled ? 'text-gray-600' : 'text-accent-cyan'} />
-                                                    {item.name}
-                                                    {item.disabled && <span className="ml-auto text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
-                                                </Link>
-                                            ))}
+                                            {link.dropdown.map((item) => {
+                                                const itemClass = `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${item.disabled
+                                                    ? 'text-gray-600 cursor-not-allowed'
+                                                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                                                    }`;
+
+                                                if (isExternalPath(item.path)) {
+                                                    return (
+                                                        <a
+                                                            key={item.name}
+                                                            href={item.path}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className={itemClass}
+                                                            onClick={(e) => item.disabled && e.preventDefault()}
+                                                        >
+                                                            <item.icon size={16} className={item.disabled ? 'text-gray-600' : 'text-accent-cyan'} />
+                                                            {item.name}
+                                                            {item.disabled && <span className="ml-auto text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
+                                                        </a>
+                                                    );
+                                                }
+
+                                                return (
+                                                    <Link
+                                                        key={item.name}
+                                                        to={item.path}
+                                                        className={itemClass}
+                                                        onClick={(e) => item.disabled && e.preventDefault()}
+                                                    >
+                                                        <item.icon size={16} className={item.disabled ? 'text-gray-600' : 'text-accent-cyan'} />
+                                                        {item.name}
+                                                        {item.disabled && <span className="ml-auto text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
+                                                    </Link>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>
@@ -272,23 +295,48 @@ const Header = () => {
                             return (
                                 <div key={link.name} className="space-y-2">
                                     <div className="text-sm font-bold text-gray-500 uppercase tracking-wider px-4">{link.name}</div>
-                                    {link.dropdown.map(item => (
-                                        <Link
-                                            key={item.name}
-                                            to={item.path}
-                                            className={`block px-4 py-2 text-sm rounded-lg ${item.disabled ? 'text-gray-600' : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                                                }`}
-                                            onClick={() => !item.disabled && setIsMobileMenuOpen(false)}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <span className="flex items-center gap-2">
-                                                    <item.icon size={16} />
-                                                    {item.name}
-                                                </span>
-                                                {item.disabled && <span className="text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
-                                            </div>
-                                        </Link>
-                                    ))}
+                                    {link.dropdown.map(item => {
+                                        const itemClass = `block px-4 py-2 text-sm rounded-lg ${item.disabled ? 'text-gray-600' : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                                            }`;
+
+                                        if (isExternalPath(item.path)) {
+                                            return (
+                                                <a
+                                                    key={item.name}
+                                                    href={item.path}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={itemClass}
+                                                    onClick={() => !item.disabled && setIsMobileMenuOpen(false)}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="flex items-center gap-2">
+                                                            <item.icon size={16} />
+                                                            {item.name}
+                                                        </span>
+                                                        {item.disabled && <span className="text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
+                                                    </div>
+                                                </a>
+                                            );
+                                        }
+
+                                        return (
+                                            <Link
+                                                key={item.name}
+                                                to={item.path}
+                                                className={itemClass}
+                                                onClick={() => !item.disabled && setIsMobileMenuOpen(false)}
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <span className="flex items-center gap-2">
+                                                        <item.icon size={16} />
+                                                        {item.name}
+                                                    </span>
+                                                    {item.disabled && <span className="text-[10px] uppercase bg-white/5 px-1.5 py-0.5 rounded text-gray-500">Soon</span>}
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
                             );
                         }

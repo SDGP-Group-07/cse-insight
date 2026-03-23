@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
-import { Calendar as CalendarIcon, Megaphone, Landmark, Wallet } from 'lucide-react';
+import { Calendar as CalendarIcon, Info, Megaphone, Landmark, Wallet } from 'lucide-react';
 import Header from '../components/common/Header';
 import DividentMainCalender from '../components/DividendCalender/DividentMainCalender';
 import FilterButton from '../components/DividendCalender/FilterButton';
@@ -187,6 +187,16 @@ const DividendCalendar = () => {
                 <CalendarIcon size={28} />
                 </div>
                 Dividend Calendar
+                <a
+                  href="/wiki/Dividend%20investing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open dividend investing wiki article"
+                  title="Learn about dividend investing"
+                  className="inline-flex items-center justify-center rounded-full bg-accent-cyan/10 border border-accent-cyan/20 p-1.5 text-accent-cyan hover:bg-accent-cyan/20 transition-colors"
+                >
+                  <Info size={16} />
+                </a>
               </h1>
               <p className="text-slate-400 mt-2 uppercase text-[10px] font-bold tracking-[0.25em]">
                 Market Insights / <span className="text-accent-cyan">{activeFilter}</span>

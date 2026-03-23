@@ -11,7 +11,6 @@ import DashboardPage from './pages/DashboardPage';
 import WikiPage from './pages/WikiPage';
 import ChatbotPage from './pages/ChatbotPage';
 import RAGPage from './pages/RAGPage';
-import PredictionPage from './pages/PredictionPage';
 import CompanyPage from './pages/CompanyPage';
 import DividendCalendarPage from './pages/DividendCalendar';
 import BrokersPage from './pages/BrokersList';
@@ -33,6 +32,7 @@ import DocumentationPage from './pages/DocumentationPage';
 import APIReferencePage from './pages/APIReferencePage';
 import CommunityPage from './pages/CommunityPage';
 import HelpCenterPage from './pages/HelpCenterPage';
+import MarketIntelligencePage from './pages/MarketIntelligencePage';
 
 const router = createBrowserRouter([
     {
@@ -113,10 +113,10 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: '/tools/price-predictions',
+        path: '/tools/market-intelligence',
         element: (
             <ProtectedRoute>
-                <AppLayout><PredictionPage /></AppLayout>
+                <AppLayout><MarketIntelligencePage /></AppLayout>
             </ProtectedRoute>
         ),
     },
