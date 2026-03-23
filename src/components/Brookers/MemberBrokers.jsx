@@ -50,6 +50,7 @@ const brokerLogoKeyMap = {
 	'hnb stock brokers': 'hnb-stockbrokers',
 	'john keells stock brokers': 'john-keells-stock-brokers',
 	'asha securities': 'asia-securities-limited',
+	
 	'almas equities': 'almas-equities',
 	'somerville stockbrokers': 'somerville-stockbrokers',
 	'somerville stock brokers': 'somerville-stockbrokers',
