@@ -3,6 +3,7 @@ import React, { useEffect, useRef, memo } from 'react';
 function TradingViewWidget({ symbol }) {
     const containerRef = useRef(null);
 
+
     useEffect(() => {
         const container = containerRef.current;
         if (!container || !symbol) return;
@@ -35,6 +36,7 @@ function TradingViewWidget({ symbol }) {
 
     if (!symbol) {
         return (
+            
             <div className="w-full rounded-lg border border-white/10 bg-white/5 overflow-hidden" style={{ height: 460 }}>
                 <div className="flex gap-2 px-4 pt-4 pb-3 border-b border-white/10">
                     {['1m', '5m', '15m', '30m', '1h', '2h', '4h'].map((t) => (
