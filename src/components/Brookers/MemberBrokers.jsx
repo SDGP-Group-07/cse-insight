@@ -25,13 +25,14 @@ const brokerLogosByFile = Object.fromEntries(
 
 const normalizeLogoFileKey = (fileName) => {
 	if (!fileName) {
+
 		return '';
 	}
 
 	return fileName
 		.toLowerCase()
 		.replace(/'/g, '')
-		// Handle names like "logo.png.png" by removing repeated extensions.
+		// Handle names like "logo.png.png" by removing repeated extensions./
 		.replace(/(\.(png|jpg|jpeg|webp|svg))+$/g, '')
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
@@ -39,6 +40,7 @@ const normalizeLogoFileKey = (fileName) => {
 
 const brokerLogosByKey = Object.fromEntries(
 	Object.entries(brokerLogosByFile).map(([fileName, value]) => [
+		
 		normalizeLogoFileKey(fileName),
 		value,
 	]),
@@ -50,7 +52,6 @@ const brokerLogoKeyMap = {
 	'hnb stock brokers': 'hnb-stockbrokers',
 	'john keells stock brokers': 'john-keells-stock-brokers',
 	'asha securities': 'asia-securities-limited',
-	
 	'almas equities': 'almas-equities',
 	'somerville stockbrokers': 'somerville-stockbrokers',
 	'somerville stock brokers': 'somerville-stockbrokers',
