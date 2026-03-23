@@ -12,6 +12,7 @@ const DividentMainCalender = ({ monthName, year, days, firstDay, currentDate, ac
           <button onClick={() => changeMonth(-1)} className="p-2 bg-primary-mid/60 hover:bg-primary-mid/80 rounded-lg border border-white/10 transition-all text-slate-400 hover:text-accent-cyan">
             <ChevronLeft size={20}/>
           </button>
+          
           <button onClick={() => changeMonth(1)} className="p-2 bg-primary-mid/60 hover:bg-primary-mid/80 rounded-lg border border-white/10 transition-all text-slate-400 hover:text-accent-cyan">
             <ChevronRight size={20}/>
           </button>

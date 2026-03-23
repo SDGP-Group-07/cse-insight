@@ -1,4 +1,5 @@
 import { AreaChart, Area, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
+
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 
@@ -56,6 +57,7 @@ const PriceTrajectoryCard = ({ currentClose, predictedClose, predictedDate }) =>
             </p>
           </div>
           <p className={`text-xs mt-0.5 ${isUp ? 'text-accent-green' : 'text-red-400'}`}>
+
             {isUp ? '+' : ''}{change.toFixed(2)} ({isUp ? '+' : ''}{changePct}%)
           </p>
         </div>
@@ -82,6 +84,7 @@ const PriceTrajectoryCard = ({ currentClose, predictedClose, predictedDate }) =>
               activeDot={{ r: 4, fill: isUp ? '#00f5d4' : '#ef4444' }}
             />
           </AreaChart>
+          
         </ResponsiveContainer>
       </div>
     </div>

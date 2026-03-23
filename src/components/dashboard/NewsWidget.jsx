@@ -9,7 +9,7 @@ const NewsWidget = () => {
     const [currentPage, setCurrentPage] = useState(0);
 
     const itemsPerPage = 5;
-    // per-row fixed height in pixels
+    /// per-row fixed height in pixels
     const rowHeight = 64;
     // vertical gap used by Tailwind `space-y-4` is 16px
     const rowGap = 16;
