@@ -29,6 +29,8 @@ export const MarketDataProvider = ({ children }) => {
     marketCapData: [],
   });
 
+
+
   const createSectionStatus = () => ({
     loading: false,
     error: null,
@@ -48,6 +50,8 @@ export const MarketDataProvider = ({ children }) => {
 
   const refreshIntervalMs = 60_000;
 
+
+  
   const updateStatus = (key, patch) => {
     setStatus((prev) => ({
       ...prev,
