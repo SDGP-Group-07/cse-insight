@@ -24,6 +24,7 @@ const getMomentum = (probUp) => {
   return             { label: 'Strong Bearish', color: 'text-red-400',      Icon: TrendingDown };
 };
 
+
 const MetricRow = ({ label, value, valueClass, icon: Icon }) => {
   const [hovered, setHovered] = useState(false);
   return (
@@ -43,6 +44,7 @@ const MetricRow = ({ label, value, valueClass, icon: Icon }) => {
     </div>
   );
 };
+
 
 const EngineSignalCard = ({ signal, reason, confidence, probabilityUp, probabilityDown }) => {
   const [hovered, setHovered] = useState(false);
