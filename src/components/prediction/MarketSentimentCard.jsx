@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 const getSentimentDescription = (probUp, probDown) => {
   const spread = Math.abs(probUp - probDown);
+  
   if (spread < 2) {
     return 'Market sentiment is currently in a state of high equilibrium. Significant volatility is expected within the next trading session.';
   } else if (spread < 10) {

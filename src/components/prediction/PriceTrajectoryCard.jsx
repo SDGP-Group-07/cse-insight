@@ -1,6 +1,9 @@
 import { AreaChart, Area, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+
+
 const generateChartData = (currentClose, predictedClose) => {
+
   const points = [];
   const base = currentClose * 0.975;
   for (let i = 0; i < 10; i++) {

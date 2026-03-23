@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Lightbulb, Cpu } from 'lucide-react';
 
 const FeedItem = ({ item }) => {
   const [expanded, setExpanded] = useState(true);
+  
   const [hovered, setHovered] = useState(false);
 
   return (
