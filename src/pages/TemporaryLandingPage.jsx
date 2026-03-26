@@ -17,13 +17,12 @@ import Footer from '../components/common/Footer';
 
 // Import GIF assets
 import lotusGif from '../assets/lotus.gif';
-import greenGif from '../assets/green.gif';
 import logo from '../assets/logo.png';
 import Features from '../components/landing/Features';
 
 const TemporaryLandingPage = () => {
   const { theme } = useTheme();
-  const backgroundGif = theme === 'dark' ? lotusGif : greenGif;
+  const backgroundGif = theme === 'dark' ? lotusGif : lotusGif;
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState({

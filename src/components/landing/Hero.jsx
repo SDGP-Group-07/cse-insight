@@ -6,11 +6,10 @@ import { useTheme } from '../../context/ThemeContext';
 
 // Import GIF assets
 import lotusGif from '../../assets/lotus.gif';
-import greenGif from '../../assets/green.gif';
 
 const Hero = () => {
     const { theme } = useTheme();
-    const backgroundGif = theme === 'dark' ? lotusGif : greenGif;
+    const backgroundGif = theme === 'dark' ? lotusGif : lotusGif;
 
     return (
         <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">

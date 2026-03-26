@@ -18,6 +18,7 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
             subtopics: [
                 'What is a stock exchange?',
                 'CSE history and structure',
+                'Account opening process',
                 'Trading hours and mechanisms',
                 'Settlement process'
             ]
@@ -77,7 +78,6 @@ const WikiSidebar = ({ activeTopic, onSelectTopic }) => {
             subtopics: [
                 'What brokers do',
                 'How to choose a broker',
-                'Account opening process',
                 'Brokerage fees structure'
             ]
         },
