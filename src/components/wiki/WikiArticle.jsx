@@ -28,6 +28,11 @@ import positionTradingMarkdown from '../../assets/docs/wiki/position_trading.md?
 import candleBarChartImage from '../../assets/imgs/candle_bar_chart.png';
 import companyResearchImage from '../../assets/imgs/company_research.jpeg';
 import sectorCardImage from '../../assets/imgs/sector_card.png';
+import stockMarketMarkdown from '../../assets/docs/wiki/stock_market.md?raw';
+import cseHistoryMarkdown from '../../assets/docs/wiki/cse_history.md?raw';
+import accountOpeningMarkdown from '../../assets/docs/wiki/account_opening.md?raw';
+import tradingSessionMarkdown from '../../assets/docs/wiki/trading_session.md?raw';
+import settlementProcessMarkdown from '../../assets/docs/wiki/settlement_process.md?raw';
 
 const markdownComponents = {
   h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
@@ -163,6 +168,18 @@ const wikiTopicConfig = {
   'Using indices': {
     section: 'Market Analysis',
     markdown: usingIndicesMarkdown,
+  },
+  'What is a stock exchange?': {
+    section: 'How the CSE Works',
+    markdown: stockMarketMarkdown,
+  },
+  'CSE history and structure': {
+    section: 'How the CSE Works',
+    markdown: cseHistoryMarkdown,
+  },
+  'Account opening process': {
+    section: 'How the CSE Works',
+    markdown: accountOpeningMarkdown,
   },
 };
 
