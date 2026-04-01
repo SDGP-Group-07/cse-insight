@@ -33,6 +33,9 @@ import cseHistoryMarkdown from '../../assets/docs/wiki/cse_history.md?raw';
 import accountOpeningMarkdown from '../../assets/docs/wiki/account_opening.md?raw';
 import tradingSessionMarkdown from '../../assets/docs/wiki/trading_session.md?raw';
 import settlementProcessMarkdown from '../../assets/docs/wiki/settlement_process.md?raw';
+import whatBrokersDoMarkdown from '../../assets/docs/wiki/what_brokers_do.md?raw';
+import howToChooseBrokerMarkdown from '../../assets/docs/wiki/choose_broker.md?raw';
+import brokerageFeesStructureMarkdown from '../../assets/docs/wiki/broker_fees.md?raw';
 
 const markdownComponents = {
   h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4">{children}</h1>,
@@ -181,6 +184,27 @@ const wikiTopicConfig = {
     section: 'How the CSE Works',
     markdown: accountOpeningMarkdown,
   },
+  'Trading hours and mechanisms': {
+    section: 'How the CSE Works',
+    markdown: tradingSessionMarkdown,
+  },
+  'Settlement process': {
+    section: 'How the CSE Works',
+    markdown: settlementProcessMarkdown,
+  },
+  'What brokers do': {
+    section: 'Role of Stockbrokers',
+    markdown: whatBrokersDoMarkdown,
+  },
+  'How to choose a broker': {
+    section: 'Role of Stockbrokers',
+    markdown: howToChooseBrokerMarkdown,
+  },
+  'Brokerage fees structure': {
+    section: 'Role of Stockbrokers',
+    markdown: brokerageFeesStructureMarkdown,
+  },
+  
 };
 
 const renderArticleFooter = (onMarkRead) => (
