@@ -3,6 +3,7 @@ import { ArrowUpRight, ArrowDownRight, Loader, Info } from "lucide-react";
 import Card from "../components/common/Card";
 import { MarketDataProvider } from "../context/MarketDataContext";
 import sectorService from "../services/sectorService";
+import { Link } from "react-router-dom";
 
 /* =============Sector Card Component=============== */
 
@@ -10,6 +11,7 @@ const SectorInsightCard = ({ sectorResponse }) => {
   const { header, valuation, insights } = sectorResponse.data;
 
   const isNegative = header?.change < 0;
+  const sectorId = header?.sectorId;
 
   const formatCap = (val) => {
     if (!val) return "-";
@@ -26,7 +28,12 @@ const SectorInsightCard = ({ sectorResponse }) => {
     (insights.decliners / valuation.companiesListed) * 100 || 0;
 
   return (
-    <Card className="overflow-hidden p-0 hover:border-accent-cyan/40 transition-all">
+    <Link
+      to={`/companies?sector=${sectorId}`}
+      className="group block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
+      aria-label={`View companies in ${header?.sectorName ?? "selected"} sector`}
+    >
+      <Card className="relative overflow-hidden p-0 hover:border-accent-cyan/30 transition-all duration-300 hover:-translate-y-0.5 cursor-pointer">
 
       {/* HEADER */}
       <div className="p-5 border-b border-white/10">
@@ -175,7 +182,17 @@ const SectorInsightCard = ({ sectorResponse }) => {
 
       </div>
 
-    </Card>
+      <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200">
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/35 via-transparent to-transparent" />
+        <div className="absolute bottom-3 left-3 right-3 rounded-md border border-accent-cyan/25 bg-primary-dark/65 px-3 py-2 backdrop-blur-[1px]">
+          <p className="text-[11px] font-semibold text-accent-cyan/90 tracking-wide uppercase">
+            Click to view sector companies
+          </p>
+        </div>
+      </div>
+
+      </Card>
+    </Link>
   );
 };
 
